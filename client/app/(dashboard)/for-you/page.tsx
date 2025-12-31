@@ -272,7 +272,7 @@ const MadeForYouPage = () => {
                         />
 
                         <div>
-                          {!search ? (
+                          {!search && (
                             <div
                               className={`font-bold ${
                                 iscurrentTrack && madeForYouAlbumPlaying
@@ -282,29 +282,11 @@ const MadeForYouPage = () => {
                             >
                               {track.data.title}
                             </div>
-                          ) : (
-                            <HighlightedText
-                              text={track.data.title}
-                              indices={
-                                track.matches?.find(
-                                  (m: any) => m.key === 'title'
-                                )?.indices
-                              }
-                            />
                           )}
-                          {!search ? (
+                          {!search && (
                             <div className='hover:underline'>
                               {track.data.artist.name}
                             </div>
-                          ) : (
-                            <HighlightedText
-                              text={track.data.artist.name}
-                              indices={
-                                track.matches?.find(
-                                  (m: any) => m.key === 'artist'
-                                )?.indices
-                              }
-                            />
                           )}
                         </div>
                       </div>
