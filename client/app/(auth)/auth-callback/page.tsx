@@ -26,7 +26,7 @@ const AuthCallbackPage = () => {
           lastName: user.lastName,
           imageUrl: user.imageUrl,
         });
-      } catch (error: any) {
+      } catch (error) {
         console.log(`Error in auth callback ${error}`);
       } finally {
         router.push('/');

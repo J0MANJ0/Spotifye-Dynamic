@@ -1,25 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from './ui/button';
 import { useMusicStore } from '@/stores/use-music-store';
-import toast from 'react-hot-toast';
 import { useNavigationHistory } from '@/hooks/use-nav';
 import { useFollowStore } from '@/stores/use-follow-store';
 import { usePlayerStore } from '@/stores/use-player-store';
 
 export const ArtistCard = () => {
-  const { fetchArtist, artist, currentAlbum } = useMusicStore();
-  const { followedArtists, followTarget, unfollowTarget, loading } =
-    useFollowStore();
+  const { fetchArtist, artist } = useMusicStore();
+  const { followedArtists, followTarget, unfollowTarget } = useFollowStore();
   const { currentTrack } = usePlayerStore();
   const { router } = useNavigationHistory();
 
-  if (!currentTrack) return;
-
   useEffect(() => {
-    fetchArtist(currentTrack?.data?.artist?.id);
-  }, [currentTrack?.data?.artist?.id]);
+    if (currentTrack) fetchArtist(currentTrack?.data?.artist?.id!);
+  }, [currentTrack?.data?.artist?.id, currentTrack, fetchArtist]);
 
   const isFollowed = followedArtists?.some(
     (a) => a.target?.data?.id === artist?.data?.id
@@ -31,6 +27,7 @@ export const ArtistCard = () => {
       : followTarget('artists', artist?.data?.id);
   };
 
+  if (!currentTrack) return;
   return (
     <div className='bg-zinc-800 rounded-md w-full'>
       <div className='w-full relative'>

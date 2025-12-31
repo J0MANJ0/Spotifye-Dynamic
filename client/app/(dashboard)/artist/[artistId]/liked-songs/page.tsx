@@ -7,8 +7,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Clock, MoreHorizontal } from 'lucide-react';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useNavigationHistory } from '@/hooks/use-nav';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { formatDate } from 'date-fns';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'next/navigation';
 import { cn, formatTime } from '@/lib/utils';
 import { Tooltip } from '@mui/material';
@@ -68,7 +67,7 @@ const ArtistLikedSongsPage = () => {
 
   useEffect(() => {
     fetchArtistPage(Number(artistId));
-  }, [artistId]);
+  }, [artistId, fetchArtistPage]);
   return (
     <div className='bg-zinc-900 rounded-md w-full h-full'>
       <div className='w-full p-4 h-full'>

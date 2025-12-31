@@ -1,13 +1,9 @@
 'use client';
 
 import { useChartStore } from '@/stores/use-chart-store';
-import { SectionGrid } from './section-grid';
-import { PlayBtn } from './play-btn';
 import { Button } from './ui/button';
 import { useNavigationHistory } from '@/hooks/use-nav';
-import { PlayBtnFollow } from './play-btn-follow';
 
-type Props = {};
 export const FeaturedSection = () => {
   const { tracks: trending } = useChartStore();
   const { router } = useNavigationHistory();

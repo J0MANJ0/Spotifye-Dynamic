@@ -22,7 +22,7 @@ const Home = () => {
       setGreeting(g);
     };
     getGreeting();
-  }, [greeting]);
+  }, [greeting, user?.fullName]);
 
   return (
     <main className='rounded-md h-full bg-linear-to-b from-zinc-800 to-zinc-900'>

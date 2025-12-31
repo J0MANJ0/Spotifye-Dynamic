@@ -11,7 +11,7 @@ const TopArtistsPage = () => {
   const followed = useMemo(() => {
     const filtered = artists;
     return filtered?.sort(() => Math.random() - 0.5);
-  }, []);
+  }, [artists]);
   return (
     <ScrollArea className='h-full w-full rounded-md bg-zinc-900 p-4'>
       <div>

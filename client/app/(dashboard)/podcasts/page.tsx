@@ -6,7 +6,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { useChartStore } from '@/stores/use-chart-store';
 import { useUser } from '@clerk/nextjs';
 import { motion } from 'framer-motion';
-import { Clock, Pause, Play } from 'lucide-react';
+import { Pause, Play } from 'lucide-react';
 
 const PodcastsPage = () => {
   const { user } = useUser();

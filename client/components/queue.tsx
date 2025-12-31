@@ -99,7 +99,7 @@ export const Queue = () => {
 
       setToastShown(true);
     }
-  }, [progress, toastShown, setToastShown]);
+  }, [progress, toastShown, currentIndex, setToastShown]);
 
   return (
     <div className='h-full bg-zinc-900 rounded-lg flex flex-col p-2'>

@@ -34,6 +34,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tooltip } from '@mui/material';
+import Image from 'next/image';
 
 const AlbumPage = () => {
   const { user } = useUser();
@@ -86,7 +87,7 @@ const AlbumPage = () => {
       setGradient(bgGradient());
       setGradientActive(bgActive());
     }
-  }, [fetchAlbum, albumId]);
+  }, [fetchAlbum, albumId, pathname]);
 
   useEffect(() => {
     if (!filteredTracks) return;
@@ -96,7 +97,7 @@ const AlbumPage = () => {
         block: 'center',
       });
     }
-  }, [filteredTracks?.length, currentTrack?._id]);
+  }, [filteredTracks, currentTrack?._id]);
 
   if (loading) {
     return <AlbumPageSkeleton />;
@@ -152,8 +153,8 @@ const AlbumPage = () => {
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger>
                   <img
-                    src={album?.data?.cover_xl}
-                    alt={album?.data?.title}
+                    src={album?.data?.cover_xl!}
+                    alt={album?.data?.title!}
                     className='h-[230px] w-[230px] shadow-xl hover:scale-[1.030] transition-all cursor-pointer rounded-md'
                   />
                 </DialogTrigger>
@@ -164,8 +165,8 @@ const AlbumPage = () => {
                 <DialogContent className='bg-transparent border-none shadow-none'>
                   <div className='w-full h-full'>
                     <img
-                      src={album?.data?.cover_xl}
-                      alt={album?.data?.title}
+                      src={album?.data?.cover_xl!}
+                      alt={album?.data?.title!}
                       className='object-cover w-full h-full'
                     />
                   </div>
@@ -194,8 +195,8 @@ const AlbumPage = () => {
               </motion.h2>
               <div className='flex items-center gap-2 text-sm text-zinc-400'>
                 <img
-                  src={album?.data.artist.picture_small}
-                  alt={album?.data.title}
+                  src={album?.data.artist.picture_small!}
+                  alt={album?.data.title!}
                   className='size-8 rounded-full object-cover'
                 />
                 {album?.data.contributors.map((c, i) => (
@@ -350,10 +351,12 @@ const AlbumPage = () => {
                           )}
                         </div>
                         <div className='flex items-center gap-3'>
-                          <img
+                          <Image
                             src={track.data.album.cover_medium}
                             alt={track.data.title}
                             className='size-10 rounded-[3px]'
+                            width={20}
+                            height={20}
                           />
 
                           <div>

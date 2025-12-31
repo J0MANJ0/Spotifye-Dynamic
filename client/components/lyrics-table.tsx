@@ -10,8 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { Calendar, Music, Trash2 } from 'lucide-react';
-import { Button } from './ui/button';
+import { Calendar } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,
@@ -20,9 +19,8 @@ import {
   PaginationPrevious,
 } from './ui/pagination';
 
-type Props = {};
 export const LyrcisTable = () => {
-  const { lrcs, loadingLrc: loading, fetchLrcs } = useMusicStore();
+  const { lrcs, fetchLrcs } = useMusicStore();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -46,7 +44,6 @@ export const LyrcisTable = () => {
     fetchLrcs();
   }, [fetchLrcs]);
 
-  console.log(lrcs);
   return (
     <div className='space-y-4'>
       <Table>

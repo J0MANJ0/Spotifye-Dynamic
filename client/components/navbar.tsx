@@ -8,13 +8,10 @@ import { useNavigationHistory } from '@/hooks/use-nav';
 import HomeIcon from '@mui/icons-material/Home';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import ActionSearchBar from './kokonutui/action-search-bar';
 import { Input } from './ui/input';
-import { Heart, LayoutDashboard, Search, User } from 'lucide-react';
+import { Heart, Search, User } from 'lucide-react';
 import { useAuthStore } from '@/stores/use-auth-store';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from './ui/button';
 import { SignInOauthBtn } from './sign-in-oauth-btn';
 import { Badge } from './ui/badge';
 import GradientButton from './kokonutui/gradient-button';
@@ -27,7 +24,6 @@ export const Navbar = () => {
   const { canGoBack, canGoForward, goBack, goForward, pathname, router } =
     useNavigationHistory();
 
-  const unseenMessages = 10;
   return (
     <nav className='h-10 bg-black p-4 my-2 flex justify-between items-center'>
       <div className='flex justify-center items-center gap-2 ml-8'>

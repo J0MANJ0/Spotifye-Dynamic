@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,7 +16,7 @@ import { X } from 'lucide-react';
 export const CreditsDialog = () => {
   const [open, setOpen] = useState(false);
   const { currentTrack } = usePlayerStore();
-  const { fetchAlbumDialog, albumDialog, albums } = useMusicStore();
+  const { fetchAlbumDialog, albumDialog } = useMusicStore();
 
   useEffect(() => {
     if (currentTrack) fetchAlbumDialog(currentTrack?.data?.album?.id);
@@ -112,7 +110,7 @@ export const CreditsDialog = () => {
               </div>
               <div>
                 <p className='font-mono text-muted-foreground text-xs'>
-                  {albumDialog?.data.genres.data.map((g, i) => (
+                  {albumDialog?.data.genres.data.map((g) => (
                     <span key={g.id}>{g.name}</span>
                   ))}
                 </p>

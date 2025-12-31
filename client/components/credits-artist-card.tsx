@@ -3,10 +3,7 @@
 import { useFollowStore } from '@/stores/use-follow-store';
 import { Button } from './ui/button';
 import { useNavigationHistory } from '@/hooks/use-nav';
-import { useMusicStore } from '@/stores/use-music-store';
-import { useEffect, useState } from 'react';
 import { ArtistTrackInfo } from '@/types';
-import { Loader } from 'lucide-react';
 
 type Props = {
   artist: ArtistTrackInfo;

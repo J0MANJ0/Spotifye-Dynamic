@@ -26,7 +26,7 @@ export const SongDisplay = () => {
   useEffect(() => {
     if (!currentTrack) return;
     setGradient(bgGradientDisplay());
-  }, [currentTrack?.trackId]);
+  }, [currentTrack?.trackId, currentTrack]);
 
   if (!mounted) return null;
 

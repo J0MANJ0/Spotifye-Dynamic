@@ -1,5 +1,4 @@
 import { Tooltip } from '@mui/material';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { motion } from 'framer-motion';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -9,6 +8,7 @@ import React from 'react';
 type Props = {
   trackId: string;
 };
+
 export const ToggleLikeSong = ({ trackId }: Props) => {
   const { likedSongs, like, unLike } = useMusicStore();
 
@@ -29,7 +29,7 @@ export const ToggleLikeSong = ({ trackId }: Props) => {
     >
       <motion.button
         className='size-5 p-2 rounded-full text-black flex justify-center items-center cursor-pointer'
-        onClick={handleClick}
+        onClick={(e) => handleClick(e)}
         initial={{ scale: 0.8, opacity: 0, y: -30 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.8, opacity: 0 }}

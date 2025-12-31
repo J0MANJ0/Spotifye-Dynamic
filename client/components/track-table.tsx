@@ -1,7 +1,7 @@
 'use client';
 
 import { useMusicStore } from '@/stores/use-music-store';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ import {
 } from './ui/pagination';
 
 export const TrackTable = () => {
-  const { tracks, loadingTrack: loading, deleteTrack } = useMusicStore();
+  const { tracks, deleteTrack } = useMusicStore();
   const [currentPage, setCurrentPage] = useState(1);
   const items = 10;
   const pages = Math.ceil(tracks.length / items);

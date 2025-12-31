@@ -2,9 +2,8 @@
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMusicStore } from '@/stores/use-music-store';
-import { AnimatePresence, motion } from 'framer-motion';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { Loader, MoreHorizontal, Play } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -22,13 +21,7 @@ import { usePlayerStore } from '@/stores/use-player-store';
 import { Track } from '@/types';
 
 const ArtistPage = () => {
-  const {
-    artistPage,
-    loadingArtistPage: loading,
-    likedSongs,
-    tracks,
-    fetchArtistPage,
-  } = useMusicStore();
+  const { artistPage, likedSongs, tracks, fetchArtistPage } = useMusicStore();
   const { isPlaying, currentTrack, toggleSong, playAlbum, artistAlbumPlaying } =
     usePlayerStore();
   const { followedArtists, followTarget, unfollowTarget } = useFollowStore();

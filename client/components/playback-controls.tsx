@@ -9,8 +9,6 @@ export const PlaybackControls = () => {
       <div className='flex justify-between items-center h-full gap-6'>
         <PlaySongInfo />
         <PlayControls />
-
-        {/*  */}
         <PlayInteracts />
       </div>
     </footer>

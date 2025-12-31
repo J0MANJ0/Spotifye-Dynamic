@@ -35,22 +35,6 @@ export const LiveTrack = () => {
 
   const scrollToCurrent = useRef<HTMLImageElement | null>(null);
 
-  if (!currentTrack) {
-    return (
-      <div className='size-full bg-zinc-900 rounded-md flex flex-col p-4 gap-5'>
-        <div className='flex justify-center items-center gap-4 flex-col'>
-          <img
-            src='/spotify.png'
-            alt='logo'
-            className='object-cover size-9 animate-bounce transition-all'
-          />
-          <h3 className='text-md font-bold text-gray-300'>No Track Yet!</h3>
-        </div>
-        <hr className='w-full bg-zinc-500' />
-      </div>
-    );
-  }
-
   useEffect(() => {
     if (
       progress.toFixed(0).toString() === '90' &&
@@ -126,14 +110,14 @@ export const LiveTrack = () => {
       .filter((a) => a?.data?.id === currentTrack?.data?.album?.id)[0]
       ?.tracks.filter((s) => s?.trackId !== currentTrack?.trackId);
     return filtered?.sort(() => Math.random() - 0.5).slice(0, 4);
-  }, [currentTrack?.data?.album?.id]);
+  }, [currentTrack?.data?.album?.id, albums]);
 
   const moreByArtist = useMemo(() => {
     const filtered = tracks.filter(
-      (t) => t.data.artist.id === currentTrack.data.artist.id
+      (t) => t?.data?.artist?.id === currentTrack?.data?.artist?.id
     );
     return filtered.sort(() => Math.random() - 0.5).slice(0, 5);
-  }, [currentTrack?.data?.artist?.id]);
+  }, [currentTrack?.data?.artist?.id, tracks]);
 
   const relatedAlbums = useMemo(() => {
     const filtered = albums.filter(
@@ -143,7 +127,7 @@ export const LiveTrack = () => {
     );
 
     return filtered.sort(() => Math.random() - 0.5).slice(0, 4);
-  }, [currentTrack.trackId, currentAlbum?.albumId]);
+  }, [currentTrack?.trackId, currentAlbum?.albumId, albums]);
 
   const handlePlayAlbum = (album: Album) => {
     if (!album) return;
@@ -174,6 +158,22 @@ export const LiveTrack = () => {
     const iscurrentTrack = currentTrack?._id === track._id;
     iscurrentTrack ? toggleSong() : setcurrentTrack(track);
   };
+
+  if (!currentTrack) {
+    return (
+      <div className='size-full bg-zinc-900 rounded-md flex flex-col p-4 gap-5'>
+        <div className='flex justify-center items-center gap-4 flex-col'>
+          <img
+            src='/spotify.png'
+            alt='logo'
+            className='object-cover size-9 animate-bounce transition-all'
+          />
+          <h3 className='text-md font-bold text-gray-300'>No Track Yet!</h3>
+        </div>
+        <hr className='w-full bg-zinc-500' />
+      </div>
+    );
+  }
 
   return (
     <div className='h-full w-full bg-zinc-900 rounded-md flex flex-col p-4 gap-5'>

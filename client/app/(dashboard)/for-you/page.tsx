@@ -13,7 +13,6 @@ import {
 import { useMusicStore } from '@/stores/use-music-store';
 import { usePlayerStore } from '@/stores/use-player-store';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Tooltip } from '@mui/material';
 import PauseIcon from '@mui/icons-material/Pause';
 import { Track } from '@/types';
@@ -21,11 +20,10 @@ import { useUser } from '@clerk/nextjs';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { Clock, Play } from 'lucide-react';
-import { SearchFilterDropdown } from '@/components/search-filter-dropdown';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Fuse from 'fuse.js';
 import { useNavigationHistory } from '@/hooks/use-nav';
 import { ToggleLikeSong } from '@/components/toggle-like';
+
 const MadeForYouPage = () => {
   const [gradient, setGradient] = useState('');
   const [gradientActive, setGradientActive] = useState('');
@@ -36,15 +34,7 @@ const MadeForYouPage = () => {
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
   const { user } = useUser();
-  const {
-    madeforyou,
-    fetchLikedSongs,
-    fetchMadeForYou,
-    unLike,
-    reverseSongsOrder,
-    searchKeys,
-    sortKey,
-  } = useMusicStore();
+  const { madeforyou, reverseSongsOrder } = useMusicStore();
   const {
     isPlaying,
     currentTrack,
@@ -70,15 +60,15 @@ const MadeForYouPage = () => {
     }
   };
 
-  const activeFilterKeys = useMemo(() => {
-    return searchKeys.length > 0 ? searchKeys : ['title', 'artist'];
-  }, [searchKeys]);
+  // const activeFilterKeys = useMemo(() => {
+  //   return searchKeys.length > 0 ? searchKeys : ['title', 'artist'];
+  // }, [searchKeys]);
 
   const filteredLikedSongs = useMemo(() => {
     const sortedSongs = [...madeforyou];
 
     return reverseSongsOrder ? sortedSongs.reverse() : sortedSongs;
-  }, []);
+  }, [madeforyou]);
 
   const handlePlaySong = (song: Track) => {
     if (!filteredLikedSongs) return;
@@ -99,10 +89,16 @@ const MadeForYouPage = () => {
         block: 'center',
       });
     }
-  }, [filteredLikedSongs, currentTrack?._id]);
+  }, [
+    filteredLikedSongs,
+    currentTrack?._id,
+    currentTrack,
+    scrollToCurrent.current,
+  ]);
+
   useEffect(() => {
     usePlayerStore.setState({ queue: madeforyou });
-  }, []);
+  }, [madeforyou]);
 
   useEffect(() => {
     setGradient(bgGradientLiked());

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMusicStore } from '@/stores/use-music-store';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Table,
   TableBody,

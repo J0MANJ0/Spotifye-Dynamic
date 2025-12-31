@@ -14,7 +14,7 @@ import { useUser } from '@clerk/nextjs';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { formatTime, skipBackward, skipForward } from '@/lib/utils';
 import { useMusicStore } from '@/stores/use-music-store';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const PlayControls = () => {
   const { user } = useUser();
@@ -31,25 +31,17 @@ export const PlayControls = () => {
     toggleSong,
     toggleShuffle,
     audioRef,
-    seekTo,
   } = usePlayerStore();
 
-  const [volume, setVolume] = useState(65);
   const [duration, setDuration] = useState(0);
   const [currentTimeApp, setCurrentTimeApp] = useState(0);
   const { currentAlbum } = useMusicStore();
 
   useEffect(() => {
-    if (audioRef) {
-      audioRef.volume = volume / 100;
-    }
-  }, [volume]);
-
-  useEffect(() => {
     if (!audioRef) return;
 
     audioRef.currentTime = currentTimeApp;
-  }, [audioRef]);
+  }, [audioRef, currentTimeApp]);
 
   useEffect(() => {
     const audio = audioRef;
@@ -67,7 +59,7 @@ export const PlayControls = () => {
     };
 
     audio.addEventListener('ended', handleEnded);
-  }, [currentTrack]);
+  }, [currentTrack, audioRef]);
 
   const handleSeek = (value: number[]) => {
     if (currentTrack) {

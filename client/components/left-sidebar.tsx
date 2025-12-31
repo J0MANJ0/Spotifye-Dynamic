@@ -16,16 +16,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMusicStore } from '@/stores/use-music-store';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, Library } from 'lucide-react';
+import { Library } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { HighlightedText } from './text-highligt';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { PlaylistSkeleton } from './playlist-skeleton';
 import Fuse from 'fuse.js';
 import { Album } from '@/types';
-import { useFollowStore } from '@/stores/use-follow-store';
 import { useChartStore } from '@/stores/use-chart-store';
-import { useSocketStore } from '@/stores/use-socket-store';
 
 export const LeftSidebar = () => {
   const { user } = useUser();
@@ -36,23 +34,11 @@ export const LeftSidebar = () => {
     currentAlbum,
     loadingAlbums: loading,
   } = useMusicStore();
-  const { emit, on } = useSocketStore();
 
   const { podcasts } = useChartStore();
 
-  const {
-    currentTrack,
-    isPlaying,
-    toggleSong,
-    playAlbum,
-    likedAlbumPlaying,
-    repeatMode,
-    queue,
-    shuffle,
-    shuffledQueue,
-    currentIndex,
-    currentTime,
-  } = usePlayerStore();
+  const { currentTrack, isPlaying, toggleSong, playAlbum, likedAlbumPlaying } =
+    usePlayerStore();
 
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
@@ -117,39 +103,17 @@ export const LeftSidebar = () => {
   };
 
   useEffect(() => {
-    emit('playback-update', {
-      currentAlbum,
-      currentTrack,
-      isPlaying,
-      queue,
-      currentIndex,
-      currentTime,
-      repeatMode,
-      shuffle,
-      shuffledQueue,
-    });
-  }, [currentTrack, currentAlbum, currentTime, repeatMode, queue, emit]);
-
-  useEffect(() => {
-    emit('playback:play', {
-      track: currentTrack,
-      isPlaying,
-      position: currentTime,
-    });
-  }, [on]);
-
-  useEffect(() => {
     if (
       scrollToCurrent.current &&
       currentAlbum &&
-      location.pathname.includes(currentAlbum._id)
+      pathname.includes(currentAlbum._id)
     ) {
       scrollToCurrent.current.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
       });
     }
-  }, [currentAlbum?._id]);
+  }, [currentAlbum?._id, scrollToCurrent.current, currentAlbum]);
 
   return (
     <div className='h-full flex flex-col gap-1'>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMusicStore } from '@/stores/use-music-store';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,

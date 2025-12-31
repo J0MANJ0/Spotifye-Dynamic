@@ -1,7 +1,6 @@
 import { RefreshCw, WifiOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import Loader from './kokonutui/loader';
 
 export const Offline = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -52,10 +51,10 @@ export const Offline = () => {
         }}
         className='text-6xl font-bold text-gray-200'
       >
-        You're offline!
+        You&#39;re offline!
       </motion.h2>
       <p className='text-sm text-gray-400'>
-        Make sure you're online. Spotifye works best with an internet
+        Make sure you&#39;re online. Spotifye works best with an internet
         connection.
       </p>
 

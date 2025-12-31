@@ -8,7 +8,6 @@ import {
 } from './ui/resizable';
 import React, { useEffect, useState } from 'react';
 import { Navbar } from './navbar';
-import { SongDisplay } from './track-display';
 import { PlaybackControls } from './playback-controls';
 import { LeftSidebar } from './left-sidebar';
 import { AudioPlayer } from '@/hooks/use-audio';
@@ -63,7 +62,6 @@ export const MainLayout = ({ children }: Props) => {
       >
         {isOnline ? (
           <div className='h-screen bg-black flex flex-col'>
-            {/* <SongDisplay /> */}
             <Navbar />
             <ResizablePanelGroup
               direction='horizontal'

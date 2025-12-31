@@ -14,7 +14,7 @@ import {
 import { Tooltip } from '@mui/material';
 import DownloadSharpIcon from '@mui/icons-material/DownloadSharp';
 import { Slider } from './ui/slider';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigationHistory } from '@/hooks/use-nav';
 import { useUser } from '@clerk/nextjs';
 import { useMusicStore } from '@/stores/use-music-store';
@@ -32,7 +32,7 @@ export const PlayInteracts = () => {
     if (audioRef) {
       audioRef.volume = volume / 100;
     }
-  }, [volume]);
+  }, [volume, audioRef]);
 
   return (
     <div className='sm:flex items-center gap-4 min-w-[180px] w-[30%] justify-end'>

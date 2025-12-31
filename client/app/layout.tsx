@@ -5,9 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
-import SocketProvider from '@/providers/socket.provider';
 import ServerProvider from '@/providers/server.provider';
-import AuthProvider from '@/providers/auth-provider';
 
 const outfitFont = Outfit({
   subsets: ['latin'],
@@ -40,7 +38,6 @@ export default function RootLayout({
           >
             <Toaster />
             <ServerProvider />
-            {/* <SocketProvider /> */}
             {children}
             <ToastContainer position='bottom-right' />
           </ThemeProvider>

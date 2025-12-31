@@ -13,7 +13,7 @@ export const NoLyrics = ({ trackId }: { trackId: number }) => {
 
   useEffect(() => {
     setIdx(Math.floor(Math.random() * messages.length));
-  }, [trackId]);
+  }, [trackId, messages.length]);
 
   return (
     <div className='w-full h-full flex flex-col justify-center items-center text-center px-5 rounded-md bg-zinc-600 relative'>

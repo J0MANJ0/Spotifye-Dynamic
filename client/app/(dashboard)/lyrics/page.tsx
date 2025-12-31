@@ -4,7 +4,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { bgGradientLyrics, cn } from '@/lib/utils';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
 import { NoLyrics } from '@/components/no-lyrics';
 import { motion } from 'framer-motion';
 import { useMusicStore } from '@/stores/use-music-store';
@@ -36,7 +35,7 @@ const LyricsPage = () => {
   useEffect(() => {
     if (!currentTrack) return;
     fetchLrc(currentTrack?.trackId);
-  }, [currentTrack?.trackId, fetchLrc]);
+  }, [currentTrack?.trackId, currentTrack, fetchLrc]);
 
   const activeIndex = lrcLyrics.findIndex(
     (line, i) =>
@@ -53,7 +52,7 @@ const LyricsPage = () => {
       behavior: 'smooth',
       block: 'center',
     });
-  }, []);
+  }, [activeLineRef.current]);
 
   useEffect(() => {
     if (activeIndex === -1 || !scrollAreaRef.current || !activeLineRef.current)
@@ -86,7 +85,7 @@ const LyricsPage = () => {
     }, 100);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [activeIndex]);
 
   useEffect(() => {
     if (activeIndex !== -1) {
@@ -95,7 +94,7 @@ const LyricsPage = () => {
         block: 'center',
       });
     }
-  }, [currentTrack?.trackId]);
+  }, [currentTrack?.trackId, activeIndex]);
 
   useEffect(() => {
     if (!showSyncBtn)

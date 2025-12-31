@@ -7,7 +7,6 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { UsersListSkeleton } from './users-skeleton';
 
-type Props = {};
 export const UsersList = () => {
   const { user } = useUser();
   const {

@@ -5,10 +5,8 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 import LoopIcon from '@mui/icons-material/Loop';
 import { usePlayerStore } from '@/stores/use-player-store';
-import { useUser } from '@clerk/nextjs';
 
 export const RepeatMode = () => {
-  const { user } = useUser();
   const { currentTrack, repeatMode, togglRepeatMode } = usePlayerStore();
   return (
     <Tooltip

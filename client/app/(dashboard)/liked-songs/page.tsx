@@ -22,10 +22,10 @@ import { useUser } from '@clerk/nextjs';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { Clock, Play } from 'lucide-react';
-import { SearchFilterDropdown } from '@/components/search-filter-dropdown';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 import { useNavigationHistory } from '@/hooks/use-nav';
+
 const LikedSongsPage = () => {
   const [gradient, setGradient] = useState('');
   const [gradientActive, setGradientActive] = useState('');
@@ -36,14 +36,8 @@ const LikedSongsPage = () => {
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
   const { user } = useUser();
-  const {
-    likedSongs,
-    fetchLikedSongs,
-    unLike,
-    reverseSongsOrder,
-    searchKeys,
-    sortKey,
-  } = useMusicStore();
+  const { likedSongs, unLike, reverseSongsOrder, searchKeys, sortKey } =
+    useMusicStore();
   const { isPlaying, likedAlbumPlaying, currentTrack, playAlbum, toggleSong } =
     usePlayerStore();
 

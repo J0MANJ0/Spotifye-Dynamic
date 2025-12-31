@@ -1,4 +1,4 @@
-import { Track, TrackData } from '@/types';
+import { Track } from '@/types';
 import { SectionGridSkeleton } from './section-grid-skeleton';
 import { useNavigationHistory } from '@/hooks/use-nav';
 import { PlayBtn } from './play-btn';
@@ -18,9 +18,9 @@ export const SectionGrid = ({
   href,
   subTitle,
 }: Props) => {
-  if (loading) return <SectionGridSkeleton />;
-
   const { router } = useNavigationHistory();
+
+  if (loading) return <SectionGridSkeleton />;
 
   return (
     <div className='mb-8'>
