@@ -22,7 +22,7 @@ const AuthProvider = ({ children }: Props) => {
   const { getToken, userId } = useAuth();
   const [loading, setLoading] = useState(false);
   const { checkAdmin, getUser, logout } = useAuthStore();
-  const { connect, disconnect } = useSocketStore();
+  const { initSocket, disconnect } = useSocketStore();
 
   useAuthInterceptor();
   useEffect(() => {
@@ -34,8 +34,8 @@ const AuthProvider = ({ children }: Props) => {
 
         if (token) await checkAdmin();
 
-        if (userId) {
-          connect(userId);
+        if (userId && token) {
+          initSocket(token, userId);
           getUser(); // ensure socket connection
         } else {
           logout();
