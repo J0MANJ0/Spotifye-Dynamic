@@ -1,0 +1,24 @@
+import 'dotenv/config';
+
+export const ENV = {
+  PORT: process.env.PORT!,
+  DEEZER_BASE: process.env.DEEZER_BASE!,
+  LYRICS_BASE: process.env.LYRICS_BASE!,
+  CONN_STR: process.env.CONN_STR!,
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY!,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET!,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL!,
+  CLIENT_URL: process.env.CLIENT_URL!,
+  LRC_LIB: process.env.LRC_LIB!,
+  REDIS_URL: process.env.REDIS_URL!,
+  NODE_ENV: process.env.NODE_ENV!,
+  LOG_LEVEL: process.env.LOG_LEVEL!,
+  LOG_DIR: process.env.LOG_DIR!,
+  LOG_MAX_SIZE: process.env.LOG_MAX_SIZE!,
+  LOG_MAX_FILES: process.env.LOG_MAX_FILES!,
+  LOG_SOCKET_EVENTS: process.env.LOG_SOCKET_EVENTS!,
+  LOG_SOCKET_PAYLOADS: process.env.LOG_SOCKET_PAYLOADS!,
+  CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY!,
+  CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY!,
+};

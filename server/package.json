@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
+    "@clerk/express": "^1.7.57",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "axios": "^1.13.2",
+    "cloudinary": "^2.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-fileupload": "^1.5.2",
+    "ioredis": "^5.8.2",
+    "mongoose": "^9.0.1",
+    "redis": "^5.10.0",
+    "socket.io": "^4.8.3",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "scripts": {
+    "server": "nodemon --watch src --ext ts --exec tsx src/server.ts"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/express-fileupload": "^1.5.1",
+    "@types/node": "^24.10.2",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

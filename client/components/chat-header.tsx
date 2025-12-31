@@ -1,0 +1,34 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { useChatStore } from '@/stores/use-chat-store';
+import { Tooltip } from '@mui/material';
+
+export const ChatHeader = () => {
+  const { selectedUser, onlineUsers, setSelectedUser } = useChatStore();
+
+  if (!selectedUser) return null;
+
+  return (
+    <div className='p-4 border-b border-zinc-800 flex justify-between items-center'>
+      <div className='flex items-center gap-3'>
+        <Avatar>
+          <AvatarImage src={selectedUser.imageUrl} />
+          <AvatarFallback>{selectedUser.fullName[0]}</AvatarFallback>
+        </Avatar>
+        <div>
+          <h2 className='font-medium'>{selectedUser.fullName}</h2>
+          <p className='text-sm text-zinc-400'>
+            {onlineUsers.has(selectedUser.clerkId) ? 'Online' : 'Offline'}
+          </p>
+        </div>
+      </div>
+      <div>
+        <Tooltip placement='bottom' title='Close Chat'>
+          <button onClick={() => setSelectedUser(null)}>
+            <CloseOutlinedIcon fontSize='medium' />
+          </button>
+        </Tooltip>
+      </div>
+    </div>
+  );
+};
