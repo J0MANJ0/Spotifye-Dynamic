@@ -3,6 +3,7 @@
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/express": "^1.7.57",
     "@socket.io/redis-adapter": "^8.3.0",
+    "@types/node": "^24.10.2",
     "axios": "^1.13.2",
     "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
@@ -26,7 +27,6 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-fileupload": "^1.5.1",
-    "@types/node": "^24.10.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
