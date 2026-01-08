@@ -6,6 +6,9 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
 import ServerProvider from '@/providers/server.provider';
+import SocketProvider from '@/providers/socket.provider';
+import PlaybackProvider from '@/providers/playback.provider';
+import { PlaybackResolver } from '@/hooks/useplaybackresolver';
 
 const outfitFont = Outfit({
   subsets: ['latin'],
@@ -37,7 +40,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
+            <PlaybackProvider />
             <ServerProvider />
+            <SocketProvider />
             {children}
             <ToastContainer position='bottom-right' />
           </ThemeProvider>

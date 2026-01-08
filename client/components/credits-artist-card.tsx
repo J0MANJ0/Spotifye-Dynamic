@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const CreditsArtistCard = ({ artist }: Props) => {
-  const { followedArtists, followTarget, unfollowTarget, loading } =
+  const { followedArtists, FollowArtist, unFollowArtist, loading } =
     useFollowStore();
 
   const { router } = useNavigationHistory();
@@ -21,8 +21,8 @@ export const CreditsArtistCard = ({ artist }: Props) => {
 
   const handleSubmit = () => {
     isFollowed
-      ? unfollowTarget('artists', artist?.id, null)
-      : followTarget('artists', artist?.id, null);
+      ? unFollowArtist('artists', artist?.id, null)
+      : FollowArtist('artists', artist?.id, null);
   };
 
   return (

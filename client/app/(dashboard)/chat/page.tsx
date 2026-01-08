@@ -41,6 +41,8 @@ const ChatPage = () => {
   useEffect(() => {
     if (selectedUser) fetchMessages(selectedUser.clerkId);
   }, [selectedUser, fetchMessages]);
+
+  console.log({ messages });
   return (
     <div className='rounded-md h-full bg-linear-to-b from-zinc-800 to-zinc-900 overflow-hidden'>
       <Topbar />
@@ -56,6 +58,7 @@ const ChatPage = () => {
                 <div className='p-4 space-y-4'>
                   {messages.map((message) => (
                     <div
+                      ref={scrollEnd}
                       key={message._id}
                       className={`flex items-start gap-4 ${
                         message.senderId === user?.id ? 'flex-row-reverse' : ''

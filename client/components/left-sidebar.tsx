@@ -24,6 +24,8 @@ import { PlaylistSkeleton } from './playlist-skeleton';
 import Fuse from 'fuse.js';
 import { Album } from '@/types';
 import { useChartStore } from '@/stores/use-chart-store';
+import { useAuthStore } from '@/stores/use-auth-store';
+import { Sidebar, SidebarTrigger } from './ui/sidebar';
 
 export const LeftSidebar = () => {
   const { user } = useUser();
@@ -31,14 +33,21 @@ export const LeftSidebar = () => {
   const {
     albums,
     likedSongs,
-    currentAlbum,
+    currentAlbumId,
     loadingAlbums: loading,
+    albumsByIds,
   } = useMusicStore();
+  const { explicitContent } = useAuthStore();
 
   const { podcasts } = useChartStore();
 
-  const { currentTrack, isPlaying, toggleSong, playAlbum, likedAlbumPlaying } =
-    usePlayerStore();
+  const {
+    currentTrackId,
+    isPlaying,
+    toggleSong,
+    playAlbum,
+    likedAlbumPlaying,
+  } = usePlayerStore();
 
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
@@ -46,74 +55,74 @@ export const LeftSidebar = () => {
   const [exp, setExp] = useState(false);
 
   const filteredAlbums = useMemo(() => {
-    if (!searchAlbum) return albums.map((album) => ({ ...album, matches: [] }));
+    if (!explicitContent) {
+      const filtered = albums?.filter((a) => !a?.data?.explicit_lyrics);
+      return filtered;
+    }
+    return albums;
+  }, [searchAlbum, albums, explicitContent]);
 
-    const fuse = new Fuse(albums, {
-      keys: ['title', 'artist'],
-      threshold: 0.3,
-      includeMatches: true,
-    });
-
-    const results = fuse.search(searchAlbum);
-
-    return results.map(({ item, matches }) => ({
-      ...item,
-      matches,
-    }));
-  }, [searchAlbum, albums]);
+  const filteredLikedSongs = useMemo(() => {
+    if (!explicitContent) {
+      return likedSongs.filter((t) => !t?.data?.explicit_lyrics);
+    }
+    return likedSongs;
+  }, [explicitContent, likedSongs]);
 
   const handlePlayLikedAlbum = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!likedSongs) return;
-    const isCurrentAlbumPlaying = likedSongs.some(
-      (song) => song._id === currentTrack?._id
+    const iscurrentAlbumIdPlaying = likedSongs.some(
+      (song) => song._id === currentTrackId
     );
 
-    if (isCurrentAlbumPlaying && likedAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying && likedAlbumPlaying) {
       toggleSong();
     } else {
-      playAlbum(likedSongs);
+      const q = likedSongs.map((t) => t._id);
+      playAlbum(q, 'likedSongsAlbum');
       usePlayerStore.setState({
         likedAlbumPlaying: true,
         madeForYouAlbumPlaying: false,
         artistAlbumPlaying: false,
       });
-      useMusicStore.setState({ currentAlbum: null });
+      useMusicStore.setState({ currentAlbumId: null });
     }
   };
 
   const handlePlayAlbum = (e: React.MouseEvent, album: Album) => {
     e.stopPropagation();
     if (!album) return;
-    const isCurrentAlbumPlaying = album?.tracks.some(
-      (track) => track._id === currentTrack?._id
+    const iscurrentAlbumIdPlaying = album?.tracks.some(
+      (track) => track._id === currentTrackId
     );
 
-    if (isCurrentAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying) {
       toggleSong();
     } else {
-      playAlbum(album.tracks);
+      const q = album.tracks.map((t) => t._id);
+      playAlbum(q, 'album', album._id);
       usePlayerStore.setState({
         likedAlbumPlaying: false,
         madeForYouAlbumPlaying: false,
         artistAlbumPlaying: false,
       });
-      useMusicStore.setState({ currentAlbum: album });
+      useMusicStore.setState({ currentAlbumId: album._id });
     }
   };
 
   useEffect(() => {
     if (
       scrollToCurrent.current &&
-      currentAlbum &&
-      pathname.includes(currentAlbum._id)
+      currentAlbumId &&
+      pathname.includes(currentAlbumId)
     ) {
       scrollToCurrent.current.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
       });
     }
-  }, [currentAlbum?._id, scrollToCurrent.current, currentAlbum]);
+  }, [currentAlbumId, scrollToCurrent.current]);
 
   return (
     <div className='h-full flex flex-col gap-1'>
@@ -162,7 +171,7 @@ export const LeftSidebar = () => {
                   pathname === '/chat' ? 'text-green-400' : 'text-white'
                 }`}
               >
-                Messages
+                Chats
               </span>
             </Link>
           </SignedIn>
@@ -294,8 +303,8 @@ export const LeftSidebar = () => {
                       Liked Songs
                     </p>
                     <p className='font-medium text-zinc-400 truncate'>
-                      Playlist • {likedSongs?.length}{' '}
-                      {likedSongs?.length === 1 ? 'episode' : 'songs'}
+                      Playlist • {filteredLikedSongs?.length}{' '}
+                      {filteredLikedSongs?.length === 1 ? 'song' : 'songs'}
                     </p>
                   </div>
                   {isPlaying && likedAlbumPlaying && (
@@ -330,7 +339,7 @@ export const LeftSidebar = () => {
                       className='hidden group-hover:block absolute left-4 top-4'
                       onClick={(e) => handlePlayAlbum(e, album)}
                     >
-                      {isPlaying && currentAlbum?._id === album?._id ? (
+                      {isPlaying && currentAlbumId === album?._id ? (
                         <PauseIcon fontSize='large' sx={{ color: '#edf6f9' }} />
                       ) : (
                         <PlayArrowIcon
@@ -346,39 +355,23 @@ export const LeftSidebar = () => {
                       className='size-12 rounded-md shrink-0 object-cover'
                     />
                     <div className='flex-1 min-w-0 hidden md:block'>
-                      {!searchAlbum ? (
+                      {!searchAlbum && (
                         <p
                           className={`font-medium truncate line-clamp-1 ${
-                            currentAlbum?._id === album?._id && 'text-green-400'
+                            currentAlbumId === album?._id && 'text-green-400'
                           }`}
                         >
                           {album.data.title}
                         </p>
-                      ) : (
-                        <HighlightedText
-                          text={album.data.title}
-                          indices={
-                            album.matches?.find((m) => m.key === 'title')
-                              ?.indices
-                          }
-                        />
                       )}
-                      {!searchAlbum ? (
+                      {!searchAlbum && (
                         <p className='font-medium text-zinc-400 truncate'>
                           Album • {album?.tracks?.length}{' '}
                           {album?.tracks?.length === 1 ? 'song' : 'songs'}
                         </p>
-                      ) : (
-                        <HighlightedText
-                          text={album.data.artist.name}
-                          indices={
-                            album.matches?.find((m) => m.key === 'artist')
-                              ?.indices
-                          }
-                        />
                       )}
                     </div>
-                    {currentAlbum?._id === album?._id && isPlaying && (
+                    {currentAlbumId === album?._id && isPlaying && (
                       <div className='flex justify-center items-center'>
                         <VolumeUpRoundedIcon
                           fontSize='small'

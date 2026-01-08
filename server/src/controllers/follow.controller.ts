@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 import { FOLLOW_REPO } from 'repos/follow.repo';
 import { USER_REPO } from 'repos/user.repo';
 
-const followTarget = asyncHandler(async (req: Request, res: Response) => {
+const FollowArtist = asyncHandler(async (req: Request, res: Response) => {
   const {
     auth: { userId },
     body: { targetType, target, artistId },
@@ -32,7 +32,7 @@ const followTarget = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const unfollowTarget = asyncHandler(async (req: Request, res: Response) => {
+const unFollowArtist = asyncHandler(async (req: Request, res: Response) => {
   const {
     auth: { userId },
     query: { target, targetType, artistId },
@@ -95,8 +95,8 @@ const getFollowedTargets = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const FOLLOW_CONTROLLER = {
-  FOLLOW_TARGET: followTarget,
-  UNFOLLOW_TARGET: unfollowTarget,
+  FOLLOW_TARGET: FollowArtist,
+  UNFOLLOW_TARGET: unFollowArtist,
   TARGET_STATUS: targetStatus,
   GET_FOLLOWED_TARGETS: getFollowedTargets,
 };

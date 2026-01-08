@@ -12,9 +12,9 @@ type Props = {
 export const ToggleLikeSong = ({ trackId }: Props) => {
   const { likedSongs, like, unLike } = useMusicStore();
 
-  if (!likedSongs?.length) return;
-
-  const isLiked = likedSongs.some((track) => track.trackId === Number(trackId));
+  const isLiked = likedSongs.some(
+    (track) => track?.trackId === Number(trackId)
+  );
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();

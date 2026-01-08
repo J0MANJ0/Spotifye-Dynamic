@@ -13,7 +13,7 @@ import { FollowArtistTop } from '@/components/follow-artist-top-card';
 
 const ProfilePage = () => {
   const { router } = useNavigationHistory();
-  const { followedArtists, followTarget, unfollowTarget, getTargets } =
+  const { followedArtists, FollowArtist, unFollowArtist, getTargets } =
     useFollowStore();
   const { artists } = useChartStore();
 
@@ -31,7 +31,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     getTargets('artists');
-  }, [followTarget, unfollowTarget, getTargets]);
+  }, [FollowArtist, unFollowArtist, getTargets]);
 
   return (
     <ScrollArea className='h-full rounded-md bg-zinc-700/30'>

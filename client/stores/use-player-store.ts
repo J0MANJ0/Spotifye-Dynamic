@@ -1,69 +1,92 @@
-import type { Album, Track } from '@/types';
 import { create } from 'zustand';
-import { useChatStore } from './use-chat-store';
 import { useAuthStore } from './use-auth-store';
-import { getDeviceId } from '@/lib/deviceId';
-import { api } from '@/lib/api';
-import toast from 'react-hot-toast';
 import { debounce } from 'lodash';
-import { useMusicStore } from './use-music-store';
 import { useSocketStore } from './use-socket-store';
+import { useMusicStore } from './use-music-store';
+import { Device } from '@/types';
 
 type RepeatMode = 'off' | 'all' | 'one';
 
-let isApplyingRemote: boolean = false;
+type AlbumType =
+  | 'likedSongsAlbum'
+  | 'artistAlbum'
+  | 'madeForYouAlbum'
+  | 'album';
 
-interface Device {
-  id: string;
-  name: string;
+interface PlaybackState {
+  isPlaying: boolean;
+  likedAlbumPlaying: boolean;
+  artistAlbumPlaying: boolean;
+  madeForYouAlbumPlaying: boolean;
+  repeatMode: RepeatMode;
+  volume: number;
+  prevVolume: number;
+  shuffle: boolean;
+  queue: string[];
+  shuffledQueue: string[];
+  currentIndex: number;
+  currentTrackId: string | null;
+  currentTime: number;
+  currentAlbumId: string | null;
+  syncAt: number;
+  explicitContent: boolean;
+  syncReason: 'seek' | 'track-change' | 'join' | null;
 }
 
 interface Props {
-  currentTrack: Track | null;
+  currentTrackId: string | null;
   isPlaying: boolean;
   shuffle: boolean;
-  shuffledQueue: Track[];
-  queue: Track[];
+  shuffledQueue: string[];
+  queue: string[];
   likedAlbumPlaying: boolean;
   artistAlbumPlaying: boolean;
   madeForYouAlbumPlaying: boolean;
   currentIndex: number;
   currentTime: number;
   repeatMode: RepeatMode;
+  volume: number;
+  prevVolume: number;
   progress: number;
   toastShown: boolean;
   audioRef: HTMLAudioElement | null;
   minSize: number;
   isMaxRight: boolean;
   isMaxLeft: boolean;
-  userId: string | null;
+  isActive: boolean;
+  lastSyncAt: number;
+  devices: Device[];
 
   setAudioRef: (ref: HTMLAudioElement) => void;
   seekTo: (time: number) => void;
-  initializeSocketListeners: (
-    userId: string,
-    deviceName: string
-  ) => Promise<void>;
-  getSessions: () => Promise<void>;
-  updateState: (delta: Partial<Props> | object, userId: string | null) => void;
+  setVolume: (volume: number) => void;
+  toggleMute: () => void;
+
   setToastShown: (value: boolean) => void;
-  setProgress: (progress: number, currentTime: number) => void;
+  setProgress: (progress: number) => void;
   setRepeatMode: (mode: RepeatMode) => void;
   setCurrentTime: (currentTime: number) => void;
-  togglRepeatMode: () => void;
+  toggleRepeatMode: () => void;
   toggleShuffle: () => void;
+  playAlbum: (
+    songs: string[],
+    TYPE: AlbumType,
+    albumId?: string | null,
+    startIndex?: number
+  ) => void;
 
-  initializeQueue: (songs: Track[]) => void;
-  playAlbum: (songs: Track[], startIndex?: number) => void;
-
-  setcurrentTrack: (track: Track | null) => void;
+  setcurrentTrackId: (track: string | null) => void;
   toggleSong: () => void;
+  requestSeek: (time: number) => void;
   playNext: () => void;
   playPrevious: () => void;
+  setActiveDevice: (socketId: string) => void;
+
+  syncPlayback: (state: PlaybackState) => void;
 }
 
 export const usePlayerStore = create<Props>((set, get) => ({
-  currentTrack: null,
+  currentTrackId: null,
   isPlaying: false,
   queue: [],
   currentIndex: -1,
@@ -75,69 +98,26 @@ export const usePlayerStore = create<Props>((set, get) => ({
   shuffle: false,
   shuffledQueue: [],
   minSize: 25,
+  volume: 50,
+  prevVolume: 50,
   progress: 0,
   isMaxRight: true,
   isMaxLeft: true,
   audioRef: null,
   toastShown: false,
+  lastSyncAt: 0,
+  isActive: false,
+  devices: [],
 
-  userId: null,
+  setAudioRef: (ref) => {
+    const { isActive } = get();
 
-  initializeSocketListeners: async (userId) => {
-    const { socket } = useChatStore.getState();
-    if (!socket) return;
+    ref.muted = !isActive;
 
-    set({ userId });
-
-    socket.emit('user_connected', { userId });
-
-    socket.emit('register_device', { userId });
-
-    socket.on('resume_music_state', (savedState: any) => {
-      isApplyingRemote = true;
-      set({
-        ...savedState,
-      });
-
-      if (savedState.currentAlbum) {
-        useMusicStore.setState({ currentAlbum: savedState.currentAlbum });
-      }
-
-      setTimeout(() => (isApplyingRemote = false), 50);
-    });
+    set({ audioRef: ref });
   },
-  updateState: (delta, userId) => {
-    const { socket } = useChatStore.getState();
-    const { user } = useAuthStore.getState();
-
-    if (user) return;
-
-    if (!socket || !userId || !delta) return;
-
-    if (typeof isApplyingRemote !== 'undefined' && isApplyingRemote) return;
-
-    socket.emit('update_music_state', {
-      userId,
-      delta,
-    });
-
-    return () => {
-      socket.off('update_music_state');
-      socket.off('music_state_updated');
-    };
-  },
-  getSessions: async () => {
-    const { socket } = useSocketStore.getState();
-
-    if (!socket?.connected) return;
-
-    socket.on('resume_state', (states) => {
-      console.log(states);
-    });
-  },
-  setAudioRef: (ref) => set({ audioRef: ref }),
   seekTo: (time) => {
-    const audio = get().audioRef;
+    const { audioRef: audio } = get();
 
     if (!audio) return;
 
@@ -145,197 +125,197 @@ export const usePlayerStore = create<Props>((set, get) => ({
   },
   setToastShown: (toastShown) => set({ toastShown }),
   setCurrentTime: (currentTime) => set({ currentTime }),
-  setProgress: (progress, currentTime) => {
-    const { userId } = get();
-    const { socket } = useChatStore.getState();
-    const { user } = useAuthStore.getState();
-
-    if (user) return;
-
-    set({ progress, currentTime });
+  setProgress: (progress) => {
+    set({ progress });
   },
   setRepeatMode: (value) => {
-    const { user } = useAuthStore.getState();
-
-    if (!user) return;
     set({ repeatMode: value });
   },
-  togglRepeatMode: () => {
+  toggleRepeatMode: () => {
     const { repeatMode } = get();
-    const { user } = useAuthStore.getState();
+    const { socket, emit } = useSocketStore.getState();
 
-    if (!user) return;
+    if (!socket) return;
 
     const nextMode =
       repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off';
 
-    set({ repeatMode: nextMode });
+    emit('playback:command', { type: 'SET_REPEAT', mode: nextMode });
   },
-
   toggleShuffle: () => {
-    const { shuffle, queue, currentTrack } = get();
+    // const { shuffle, queue, currentTrackId } = get();
+    // const { user } = useAuthStore.getState();
+
+    // if (!user) return;
+
+    // if (!shuffle) {
+    //   const shuffled = [...queue];
+
+    //   // fisher-yates shuffle method
+
+    //   for (let i = shuffled.length - 1; i > 0; i--) {
+    //     const j = Math.floor(Math.random() * (i + 1));
+
+    //     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    //   }
+
+    //   if (currentTrackId) {
+    //     const idx = shuffled.findIndex((s) => s === currentTrackId);
+
+    //     if (idx > -1) {
+    //       [shuffled[0], shuffled[idx]] = [shuffled[idx], shuffled[0]];
+    //     }
+    //   }
+
+    //   setQueueAndSync(shuffled, 0);
+
+    //   set({
+    //     shuffle: true,
+    //     shuffledQueue: shuffled,
+    //     currentIndex: 0,
+    //     currentTrackId: shuffled[0],
+    //   });
+    // } else {
+    //   const currentIndex = currentTrackId
+    //     ? queue.findIndex((s) => s === currentTrackId)
+    //     : 0;
+
+    //   setQueueAndSync([], currentIndex);
+
+    //   set({
+    //     shuffle: false,
+    //     shuffledQueue: [],
+    //     currentIndex,
+    //   });
+    // }
+
+    const { socket, emit } = useSocketStore.getState();
+
+    if (!socket) return;
+
+    emit('playback:command', { type: 'TOGGLE_SHUFFLE' });
+  },
+  playAlbum: (queue, TYPE, albumId, startIndex = 0) => {
+    const { socket, emit } = useSocketStore.getState();
+    const { tracksByIds } = useMusicStore.getState();
+
+    const { user } = useAuthStore.getState();
+    if (!queue.length || !socket || !user) return;
+
+    const {
+      data: {
+        title,
+        artist: { name: artist },
+      },
+    } = tracksByIds[queue[startIndex]];
+
+    emit('playback:command', {
+      type: 'PLAY_ALBUM',
+      queue,
+      startIndex,
+      TYPE,
+      albumId,
+    });
+
+    emit('update:user:activity', {
+      userId: user.clerkId,
+      activity: !get().isPlaying ? `Playing ${title} by ${artist}` : 'Idle',
+    });
+  },
+  setcurrentTrackId: (trackId) => {
+    if (!trackId) return;
+    const { socket, emit } = useSocketStore.getState();
+
+    const { tracksByIds } = useMusicStore.getState();
     const { user } = useAuthStore.getState();
 
-    if (!user) return;
+    const {
+      data: {
+        title,
+        artist: { name: artist },
+      },
+    } = tracksByIds[get().currentTrackId!];
 
-    if (!shuffle) {
-      const shuffled = [...queue];
+    if (!socket || !user) return;
 
-      // fisher-yates shuffle method
+    emit('playback:command', { type: 'SET_TRACK', trackId });
 
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-
-      if (currentTrack) {
-        const idx = shuffled.findIndex((s) => s._id === currentTrack._id);
-
-        if (idx > -1) {
-          [shuffled[0], shuffled[idx]] = [shuffled[idx], shuffled[0]];
-        }
-      }
-
-      set({
-        shuffle: true,
-        shuffledQueue: shuffled,
-        currentIndex: 0,
-        currentTrack: shuffled[0],
-      });
-    } else {
-      const currentIndex = currentTrack
-        ? queue.findIndex((s) => s._id === currentTrack._id)
-        : 0;
-
-      set({
-        shuffle: false,
-        shuffledQueue: [],
-        currentIndex,
-      });
-    }
-  },
-  initializeQueue: (songs) => {
-    set({
-      queue: songs,
-      currentTrack: get().currentTrack || songs[0],
-      currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex,
+    emit('update:user:activity', {
+      userId: user.clerkId,
+      activity: !get().isPlaying ? `Playing ${title} by ${artist}` : 'Idle',
     });
   },
-  playAlbum: (tracks, startIndex = 0) => {
-    if (tracks.length === 0) return;
+  requestSeek: debounce((time: number) => {
+    const { socket, emit } = useSocketStore.getState();
 
-    const track = tracks[startIndex];
+    if (!socket) return;
 
-    const { socket } = useChatStore.getState();
-
-    if (socket.auth) {
-      socket.emit('update_activity', {
-        userId: socket.auth.userId,
-        activity: `Playing ${track.data.title} by ${track.data.artist.name}`,
-      });
-    }
-
-    set({
-      queue: tracks,
-      currentIndex: startIndex,
-      currentTrack: track,
-      isPlaying: true,
-    });
-  },
-  setcurrentTrack: (track) => {
-    if (!track) return;
-
-    const songIdx = get().queue.findIndex((s) => s._id === track._id);
-
-    set({
-      currentTrack: track,
-      isPlaying: true,
-      currentIndex: songIdx !== -1 ? songIdx : get().currentIndex,
-    });
-    const { socket } = useChatStore.getState();
-
-    if (socket.auth) {
-      socket.emit('update_activity', {
-        userId: socket.auth.userId,
-        activity: `Playing ${track.data.title} by ${track.data.artist.name}`,
-      });
-    }
-  },
+    emit('playback:command', { type: 'SEEK', time });
+  }, 700),
   toggleSong: () => {
-    const { currentTrack, isPlaying, userId } = get();
+    const { currentTrackId } = get();
+    const { socket, emit } = useSocketStore.getState();
+    const { tracksByIds } = useMusicStore.getState();
+    const { user } = useAuthStore.getState();
 
-    const newState = !isPlaying;
+    const {
+      data: {
+        title,
+        artist: { name: artist },
+      },
+    } = tracksByIds[currentTrackId!];
 
-    set({
-      isPlaying: newState,
+    if (!socket || !user) return;
+
+    emit('playback:command', {
+      type: 'TOGGLE_PLAY',
     });
-    const socket = useChatStore.getState().socket;
 
-    if (socket.auth) {
-      socket.emit('update_activity', {
-        userId: socket.auth.userId,
-        activity:
-          newState && currentTrack
-            ? `Playing ${currentTrack.data.title} by ${currentTrack.data.artist.name}`
-            : 'Idle',
-      });
-
-      socket.emit('update_music_state', {
-        userId,
-        delta: { isPlaying: newState },
-      });
-    }
+    emit('update:user:activity', {
+      userId: user.clerkId,
+      activity: !get().isPlaying ? `Playing ${title} by ${artist}` : 'Idle',
+    });
   },
   playNext: debounce(() => {
+    const { socket, emit } = useSocketStore.getState();
+
+    const { tracksByIds } = useMusicStore.getState();
+
     const {
-      currentIndex,
-      queue,
+      currentTrackId,
       repeatMode,
-      currentTrack,
+      currentIndex,
       shuffle,
       shuffledQueue,
+      queue,
     } = get();
 
-    set({ toastShown: false });
+    const currentTrack = tracksByIds[currentTrackId!];
+    const { user } = useAuthStore.getState();
 
-    if (repeatMode === 'one' && currentTrack) {
-      const { socket } = useChatStore.getState();
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity:
-            currentTrack &&
-            `Playing ${currentTrack.data.title} by ${currentTrack.data.artist.name}`,
-        });
-      }
-      set({
-        isPlaying: true,
-        currentTrack,
+    if (!socket || !user) return;
+
+    const nextIdx = currentIndex + 1;
+    const list = shuffle ? shuffledQueue : queue;
+
+    emit('playback:command', { type: 'NEXT' });
+
+    if (repeatMode === 'one' && currentTrackId) {
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity:
+          currentTrack &&
+          `Playing ${currentTrack?.data?.title} by ${currentTrack?.data?.artist?.name}`,
       });
-
-      return;
     }
 
-    const list = shuffle ? shuffledQueue : queue;
-    let nextIdx = currentIndex + 1;
+    if (nextIdx) {
+      const nextTrack = tracksByIds[list[nextIdx]];
 
-    if (nextIdx < list.length) {
-      const nextSong = list[nextIdx];
-
-      set({
-        isPlaying: true,
-        currentIndex: nextIdx,
-        currentTrack: nextSong,
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity: `Playing ${nextTrack?.data?.title} by ${nextTrack?.data?.artist?.name}`,
       });
-      const { socket } = useChatStore.getState();
-
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity: `Playing ${nextSong.data.title} by ${nextSong.data.artist.name}`,
-        });
-      }
     } else if (repeatMode === 'all') {
       if (shuffle) {
         const reshuffled = [...queue];
@@ -345,131 +325,159 @@ export const usePlayerStore = create<Props>((set, get) => ({
           [reshuffled[i], reshuffled[j]] = [reshuffled[j], reshuffled[i]];
         }
 
-        const { socket } = useChatStore.getState();
-
-        if (socket.auth) {
-          socket.emit('update_activity', {
-            userId: socket.auth.userId,
-            activity: `Playing ${reshuffled[0]} by ${reshuffled[0].data.artist.name}`,
-          });
-        }
-
-        set({
-          shuffledQueue: reshuffled,
-          currentIndex: 0,
-          currentTrack: reshuffled[0],
-          isPlaying: true,
+        emit('update:user:activity', {
+          userId: user.clerkId,
+          activity: `Playing ${tracksByIds[reshuffled[0]]?.data?.title} by ${
+            tracksByIds[reshuffled[0]]?.data?.artist?.name
+          }`,
         });
       } else {
-        const socket = useChatStore.getState().socket;
-
-        if (socket.auth) {
-          socket.emit('update_activity', {
-            userId: socket.auth.userId,
-            activity: `Playing ${queue[0]} by ${queue[0].data.artist.name}`,
-          });
-        }
-        set({
-          currentIndex: 0,
-          currentTrack: queue[0],
-          isPlaying: true,
+        emit('update:user:activity', {
+          userId: user.clerkId,
+          activity: `Playing ${tracksByIds[queue[0]]?.data?.title} by ${
+            tracksByIds[queue[0]]?.data?.artist?.name
+          }`,
         });
       }
     } else {
-      set({ isPlaying: false });
-
-      const socket = useChatStore.getState().socket;
-
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity: 'Idle',
-        });
-      }
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity: 'Idle',
+      });
     }
   }, 100),
   playPrevious: () => {
+    const { socket, emit } = useSocketStore.getState();
     const {
-      currentIndex,
-      queue,
+      currentTrackId,
       repeatMode,
-      currentTrack,
+      currentIndex,
       shuffle,
       shuffledQueue,
+      queue,
     } = get();
 
-    set({ toastShown: false });
+    const { tracksByIds } = useMusicStore.getState();
 
+    const currentTrack = tracksByIds[get().currentTrackId!];
+    const { user } = useAuthStore.getState();
+
+    if (!socket || !user) return;
+
+    const prevIdx = currentIndex - 1;
     const list = shuffle ? shuffledQueue : queue;
 
+    emit('playback:command', { type: 'PREV' });
+
     if (repeatMode === 'one') {
-      const previousIdx = currentIndex - 1;
-      set({
-        currentTrack: queue[previousIdx],
-        isPlaying: true,
-        currentIndex: previousIdx,
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity: `Playing ${tracksByIds[queue[prevIdx]]?.data?.title} by ${
+          tracksByIds[queue[prevIdx]]?.data?.artist?.name
+        }`,
       });
-
-      const { socket } = useChatStore.getState();
-
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity:
-            currentTrack &&
-            `Playing ${currentTrack.data.title} by ${currentTrack.data.artist.name}`,
-        });
-      }
-      return;
     }
-    const previousIdx = currentIndex - 1;
 
-    if (previousIdx >= 0) {
-      const prevSong = list[previousIdx];
-
-      set({
-        currentIndex: previousIdx,
-        currentTrack: prevSong,
-        isPlaying: true,
+    if (prevIdx >= 0) {
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity: `Playing ${tracksByIds[list[prevIdx]]?.data?.title} by ${
+          tracksByIds[list[prevIdx]]?.data?.artist?.name
+        }`,
       });
-
-      const socket = useChatStore.getState().socket;
-
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity: `Playing ${prevSong.data.title} by ${prevSong.data.artist.name}`,
-        });
-      }
     } else if (repeatMode === 'all') {
       const idx = list.length - 1;
-      set({
-        isPlaying: true,
-        currentIndex: idx,
-        currentTrack: list[idx],
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity: `Playing ${tracksByIds[list[idx]]?.data?.title} by ${
+          tracksByIds[list[idx]]?.data?.artist?.name
+        }`,
       });
-
-      const { socket } = useChatStore.getState();
-
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity:
-            currentTrack &&
-            `Playing ${currentTrack.data.title} by ${currentTrack.data.artist.name}`,
-        });
-      }
     } else {
-      set({ isPlaying: false });
-
-      const { socket } = useChatStore.getState();
-
-      if (socket.auth) {
-        socket.emit('update_activity', {
-          userId: socket.auth.userId,
-          activity: 'Idle',
-        });
-      }
+      emit('update:user:activity', {
+        userId: user.clerkId,
+        activity: 'Idle',
+      });
     }
   },
+  setVolume: (volume) => {
+    const { socket, emit } = useSocketStore.getState();
+
+    if (!socket) return;
+
+    emit('playback:command', { type: 'SET_VOLUME', volume });
+  },
+  setActiveDevice: (socketId) => {
+    const { socket, emit } = useSocketStore.getState();
+
+    if (!socket) return;
+
+    emit('set:active:device', { type: 'SET_ACTIVE', socketId });
+  },
+  toggleMute: () => {
+    const { volume, prevVolume } = get();
+
+    const { socket, emit } = useSocketStore.getState();
+
+    if (!socket) return;
+
+    if (volume === 0) {
+      emit('playback:command', {
+        type: 'SET_VOLUME',
+        volume: prevVolume || 50,
+      });
+    } else {
+      emit('playback:command', { type: 'SET_VOLUME', volume: 0 });
+    }
+  },
+  syncPlayback: (state) => {
+    const { audioRef: audio } = get();
+    let targetTime = state.currentTime;
+
+    // Only apply drift math if it's ongoing playback (not join, seek, or pause)
+    if (
+      state.isPlaying &&
+      state.syncReason !== 'join' &&
+      state.syncReason !== 'track-change'
+    ) {
+      targetTime = state.currentTime + (Date.now() - state.syncAt) / 1000;
+    }
+
+    if (audio) {
+      const drift = Math.abs(audio.currentTime - targetTime);
+      if (drift > 0.4) {
+        audio.currentTime = targetTime;
+      }
+
+      if (state.isPlaying && audio.paused) audio.play().catch(() => {});
+      if (!state.isPlaying && !audio.paused) audio.pause();
+    }
+
+    set({
+      currentTrackId: state.currentTrackId,
+      isPlaying: state.isPlaying,
+      likedAlbumPlaying: state.likedAlbumPlaying,
+      madeForYouAlbumPlaying: state.madeForYouAlbumPlaying,
+      artistAlbumPlaying: state.artistAlbumPlaying,
+      queue: state.queue,
+      currentIndex: state.currentIndex,
+      shuffle: state.shuffle,
+      repeatMode: state.repeatMode,
+      shuffledQueue: state.shuffledQueue,
+      currentTime: targetTime,
+      volume: state.volume,
+      prevVolume: state.prevVolume,
+      lastSyncAt: state.syncAt,
+    });
+
+    useMusicStore.setState({ currentAlbumId: state.currentAlbumId });
+
+    useAuthStore.setState({ explicitContent: state.explicitContent });
+  },
 }));
+
+const computeEffectiveTime = (state: PlaybackState) => {
+  if (!state.isPlaying) return state.currentTime;
+
+  return state.currentTime + (Date.now() - state.syncAt) / 1000;
+};

@@ -1,24 +1,24 @@
 import { api } from '@/lib/api';
-import { Artist, FollowArtist, User } from '@/types';
+import { Artist, FollowArtist, FollowUser, User } from '@/types';
 import toast from 'react-hot-toast';
 import { create } from 'zustand';
 
 type TargetType = 'users' | 'artists';
 
 interface IFollowProps {
-  followedUsers: User[];
+  followedUsers: FollowUser[];
   followedArtists: FollowArtist[];
   loading: boolean;
   loadingStatus: boolean;
   loadingTargets: boolean;
   error: string | null;
 
-  followTarget: (
+  FollowArtist: (
     targetType: TargetType,
     artistId?: number | null,
     target?: string | null
   ) => Promise<void>;
-  unfollowTarget: (
+  unFollowArtist: (
     targetType: TargetType,
     artistId?: number | null,
     target?: string | null
@@ -39,7 +39,7 @@ export const useFollowStore = create<IFollowProps>((set, get) => ({
   loadingTargets: false,
   error: null,
 
-  followTarget: async (targetType, artistId, target) => {
+  FollowArtist: async (targetType, artistId, target) => {
     set({ loading: true });
 
     try {
@@ -58,9 +58,15 @@ export const useFollowStore = create<IFollowProps>((set, get) => ({
       } else {
         const {
           data: { success, message },
-        } = await api.post('/follow', { target, targetType });
+        } = await api.post('/follow', { target, targetType, artistId });
 
-        success ? toast.success(message) : toast.error(message);
+        if (success) {
+          const { getTargets } = get();
+          getTargets('users');
+          toast.success(message, { position: 'bottom-center' });
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error: any) {
       set({ error: error?.response?.data?.message });
@@ -68,7 +74,7 @@ export const useFollowStore = create<IFollowProps>((set, get) => ({
       set({ loading: false });
     }
   },
-  unfollowTarget: async (targetType, artistId, target) => {
+  unFollowArtist: async (targetType, artistId, target) => {
     try {
       if (targetType === 'artists') {
         const {
@@ -87,9 +93,17 @@ export const useFollowStore = create<IFollowProps>((set, get) => ({
       } else {
         const {
           data: { success, message },
-        } = await api.post('/follow', { target, targetType });
+        } = await api.delete('/follow/unfollow', {
+          params: { targetType, artistId, target },
+        });
 
-        success ? toast.success(message) : toast.error(message);
+        if (success) {
+          const { getTargets } = get();
+          getTargets('users');
+          toast.success(message, { position: 'bottom-center' });
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error: any) {
       set({ error: error?.response?.data?.message });

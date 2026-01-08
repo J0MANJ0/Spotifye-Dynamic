@@ -2,6 +2,7 @@
 
 import { useNavigationHistory } from '@/hooks/use-nav';
 import { bgGradientDisplay } from '@/lib/utils';
+import { useMusicStore } from '@/stores/use-music-store';
 
 import { usePlayerStore } from '@/stores/use-player-store';
 import { useEffect, useState } from 'react';
@@ -11,7 +12,7 @@ type Gradient = {
   text: string;
 };
 export const SongDisplay = () => {
-  const { currentTrack, isPlaying } = usePlayerStore();
+  const { currentTrackId, isPlaying } = usePlayerStore();
   const { router } = useNavigationHistory();
   const [mounted, setMounted] = useState(false);
   const [gradient, setGradient] = useState<Gradient>({
@@ -19,14 +20,18 @@ export const SongDisplay = () => {
     text: '#fff',
   });
 
+  const { tracksByIds } = useMusicStore();
+
+  const currentTrack = tracksByIds[currentTrackId!];
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!currentTrack) return;
+    if (!currentTrackId) return;
     setGradient(bgGradientDisplay());
-  }, [currentTrack?.trackId, currentTrack]);
+  }, [currentTrackId]);
 
   if (!mounted) return null;
 

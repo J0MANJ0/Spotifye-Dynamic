@@ -9,13 +9,14 @@ import HomeIcon from '@mui/icons-material/Home';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { Input } from './ui/input';
-import { Heart, Search, User } from 'lucide-react';
+import { Heart, Search, Settings, User } from 'lucide-react';
 import { useAuthStore } from '@/stores/use-auth-store';
 import Link from 'next/link';
 import { SignInOauthBtn } from './sign-in-oauth-btn';
 import { Badge } from './ui/badge';
 import GradientButton from './kokonutui/gradient-button';
 import { useChatStore } from '@/stores/use-chat-store';
+import { usePlayerStore } from '@/stores/use-player-store';
 
 export const Navbar = () => {
   const { user } = useUser();
@@ -23,6 +24,9 @@ export const Navbar = () => {
   const { messages } = useChatStore();
   const { canGoBack, canGoForward, goBack, goForward, pathname, router } =
     useNavigationHistory();
+  const { isActive } = usePlayerStore();
+
+  const unseenMessages = messages.filter((m) => !m.seen);
 
   return (
     <nav className='h-10 bg-black p-4 my-2 flex justify-between items-center'>
@@ -105,9 +109,9 @@ export const Navbar = () => {
                     fontSize='small'
                     sx={{ color: '#ccc' }}
                   />
-                  {messages.length > 0 && (
+                  {unseenMessages.length > 0 && (
                     <Badge className='absolute right-0 size-2 rounded-full bg-green-500 hover:bg-green-400'>
-                      {messages.length}
+                      {unseenMessages.length}
                     </Badge>
                   )}
                 </div>
@@ -127,6 +131,15 @@ export const Navbar = () => {
                         label='Profile'
                         labelIcon={<User className='size-4 text-zinc-900' />}
                         onClick={() => router.push('/profile')}
+                      />
+                    </UserButton.MenuItems>
+                    <UserButton.MenuItems>
+                      <UserButton.Action
+                        label='Settings'
+                        labelIcon={
+                          <Settings className='size-4 text-zinc-900' />
+                        }
+                        onClick={() => router.push('/settings')}
                       />
                     </UserButton.MenuItems>
                   </UserButton>

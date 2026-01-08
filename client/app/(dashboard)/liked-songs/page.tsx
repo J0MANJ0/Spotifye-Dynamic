@@ -25,6 +25,7 @@ import { Clock, Play } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 import { useNavigationHistory } from '@/hooks/use-nav';
+import { useAuthStore } from '@/stores/use-auth-store';
 
 const LikedSongsPage = () => {
   const [gradient, setGradient] = useState('');
@@ -32,75 +33,40 @@ const LikedSongsPage = () => {
   const [hover, setHover] = useState(false);
   const [search, setSearch] = useState('');
   const { router } = useNavigationHistory();
+  const { explicitContent } = useAuthStore();
 
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
   const { user } = useUser();
-  const { likedSongs, unLike, reverseSongsOrder, searchKeys, sortKey } =
-    useMusicStore();
-  const { isPlaying, likedAlbumPlaying, currentTrack, playAlbum, toggleSong } =
-    usePlayerStore();
+  const {
+    likedSongs,
+    unLike,
+    reverseSongsOrder,
+    searchKeys,
+    sortKey,
+    tracksByIds,
+  } = useMusicStore();
+  const {
+    isPlaying,
+    likedAlbumPlaying,
+    currentTrackId,
+    playAlbum,
+    toggleSong,
+  } = usePlayerStore();
 
-  const handlePlayAlbum = () => {
-    if (!likedSongs) return;
-    const isCurrentAlbumPlaying = likedSongs.some(
-      (track) => track.trackId === currentTrack?.trackId
-    );
-
-    if (isCurrentAlbumPlaying && likedAlbumPlaying) {
-      toggleSong();
-    } else {
-      playAlbum(likedSongs);
-      usePlayerStore.setState({
-        likedAlbumPlaying: true,
-        madeForYouAlbumPlaying: false,
-      });
-      useMusicStore.setState({ currentAlbum: null, album: null });
-    }
-  };
+  const currentTrack = tracksByIds[currentTrackId!];
 
   const activeFilterKeys = useMemo(() => {
     return searchKeys.length > 0 ? searchKeys : ['title', 'artist'];
   }, [searchKeys]);
 
   const filteredLikedSongs = useMemo(() => {
-    const sortedSongs = [...likedSongs].sort((a, b) => {
-      if (sortKey === 'createdAt') {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-
-        return reverseSongsOrder
-          ? dateA.getTime() - dateB.getTime()
-          : dateB.getTime() - dateA.getTime();
-      }
-
-      const valueA = ((a.data[sortKey] as string) || '').toLowerCase();
-      const valueB = ((b.data[sortKey] as string) || '').toLowerCase();
-
-      return reverseSongsOrder
-        ? valueB.localeCompare(valueA)
-        : valueA.localeCompare(valueB);
-    });
-    if (!search) {
-      const songs = sortedSongs.map((song) => ({ ...song, matches: [] }));
-
-      return reverseSongsOrder ? [...songs].reverse() : songs;
+    if (!explicitContent) {
+      const filtered = likedSongs?.filter((t) => !t?.data?.explicit_lyrics);
+      return filtered;
     }
 
-    const fuse = new Fuse(sortedSongs, {
-      keys: ['title', 'artist'],
-      threshold: 0.3,
-      includeMatches: true,
-    });
-
-    const results = fuse.search(search);
-
-    const songs = results.map(({ item, matches }) => ({
-      ...item,
-      matches,
-    }));
-
-    return reverseSongsOrder ? [...songs].reverse() : songs;
+    return likedSongs;
   }, [
     search,
     likedSongs,
@@ -110,17 +76,27 @@ const LikedSongsPage = () => {
     sortKey,
   ]);
 
+  const handlePlayAlbum = () => {
+    if (!filteredLikedSongs) return;
+    const iscurrentAlbumIdPlaying = filteredLikedSongs.some(
+      (track) => track.trackId === currentTrack.trackId
+    );
+
+    if (iscurrentAlbumIdPlaying && likedAlbumPlaying) {
+      toggleSong();
+    } else {
+      const q = filteredLikedSongs.map((t) => t._id);
+      playAlbum(q, 'likedSongsAlbum');
+    }
+  };
+
   const handlePlaySong = (song: Track) => {
     if (!filteredLikedSongs) return;
     const songIdx = filteredLikedSongs.findIndex((s) => s._id === song._id);
 
     if (songIdx === -1) return;
-    playAlbum(filteredLikedSongs, songIdx);
-    usePlayerStore.setState({
-      likedAlbumPlaying: true,
-      madeForYouAlbumPlaying: false,
-    });
-    useMusicStore.setState({ currentAlbum: null, album: null });
+    const q = filteredLikedSongs.map((t) => t._id);
+    playAlbum(q, 'likedSongsAlbum', null, songIdx);
   };
 
   useEffect(() => {
@@ -178,10 +154,10 @@ const LikedSongsPage = () => {
                   {user?.fullName}
                 </span>
                 <span className='font-medium'>
-                  • {likedSongs.length}{' '}
-                  {likedSongs.length === 1 ? 'song' : 'songs'},
+                  • {filteredLikedSongs.length}{' '}
+                  {filteredLikedSongs.length === 1 ? 'song' : 'songs'},
                 </span>
-                <span>{albumTimeLength(likedSongs || [])}</span>
+                <span>{albumTimeLength(filteredLikedSongs || [])}</span>
               </div>
             </div>
           </div>
@@ -191,14 +167,18 @@ const LikedSongsPage = () => {
               <button
                 onClick={handlePlayAlbum}
                 className='size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-[1.030] transition-all flex justify-center items-center'
-                disabled={!likedSongs?.length}
+                disabled={!filteredLikedSongs?.length}
                 style={{
-                  cursor: !likedSongs?.length ? 'not-allowed' : 'pointer',
-                  opacity: !likedSongs?.length ? 0.5 : 1,
+                  cursor: !filteredLikedSongs?.length
+                    ? 'not-allowed'
+                    : 'pointer',
+                  opacity: !filteredLikedSongs?.length ? 0.5 : 1,
                 }}
               >
                 {isPlaying &&
-                likedSongs?.some((song) => song._id === currentTrack?._id) &&
+                filteredLikedSongs?.some(
+                  (song) => song._id === currentTrack?._id
+                ) &&
                 likedAlbumPlaying ? (
                   <PauseIcon fontSize='medium' sx={{ color: '#000' }} />
                 ) : (
@@ -234,16 +214,16 @@ const LikedSongsPage = () => {
             <div className='px-6'>
               <div className='py-4 space-y-2'>
                 {filteredLikedSongs?.map((track, i) => {
-                  const iscurrentTrack = currentTrack?._id === track._id;
+                  const iscurrentTrackId = currentTrack?._id === track._id;
                   return (
                     <div
                       ref={
-                        iscurrentTrack && likedAlbumPlaying
+                        iscurrentTrackId && likedAlbumPlaying
                           ? scrollToCurrent
                           : null
                       }
                       onClick={() => {
-                        if (iscurrentTrack && likedAlbumPlaying) {
+                        if (iscurrentTrackId && likedAlbumPlaying) {
                           toggleSong();
                         } else {
                           handlePlaySong(track);
@@ -257,19 +237,19 @@ const LikedSongsPage = () => {
                       }}
                       key={track._id}
                       className={`grid grid-cols-[16px_5fr_3fr_2fr_1fr_1fr] gap-4 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer ${
-                        iscurrentTrack &&
+                        iscurrentTrackId &&
                         likedAlbumPlaying &&
                         `ring-1 ring-green-500`
                       }`}
                       style={{
                         backgroundColor:
-                          iscurrentTrack && likedAlbumPlaying
+                          iscurrentTrackId && likedAlbumPlaying
                             ? `${gradientActive}`
                             : '',
                       }}
                     >
                       <div className='flex items-center justify-center'>
-                        {iscurrentTrack && isPlaying && likedAlbumPlaying ? (
+                        {iscurrentTrackId && isPlaying && likedAlbumPlaying ? (
                           <div className='size-4 text-green-500 text-xl flex justify-center items-center'>
                             {hover ? (
                               <PauseIcon
@@ -283,7 +263,7 @@ const LikedSongsPage = () => {
                         ) : (
                           <span
                             className={`group-hover:hidden ${
-                              iscurrentTrack && likedAlbumPlaying
+                              iscurrentTrackId && likedAlbumPlaying
                                 ? 'text-green-500'
                                 : 'text-white'
                             }`}
@@ -305,26 +285,18 @@ const LikedSongsPage = () => {
                         />
 
                         <div>
-                          {!search ? (
+                          {!search && (
                             <div
                               className={`font-bold ${
-                                iscurrentTrack && likedAlbumPlaying
+                                iscurrentTrackId && likedAlbumPlaying
                                   ? 'text-green-500'
                                   : 'text-white'
                               }`}
                             >
                               {track.data.title}
                             </div>
-                          ) : (
-                            <HighlightedText
-                              text={track.data.title}
-                              indices={
-                                track.matches?.find((m) => m.key === 'title')
-                                  ?.indices
-                              }
-                            />
                           )}
-                          {!search ? (
+                          {!search && (
                             <div className='hover:underline flex justify-start items-center'>
                               <span>
                                 {track.data.explicit_lyrics && (
@@ -339,14 +311,6 @@ const LikedSongsPage = () => {
                                 </span>
                               ))}
                             </div>
-                          ) : (
-                            <HighlightedText
-                              text={track.data.artist.name}
-                              indices={
-                                track.matches?.find((m) => m.key === 'artist')
-                                  ?.indices
-                              }
-                            />
                           )}
                         </div>
                       </div>

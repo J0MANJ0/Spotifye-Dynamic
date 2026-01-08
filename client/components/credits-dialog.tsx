@@ -15,11 +15,13 @@ import { X } from 'lucide-react';
 
 export const CreditsDialog = () => {
   const [open, setOpen] = useState(false);
-  const { currentTrack } = usePlayerStore();
-  const { fetchAlbumDialog, albumDialog } = useMusicStore();
+  const { currentTrackId } = usePlayerStore();
+  const { fetchAlbumDialog, albumDialog, tracksByIds } = useMusicStore();
+
+  const currentTrack = tracksByIds[currentTrackId!];
 
   useEffect(() => {
-    if (currentTrack) fetchAlbumDialog(currentTrack?.data?.album?.id);
+    if (currentTrackId) fetchAlbumDialog(currentTrack?.data?.album?.id);
   }, [currentTrack?.data?.album?.id]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -64,7 +66,7 @@ export const CreditsDialog = () => {
                       rel='noopener noreferrer'
                     >
                       {c.name}
-                      {i !== currentTrack.data.contributors.length - 1 && ','}
+                      {i !== currentTrack?.data?.contributors.length - 1 && ','}
                     </a>
                   ))}
                 </p>

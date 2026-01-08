@@ -3,15 +3,7 @@ import type { Message, User } from '@/types';
 import { create } from 'zustand';
 import { io } from 'socket.io-client';
 import { usePlayerStore } from './use-player-store';
-
-const getDeviceId = () => {
-  let id = localStorage.getItem('deviceId');
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem('deviceId', id);
-  }
-  return id;
-};
+import { useSocketStore } from './use-socket-store';
 
 interface ChatStore {
   users: User[];
@@ -19,15 +11,14 @@ interface ChatStore {
   socket: any;
   isConnected: boolean;
   onlineUsers: Set<string>;
-  userActivities: Map<string, string>;
+  usersActivities: Map<string, string>;
   messages: Message[];
   selectedUser: User | null;
   error: string | null;
 
+  initChats: () => void;
   fetchUsers: () => Promise<void>;
   fetchMessages: (userId: string) => Promise<void>;
-  initSocket: (userId: string) => void;
-  disconnectSocket: () => void;
   sendMessage: (recipientId: string, senderId: string, content: string) => void;
   markSeen: (messageId: string) => Promise<void>;
   setSelectedUser: (user: User | null) => void;
@@ -47,10 +38,59 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   socket: socket,
   isConnected: false,
   onlineUsers: new Set(),
-  userActivities: new Map(),
+  usersActivities: new Map(),
   selectedUser: null,
   messages: [],
+  initChats: () => {
+    const { on } = useSocketStore.getState();
 
+    on('users:online', (onlineUsers) => {
+      console.log('store', { onlineUsers });
+      set({ onlineUsers: new Set(onlineUsers) });
+    });
+
+    on('users:online', (data) => {
+      console.log({ data });
+    });
+
+    on('users:activities', (activities) => {
+      set({ usersActivities: new Map(activities) });
+    });
+
+    on('user:connected', (userId) => {
+      set((state) => ({
+        onlineUsers: new Set([...state.onlineUsers, userId]),
+      }));
+    });
+
+    on('user:disconnected', (userId) => {
+      set((state) => {
+        const newOnlineUsers = new Set(state.onlineUsers);
+        newOnlineUsers.delete(userId);
+        return { onlineUsers: newOnlineUsers };
+      });
+    });
+
+    on('receive:message', (message: Message) => {
+      set((state) => ({
+        messages: [...state.messages, message],
+      }));
+    });
+
+    on('sent:message', (message: Message) => {
+      set((state) => ({
+        messages: [...state.messages, message],
+      }));
+    });
+
+    on('updated:user:activity', ({ userId, activity }) => {
+      set((state) => {
+        const newActivities = new Map(state.usersActivities);
+        newActivities.set(userId, activity);
+        return { usersActivities: newActivities };
+      });
+    });
+  },
   fetchUsers: async () => {
     try {
       const {
@@ -64,81 +104,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       set({ loading: false });
     }
   },
-  initSocket: (userId) => {
-    const deviceId = getDeviceId();
-    if (!get().isConnected && userId) {
-      socket.auth = { userId, deviceId };
-      socket.connect();
-      socket.emit('user_connected', { userId, deviceId });
 
-      socket.on('pause_due_to_device_switch', () => {
-        usePlayerStore.setState({ isPlaying: false });
-        const audio = document.querySelector('audio');
-
-        if (audio && !audio.paused) audio.pause();
-      });
-
-      socket.on('users_online', (users: string[]) => {
-        set({ onlineUsers: new Set(users) });
-      });
-
-      const { isPlaying, currentIndex, currentTrack } =
-        usePlayerStore.getState();
-
-      socket.emit('sessions', { isPlaying, currentIndex, currentTrack });
-
-      socket.on('activities', (activities: [string, string][]) => {
-        set({ userActivities: new Map(activities) });
-      });
-
-      socket.on('user_connected', ({ userId }: { userId: string }) => {
-        set((state) => ({
-          onlineUsers: new Set([...state.onlineUsers, userId]),
-        }));
-      });
-
-      socket.on('user_disconnected', ({ userId }: { userId: string }) => {
-        set((state) => {
-          const newOnlineUsers = new Set(state.onlineUsers);
-          newOnlineUsers.delete(userId);
-          return { onlineUsers: newOnlineUsers };
-        });
-      });
-
-      socket.on('receive_message', (message: Message) => {
-        set((state) => ({
-          messages: [...state.messages, message],
-        }));
-      });
-
-      socket.on('message_sent', (message: Message) => {
-        set((state) => ({
-          messages: [...state.messages, message],
-        }));
-      });
-
-      socket.on('activity_updated', ({ userId, activity }) => {
-        set((state) => {
-          const newActivities = new Map(state.userActivities);
-          newActivities.set(userId, activity);
-          return { userActivities: newActivities };
-        });
-      });
-
-      set({ isConnected: true });
-    }
-  },
-  disconnectSocket: () => {
-    if (get().isConnected) {
-      socket.disconnect();
-      set({ isConnected: false });
-    }
-  },
   sendMessage: (recipientId, senderId, content) => {
-    const socket = get().socket;
-    if (!socket) return;
+    const { emit, isConnected } = useSocketStore.getState();
 
-    socket.emit('send_message', { recipientId, senderId, content });
+    if (!isConnected) return;
+
+    emit('send:message', { recipientId, senderId, content });
   },
   fetchMessages: async (userId) => {
     set({ loading: true, error: null });

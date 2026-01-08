@@ -1,15 +1,13 @@
 'use client';
 
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
 export function useNavigationHistory() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const currentPath =
-    pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
+  const currentPath = pathname;
 
   const [historyStack, setHistoryStack] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);

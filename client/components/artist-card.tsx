@@ -8,14 +8,16 @@ import { useFollowStore } from '@/stores/use-follow-store';
 import { usePlayerStore } from '@/stores/use-player-store';
 
 export const ArtistCard = () => {
-  const { fetchArtist, artist } = useMusicStore();
-  const { followedArtists, followTarget, unfollowTarget } = useFollowStore();
-  const { currentTrack } = usePlayerStore();
+  const { fetchArtist, artist, tracksByIds } = useMusicStore();
+  const { followedArtists, FollowArtist, unFollowArtist } = useFollowStore();
+  const { currentTrackId } = usePlayerStore();
   const { router } = useNavigationHistory();
 
+  const currentTrack = tracksByIds[currentTrackId!];
+
   useEffect(() => {
-    if (currentTrack) fetchArtist(currentTrack?.data?.artist?.id!);
-  }, [currentTrack?.data?.artist?.id, currentTrack, fetchArtist]);
+    if (currentTrackId) fetchArtist(currentTrack?.data?.artist?.id!);
+  }, [currentTrack?.data?.artist?.id, fetchArtist]);
 
   const isFollowed = followedArtists?.some(
     (a) => a.target?.data?.id === artist?.data?.id
@@ -23,11 +25,11 @@ export const ArtistCard = () => {
 
   const handleSubmit = () => {
     isFollowed
-      ? unfollowTarget('artists', artist?.data?.id)
-      : followTarget('artists', artist?.data?.id);
+      ? unFollowArtist('artists', artist?.data?.id)
+      : FollowArtist('artists', artist?.data?.id);
   };
 
-  if (!currentTrack) return;
+  if (!currentTrackId) return;
   return (
     <div className='bg-zinc-800 rounded-md w-full'>
       <div className='w-full relative'>

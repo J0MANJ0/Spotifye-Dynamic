@@ -21,12 +21,20 @@ import { usePlayerStore } from '@/stores/use-player-store';
 import { Track } from '@/types';
 
 const ArtistPage = () => {
-  const { artistPage, likedSongs, tracks, fetchArtistPage } = useMusicStore();
-  const { isPlaying, currentTrack, toggleSong, playAlbum, artistAlbumPlaying } =
-    usePlayerStore();
-  const { followedArtists, followTarget, unfollowTarget } = useFollowStore();
+  const { artistPage, likedSongs, tracks, fetchArtistPage, tracksByIds } =
+    useMusicStore();
+  const {
+    isPlaying,
+    currentTrackId,
+    toggleSong,
+    playAlbum,
+    artistAlbumPlaying,
+  } = usePlayerStore();
+  const { followedArtists, FollowArtist, unFollowArtist } = useFollowStore();
   const { artistId } = useParams<{ artistId: string }>();
   const { router } = useNavigationHistory();
+
+  const currentTrack = tracksByIds[currentTrackId!];
 
   const [hover, setHover] = useState(false);
   const [expand, setExpand] = useState(false);
@@ -56,26 +64,27 @@ const ArtistPage = () => {
 
   const handleSubmit = () => {
     isFollowed
-      ? unfollowTarget('artists', artistPage?.data?.id)
-      : followTarget('artists', artistPage?.data?.id);
+      ? unFollowArtist('artists', artistPage?.data?.id)
+      : FollowArtist('artists', artistPage?.data?.id);
   };
 
   const handlePlayAlbum = () => {
     if (!popularSongs) return;
-    const isCurrentAlbumPlaying = popularSongs.some(
+    const iscurrentAlbumIdPlaying = popularSongs.some(
       (track) => track.trackId === currentTrack?.trackId
     );
 
-    if (isCurrentAlbumPlaying && artistAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying && artistAlbumPlaying) {
       toggleSong();
     } else {
-      playAlbum(popularSongs);
+      const q = popularSongs.map((t) => t._id);
+      playAlbum(q, 'artistAlbum', null);
       usePlayerStore.setState({
         likedAlbumPlaying: false,
         madeForYouAlbumPlaying: false,
         artistAlbumPlaying: true,
       });
-      useMusicStore.setState({ currentAlbum: null, album: null });
+      useMusicStore.setState({ currentAlbumId: null, album: null });
     }
   };
 
@@ -84,13 +93,14 @@ const ArtistPage = () => {
     const songIdx = popularSongs.findIndex((s) => s._id === song._id);
 
     if (songIdx === -1) return;
-    playAlbum(popularSongs, songIdx);
+    const q = popularSongs.map((t) => t._id);
+    playAlbum(q, 'artistAlbum', null, songIdx);
     usePlayerStore.setState({
       likedAlbumPlaying: false,
       madeForYouAlbumPlaying: false,
       artistAlbumPlaying: true,
     });
-    useMusicStore.setState({ currentAlbum: null, album: null });
+    useMusicStore.setState({ currentAlbumId: null, album: null });
   };
 
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
@@ -197,7 +207,7 @@ const ArtistPage = () => {
                 </div>
                 <div>
                   {popularSongs.map((track, i) => {
-                    const iscurrentTrack =
+                    const iscurrentTrackId =
                       currentTrack?.trackId === track?.trackId;
                     return i <= 4 ? (
                       <Fragment key={track._id}>
@@ -206,24 +216,24 @@ const ArtistPage = () => {
                           onClick={(e) => {
                             e.preventDefault();
 
-                            if (iscurrentTrack) {
+                            if (iscurrentTrackId) {
                               toggleSong();
                             } else {
                               handlePlaySong(track);
                             }
                           }}
                           onMouseEnter={() => {
-                            if (iscurrentTrack) setHover(true);
+                            if (iscurrentTrackId) setHover(true);
                           }}
                           onMouseLeave={() => {
-                            if (iscurrentTrack) setHover(false);
+                            if (iscurrentTrackId) setHover(false);
                           }}
                           className='grid grid-cols-[2fr_2fr] gap-6 p-2 group hover:bg-zinc-800 rounded-md'
                         >
                           <div className='grid grid-cols-[1fr_2fr]'>
                             <div className='grid grid-cols-[1fr_2fr]'>
                               <div className='flex justify-start items-center'>
-                                {isPlaying && iscurrentTrack ? (
+                                {isPlaying && iscurrentTrackId ? (
                                   hover ? (
                                     <PauseIcon sx={{ fontSize: '20px' }} />
                                   ) : (
@@ -234,7 +244,7 @@ const ArtistPage = () => {
                                     <span
                                       className={cn(
                                         'group-hover:hidden',
-                                        iscurrentTrack && 'text-green-400'
+                                        iscurrentTrackId && 'text-green-400'
                                       )}
                                     >
                                       {i + 1}
@@ -259,7 +269,7 @@ const ArtistPage = () => {
                               <p
                                 className={cn(
                                   'text-sm line-clamp-1',
-                                  iscurrentTrack && 'text-green-400'
+                                  iscurrentTrackId && 'text-green-400'
                                 )}
                               >
                                 {track?.data?.title}
@@ -329,7 +339,7 @@ const ArtistPage = () => {
                             onClick={(e) => {
                               e.preventDefault();
 
-                              if (iscurrentTrack) {
+                              if (iscurrentTrackId) {
                                 toggleSong();
                               } else {
                                 handlePlaySong(track);
@@ -344,7 +354,7 @@ const ArtistPage = () => {
                             <div className='grid grid-cols-[1fr_2fr]'>
                               <div className='grid grid-cols-[1fr_2fr]'>
                                 <div className='flex justify-start items-center'>
-                                  {isPlaying && iscurrentTrack ? (
+                                  {isPlaying && iscurrentTrackId ? (
                                     hover ? (
                                       <PauseIcon sx={{ fontSize: '20px' }} />
                                     ) : (
@@ -355,7 +365,7 @@ const ArtistPage = () => {
                                       <span
                                         className={cn(
                                           'group-hover:hidden',
-                                          iscurrentTrack && 'text-green-400'
+                                          iscurrentTrackId && 'text-green-400'
                                         )}
                                       >
                                         {i + 1}
@@ -381,7 +391,7 @@ const ArtistPage = () => {
                                   <p
                                     className={cn(
                                       'text-sm line-clamp-1',
-                                      iscurrentTrack && 'text-green-400'
+                                      iscurrentTrackId && 'text-green-400'
                                     )}
                                   >
                                     {track?.data?.title}

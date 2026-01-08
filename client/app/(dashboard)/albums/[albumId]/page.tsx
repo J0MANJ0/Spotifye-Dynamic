@@ -35,24 +35,27 @@ import {
 } from '@/components/ui/dialog';
 import { Tooltip } from '@mui/material';
 import Image from 'next/image';
+import { useAuthStore } from '@/stores/use-auth-store';
 
 const AlbumPage = () => {
   const { user } = useUser();
   const {
     fetchAlbum,
-    currentAlbum,
+    currentAlbumId,
     loadingAlbum: loading,
     album,
+    albumsByIds,
   } = useMusicStore();
   const { albumId } = useParams<{ albumId: string }>();
   const {
-    currentTrack,
+    currentTrackId,
     isPlaying,
     playAlbum,
     toggleSong,
     likedAlbumPlaying,
     madeForYouAlbumPlaying,
   } = usePlayerStore();
+  const { explicitContent } = useAuthStore();
   const { router, pathname } = useNavigationHistory();
   const [hover, setHover] = useState(false);
   const [exp, setExp] = useState(false);
@@ -61,25 +64,20 @@ const AlbumPage = () => {
   const [gradient, setGradient] = useState<string>('');
   const [gradientActive, setGradientActive] = useState('');
 
+  const currentAlbum = albumsByIds[currentAlbumId!];
+
+  const q = album?.tracks.map((t) => t._id);
+
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
   const filteredTracks = useMemo(() => {
-    if (!search)
-      return album?.tracks.map((track) => ({ ...track, matches: [] }));
+    if (!explicitContent) {
+      const filtered = album?.tracks?.filter((t) => !t?.data?.explicit_lyrics);
+      return filtered;
+    }
 
-    const fuse = new Fuse(album?.tracks || [], {
-      keys: ['title', 'artist'],
-      threshold: 0.3,
-      includeMatches: true,
-    });
-
-    const results = fuse.search(search);
-
-    return results.map(({ item, matches }) => ({
-      ...item,
-      matches,
-    }));
-  }, [search, album?.tracks]);
+    return album?.tracks;
+  }, [search, album?.tracks, explicitContent]);
 
   useEffect(() => {
     if (pathname === `/albums/${albumId}`) {
@@ -97,7 +95,7 @@ const AlbumPage = () => {
         block: 'center',
       });
     }
-  }, [filteredTracks, currentTrack?._id]);
+  }, [filteredTracks, currentTrackId]);
 
   if (loading) {
     return <AlbumPageSkeleton />;
@@ -105,20 +103,20 @@ const AlbumPage = () => {
 
   const handlePlayAlbum = () => {
     if (!album) return;
-    const isCurrentAlbumPlaying = album?.tracks.some(
-      (track) => track._id === currentTrack?._id
+    const iscurrentAlbumIdPlaying = album?.tracks.some(
+      (track) => track._id === currentTrackId
     );
 
-    if (isCurrentAlbumPlaying && !likedAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying && !likedAlbumPlaying) {
       toggleSong();
     } else {
-      playAlbum(album.tracks);
+      playAlbum(q!, 'album');
       usePlayerStore.setState({
         likedAlbumPlaying: false,
         madeForYouAlbumPlaying: false,
         toastShown: false,
       });
-      useMusicStore.setState({ currentAlbum: album });
+      useMusicStore.setState({ currentAlbumId: album._id });
     }
   };
 
@@ -128,13 +126,13 @@ const AlbumPage = () => {
     const songIdx = album.tracks.findIndex((s) => s._id === track._id);
 
     if (songIdx === -1) return;
-    playAlbum(album?.tracks, songIdx);
+    playAlbum(q!, 'album', album?._id, songIdx);
     usePlayerStore.setState({
       likedAlbumPlaying: false,
       madeForYouAlbumPlaying: false,
       toastShown: false,
     });
-    useMusicStore.setState({ currentAlbum: album });
+    useMusicStore.setState({ currentAlbumId: album._id });
   };
 
   return (
@@ -191,26 +189,27 @@ const AlbumPage = () => {
                 transition={{ duration: 0.7 }}
                 translate='yes'
               >
-                {album?.data.title}
+                {album?.data?.title}
               </motion.h2>
               <div className='flex items-center gap-2 text-sm text-zinc-400'>
                 <img
-                  src={album?.data.artist.picture_small!}
-                  alt={album?.data.title!}
+                  src={album?.data?.artist?.picture_small!}
+                  alt={album?.data?.title!}
                   className='size-8 rounded-full object-cover'
                 />
-                {album?.data.contributors.map((c, i) => (
+                {album?.data?.contributors.map((c, i) => (
                   <span
                     key={c.id}
                     className='font-mono hover:underline cursor-pointer'
                     onClick={() => router.push(`/artists/${c.id}`)}
                   >
-                    {c.name} {i !== album.data.contributors.length - 1 && ' •'}
+                    {c.name}{' '}
+                    {i !== album?.data?.contributors.length - 1 && ' •'}
                   </span>
                 ))}
                 <span className='font-mono'>
-                  • {album?.tracks.length}{' '}
-                  {album?.tracks.length === 1 ? 'song' : 'songs'}
+                  • {filteredTracks?.length}{' '}
+                  {filteredTracks?.length === 1 ? 'song' : 'songs'}
                 </span>
                 <Tooltip placement='top' title={album?.data?.release_date}>
                   <span className='font-mono'>
@@ -229,7 +228,7 @@ const AlbumPage = () => {
               onClick={handlePlayAlbum}
               className='size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-[1.030] transition-all flex justify-center items-center'
             >
-              {isPlaying && currentAlbum?._id === album?._id ? (
+              {isPlaying && currentAlbumId === album?._id ? (
                 <PauseIcon fontSize='medium' sx={{ color: '#000' }} />
               ) : (
                 <PlayArrowIcon fontSize='medium' sx={{ color: '#000' }} />
@@ -279,13 +278,13 @@ const AlbumPage = () => {
               <div className='py-4 space-y-2'>
                 {filteredTracks &&
                   filteredTracks.map((track, i) => {
-                    const iscurrentTrack = currentTrack?._id === track._id;
+                    const iscurrentTrackId = currentTrackId === track._id;
                     return (
                       <div
-                        ref={iscurrentTrack ? scrollToCurrent : null}
+                        ref={iscurrentTrackId ? scrollToCurrent : null}
                         onClick={() => {
                           if (
-                            iscurrentTrack &&
+                            iscurrentTrackId &&
                             !likedAlbumPlaying &&
                             !madeForYouAlbumPlaying
                           ) {
@@ -295,21 +294,21 @@ const AlbumPage = () => {
                           }
                         }}
                         onMouseEnter={() => {
-                          if (iscurrentTrack) setHover(true);
+                          if (iscurrentTrackId) setHover(true);
                         }}
                         onMouseLeave={() => {
-                          if (iscurrentTrack) setHover(false);
+                          if (iscurrentTrackId) setHover(false);
                         }}
                         key={track._id}
                         className={`grid grid-cols-[16px_4fr_2fr_1fr_1fr] gap-4 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer ${
-                          iscurrentTrack &&
+                          iscurrentTrackId &&
                           !likedAlbumPlaying &&
                           !madeForYouAlbumPlaying &&
                           `ring-1 ring-green-500`
                         }`}
                         style={{
                           backgroundColor:
-                            iscurrentTrack &&
+                            iscurrentTrackId &&
                             !likedAlbumPlaying &&
                             !madeForYouAlbumPlaying
                               ? `${gradientActive}`
@@ -317,7 +316,7 @@ const AlbumPage = () => {
                         }}
                       >
                         <div className='flex items-center justify-center'>
-                          {iscurrentTrack &&
+                          {iscurrentTrackId &&
                           isPlaying &&
                           !likedAlbumPlaying &&
                           !madeForYouAlbumPlaying ? (
@@ -334,7 +333,7 @@ const AlbumPage = () => {
                           ) : (
                             <span
                               className={`group-hover:hidden ${
-                                iscurrentTrack &&
+                                iscurrentTrackId &&
                                 !likedAlbumPlaying &&
                                 !madeForYouAlbumPlaying
                                   ? 'text-green-500'
@@ -344,7 +343,7 @@ const AlbumPage = () => {
                               {i + 1}
                             </span>
                           )}
-                          {!iscurrentTrack ? (
+                          {!iscurrentTrackId ? (
                             <Play className='size-4 hidden group-hover:block' />
                           ) : (
                             <Play className='size-4 hidden group-hover:block text-green-400' />
@@ -360,68 +359,53 @@ const AlbumPage = () => {
                           />
 
                           <div>
-                            {!search ? (
+                            {!search && (
                               <div
                                 className={`font-bold ${
-                                  iscurrentTrack &&
+                                  iscurrentTrackId &&
                                   !likedAlbumPlaying &&
                                   !madeForYouAlbumPlaying
                                     ? 'text-green-500'
                                     : 'text-white'
                                 }`}
                               >
-                                {track.data.title}
+                                {track?.data?.title}
                               </div>
-                            ) : (
-                              <HighlightedText
-                                text={track.data.title}
-                                indices={
-                                  track.matches?.find((m) => m.key === 'title')
-                                    ?.indices
-                                }
-                              />
                             )}
-                            {!search ? (
+                            {!search && (
                               <div className='hover:underline flex justify-start items-center'>
                                 <span>
-                                  {track.data.explicit_lyrics && (
+                                  {track?.data?.explicit_lyrics && (
                                     <ExplicitIcon fontSize='small' />
                                   )}
                                 </span>
-                                {track.data.contributors.map((c, i) => (
+                                {track?.data?.contributors.map((c, i) => (
                                   <span key={c.id}>
                                     {c.name}
-                                    {i !== track.data.contributors.length - 1 &&
+                                    {i !==
+                                      track?.data?.contributors.length - 1 &&
                                       ','}
                                   </span>
                                 ))}
                               </div>
-                            ) : (
-                              <HighlightedText
-                                text={track.data.artist.name}
-                                indices={
-                                  track.matches?.find((m) => m.key === 'artist')
-                                    ?.indices
-                                }
-                              />
                             )}
                           </div>
                         </div>
                         <div className='flex items-center'>
                           {formatDistanceToNow(
-                            new Date(track.data.release_date),
+                            new Date(track?.data?.release_date),
                             {
                               addSuffix: false,
                             }
                           )}
                         </div>
                         <div className='flex items-center'>
-                          {formatDuration(track.duration)}
+                          {formatDuration(track?.duration)}
                         </div>
 
                         <div className='flex items-center'>
                           {user && (
-                            <ToggleLikeSong trackId={String(track.trackId)} />
+                            <ToggleLikeSong trackId={String(track?.trackId)} />
                           )}
                         </div>
                       </div>

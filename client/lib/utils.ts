@@ -1,3 +1,4 @@
+import { useMusicStore } from '@/stores/use-music-store';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { Track } from '@/types';
 import { clsx, type ClassValue } from 'clsx';
@@ -108,7 +109,10 @@ export const bgGradientLiked = (): string => {
 };
 
 export const downloadSong = async () => {
-  const { currentTrack } = usePlayerStore.getState();
+  const { currentTrackId } = usePlayerStore.getState();
+  const { tracksByIds } = useMusicStore.getState();
+
+  const currentTrack = tracksByIds[currentTrackId!];
 
   if (!currentTrack?.audioUrl) return;
 
@@ -137,22 +141,24 @@ export const downloadSong = async () => {
   }
 };
 
-export const skipForward = (
-  audio: HTMLAudioElement | null,
-  seconds: number = 10
-): number | undefined => {
-  if (!audio) return;
-
-  audio.currentTime = Math.min(audio.currentTime + seconds, audio.duration);
+export const skipForward = (): number => {
+  const { audioRef: audio, requestSeek } = usePlayerStore.getState();
+  if (audio) {
+    const nextTime = Math.min(audio.currentTime + 10, audio.duration);
+    requestSeek(nextTime);
+    return nextTime;
+  }
+  return 0;
 };
 
-export const skipBackward = (
-  audio: HTMLAudioElement | null,
-  seconds: number = 10
-): number | undefined => {
-  if (!audio) return;
-
-  return (audio.currentTime = Math.max(audio.currentTime - seconds, 0));
+export const skipBackward = (): number => {
+  const { audioRef: audio, requestSeek } = usePlayerStore.getState();
+  if (audio) {
+    const nextTime = Math.max(audio.currentTime - 10, 0);
+    requestSeek(nextTime);
+    return nextTime;
+  }
+  return 0;
 };
 
 export const getGreetings = async (userName?: string): Promise<string> => {

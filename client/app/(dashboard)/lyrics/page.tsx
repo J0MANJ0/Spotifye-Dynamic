@@ -18,8 +18,14 @@ type Gradient = {
 };
 
 const LyricsPage = () => {
-  const { currentTrack, currentTime, seekTo } = usePlayerStore();
-  const { lrcLyrics, fetchLrc, loadingLrc: loading } = useMusicStore();
+  const { currentTrackId, currentTime, seekTo, requestSeek, audioRef } =
+    usePlayerStore();
+  const {
+    lrcLyrics,
+    fetchLrc,
+    loadingLrc: loading,
+    tracksByIds,
+  } = useMusicStore();
   const { router } = useNavigationHistory();
 
   const activeLineRef = useRef<HTMLDivElement | null>(null);
@@ -32,27 +38,28 @@ const LyricsPage = () => {
     greaterText: '',
   });
 
+  const currentTrack = tracksByIds[currentTrackId!];
+
   useEffect(() => {
-    if (!currentTrack) return;
+    if (!currentTrackId) return;
     fetchLrc(currentTrack?.trackId);
-  }, [currentTrack?.trackId, currentTrack, fetchLrc]);
+  }, [currentTrack?.trackId, fetchLrc]);
 
   const activeIndex = lrcLyrics.findIndex(
     (line, i) =>
-      currentTime >= line.time &&
-      currentTime < (lrcLyrics[i + 1]?.time ?? Infinity)
+      audioRef?.currentTime! >= line.time &&
+      audioRef?.currentTime! < (lrcLyrics[i + 1]?.time ?? Infinity)
   );
-
-  useEffect(() => {
-    setGradient(bgGradientLyrics());
-  }, [currentTrack?.trackId]);
-
   const syncToActiveLine = useCallback(() => {
     activeLineRef.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
     });
-  }, [activeLineRef.current]);
+  }, []);
+
+  useEffect(() => {
+    setGradient(bgGradientLyrics());
+  }, [currentTrack?.trackId]);
 
   useEffect(() => {
     if (activeIndex === -1 || !scrollAreaRef.current || !activeLineRef.current)
@@ -85,7 +92,7 @@ const LyricsPage = () => {
     }, 100);
 
     return () => clearTimeout(timeoutId);
-  }, [activeIndex]);
+  }, [currentTrack?.trackId]);
 
   useEffect(() => {
     if (activeIndex !== -1) {
@@ -94,7 +101,7 @@ const LyricsPage = () => {
         block: 'center',
       });
     }
-  }, [currentTrack?.trackId, activeIndex]);
+  }, [currentTrack?.trackId]);
 
   useEffect(() => {
     if (!showSyncBtn)
@@ -102,9 +109,9 @@ const LyricsPage = () => {
         behavior: 'smooth',
         block: 'center',
       });
-  }, [activeIndex, currentTrack?.trackId, showSyncBtn]);
+  }, [showSyncBtn, activeIndex]);
 
-  if (!currentTrack) {
+  if (!currentTrackId) {
     return (
       <div className='w-full h-full rounded-md bg-accent flex justify-center items-center text-center'>
         <motion.h2
@@ -119,7 +126,7 @@ const LyricsPage = () => {
   }
   if (loading) {
     return (
-      <div className='w-full h-full bg-zinc-900 flex justify-center items-center text-center mx-auto'>
+      <div className='w-full h-full bg-zinc-900 flex justify-center items-center text-center mx-auto rounded-md'>
         <div>
           <Loader className='h-10 w-10 text-muted-foreground animate-spin' />
         </div>
@@ -127,7 +134,7 @@ const LyricsPage = () => {
     );
   }
   if (!lrcLyrics.length) {
-    return <NoLyrics trackId={currentTrack.trackId} />;
+    return <NoLyrics trackId={currentTrack?.trackId} />;
   }
 
   return (
@@ -159,7 +166,9 @@ const LyricsPage = () => {
                     ? 'opacity-50'
                     : 'opacity-80'
                 )}
-                onClick={() => seekTo(line.time)}
+                onClick={() => {
+                  seekTo(line.time), requestSeek(line.time);
+                }}
                 style={{
                   color:
                     i === activeIndex
@@ -182,25 +191,25 @@ const LyricsPage = () => {
           <div className='flex flex-col'>
             <div
               onClick={() =>
-                router.push(`/albums/${currentTrack.data.album.id}`)
+                router.push(`/albums/${currentTrack?.data?.album.id}`)
               }
               style={{ color: gradient.lessText, opacity: 0.7 }}
             >
               Track:
               <span className='cursor-pointer hover:underline'>
-                {currentTrack.data.title}
+                {currentTrack?.data?.title}
               </span>
             </div>
             <div style={{ color: gradient.lessText, opacity: 0.7 }}>
               Artist(s):{' '}
-              {currentTrack.data.contributors.map((c, i) => (
+              {currentTrack?.data?.contributors.map((c, i) => (
                 <span
                   key={c.id}
                   onClick={() => router.push(`/artists/${c.id}`)}
                   className='hover:underline cursor-pointer'
                 >
                   {c.name}
-                  {i !== currentTrack.data.contributors.length - 1 && ','}
+                  {i !== currentTrack?.data?.contributors.length - 1 && ','}
                 </span>
               ))}
             </div>

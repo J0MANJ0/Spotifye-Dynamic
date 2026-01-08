@@ -9,9 +9,6 @@ import { useMusicStore } from '@/stores/use-music-store';
 import { useUser } from '@clerk/nextjs';
 import { useEffect } from 'react';
 
-type Props = {
-  children: React.ReactNode;
-};
 const ServerProvider = () => {
   const { user } = useUser();
   const {
@@ -28,22 +25,30 @@ const ServerProvider = () => {
   } = useMusicStore();
   const { fetchMessages, fetchUsers } = useChatStore();
   const { checkAdmin, getInfo, getUser, isAdmin } = useAuthStore();
-  const { getTargets, followTarget, unfollowTarget } = useFollowStore();
+  const { getTargets, FollowArtist, unFollowArtist } = useFollowStore();
 
   const { fetchChart } = useChartStore();
 
   useEffect(() => {
-    fetchAlbums(), fetchArtists();
-    fetchMadeForYou();
-    fetchTracks();
-    fetchLrcs();
-    fetchUsers();
+    const fetch = async () => {
+      return await Promise.all([
+        fetchAlbums(),
+        fetchArtists(),
+        fetchMadeForYou(),
+        fetchTracks(),
+        fetchUsers(),
+        getTargets('artists'),
+      ]);
+    };
+    fetch();
     getTargets('artists');
   }, []);
 
   useEffect(() => {
-    fetchTracks();
-    fetchAlbums();
+    const fetch = async () => {
+      return await Promise.all([fetchAlbums(), fetchTracks()]);
+    };
+    fetch();
   }, [createAlbum, createLrc, createTrack]);
 
   useEffect(() => {
@@ -52,12 +57,17 @@ const ServerProvider = () => {
 
   useEffect(() => {
     if (user) {
-      fetchMessages(user?.id);
-      getInfo();
-      getUser();
-      fetchChart();
-      fetchUsers();
-      fetchLikedSongs();
+      const fetch = async () => {
+        return await Promise.all([
+          fetchMessages(user?.id),
+          getInfo(),
+          getUser(),
+          fetchChart(),
+          fetchUsers(),
+          fetchLikedSongs(),
+        ]);
+      };
+      fetch();
     }
   }, [user, getInfo, getUser, fetchMessages, fetchLikedSongs, fetchChart]);
 
@@ -69,11 +79,11 @@ const ServerProvider = () => {
 
   useEffect(() => {
     getTargets('artists');
-  }, [getTargets, followTarget, unfollowTarget]);
+  }, [getTargets, FollowArtist, unFollowArtist]);
 
   useEffect(() => {
     getTargets('users');
-  }, [getTargets, followTarget, unfollowTarget]);
+  }, [getTargets, FollowArtist, unFollowArtist]);
 
   return null;
 };

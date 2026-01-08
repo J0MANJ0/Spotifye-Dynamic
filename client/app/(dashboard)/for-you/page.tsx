@@ -34,22 +34,24 @@ const MadeForYouPage = () => {
   const scrollToCurrent = useRef<HTMLDivElement | null>(null);
 
   const { user } = useUser();
-  const { madeforyou, reverseSongsOrder } = useMusicStore();
+  const { madeforyou, reverseSongsOrder, tracksByIds } = useMusicStore();
   const {
     isPlaying,
-    currentTrack,
+    currentTrackId,
     playAlbum,
     toggleSong,
     madeForYouAlbumPlaying,
   } = usePlayerStore();
 
+  const currentTrack = tracksByIds[currentTrackId!];
+
   const handlePlayAlbum = () => {
     if (!madeforyou) return;
-    const isCurrentAlbumPlaying = madeforyou.some(
+    const iscurrentAlbumIdPlaying = madeforyou.some(
       (track) => track.trackId === currentTrack?.trackId
     );
 
-    if (isCurrentAlbumPlaying && madeForYouAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying && madeForYouAlbumPlaying) {
       toggleSong();
     } else {
       playAlbum(madeforyou);
@@ -92,12 +94,13 @@ const MadeForYouPage = () => {
   }, [
     filteredLikedSongs,
     currentTrack?._id,
-    currentTrack,
+    currentTrackId,
     scrollToCurrent.current,
   ]);
 
   useEffect(() => {
-    usePlayerStore.setState({ queue: madeforyou });
+    const q = madeforyou.map((t) => t._id);
+    usePlayerStore.setState({ queue: q });
   }, [madeforyou]);
 
   useEffect(() => {
@@ -199,16 +202,16 @@ const MadeForYouPage = () => {
             <div className='px-6'>
               <div className='py-4 space-y-2'>
                 {filteredLikedSongs?.map((track, i) => {
-                  const iscurrentTrack = currentTrack?._id === track._id;
+                  const iscurrentTrackId = currentTrack?._id === track._id;
                   return (
                     <div
                       ref={
-                        iscurrentTrack && madeForYouAlbumPlaying
+                        iscurrentTrackId && madeForYouAlbumPlaying
                           ? scrollToCurrent
                           : null
                       }
                       onClick={() => {
-                        if (iscurrentTrack && madeForYouAlbumPlaying) {
+                        if (iscurrentTrackId && madeForYouAlbumPlaying) {
                           toggleSong();
                         } else {
                           handlePlaySong(track);
@@ -222,19 +225,19 @@ const MadeForYouPage = () => {
                       }}
                       key={track._id}
                       className={`grid grid-cols-[16px_4fr_3fr_2fr_1fr_1fr] gap-4 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer ${
-                        iscurrentTrack &&
+                        iscurrentTrackId &&
                         madeForYouAlbumPlaying &&
                         `ring-1 ring-green-500`
                       }`}
                       style={{
                         backgroundColor:
-                          iscurrentTrack && madeForYouAlbumPlaying
+                          iscurrentTrackId && madeForYouAlbumPlaying
                             ? `${gradientActive}`
                             : '',
                       }}
                     >
                       <div className='flex items-center justify-center'>
-                        {iscurrentTrack &&
+                        {iscurrentTrackId &&
                         isPlaying &&
                         madeForYouAlbumPlaying ? (
                           <div className='size-4 text-green-500 text-xl flex justify-center items-center'>
@@ -250,7 +253,7 @@ const MadeForYouPage = () => {
                         ) : (
                           <span
                             className={`group-hover:hidden ${
-                              iscurrentTrack && madeForYouAlbumPlaying
+                              iscurrentTrackId && madeForYouAlbumPlaying
                                 ? 'text-green-500'
                                 : 'text-white'
                             }`}
@@ -275,7 +278,7 @@ const MadeForYouPage = () => {
                           {!search && (
                             <div
                               className={`font-bold ${
-                                iscurrentTrack && madeForYouAlbumPlaying
+                                iscurrentTrackId && madeForYouAlbumPlaying
                                   ? 'text-green-500'
                                   : 'text-white'
                               }`}

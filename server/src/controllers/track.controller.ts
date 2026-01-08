@@ -20,6 +20,18 @@ const getTrack = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, '', { track: data });
 });
 
+const getTrackId = asyncHandler(async (req: Request, res: Response) => {
+  const {
+    params: { trackId },
+  } = req;
+
+  const data = await TRACK_REPO.GET_TRACK(trackId as string);
+
+  if (!data) return handleResponse(res, false, 'No Track found!', {}, 404);
+
+  return handleResponse(res, true, '', { track: data });
+});
+
 const getTrackChart = asyncHandler(async (req: Request, res: Response) => {
   const {
     params: { trackId },
@@ -121,6 +133,7 @@ const getMadeForYou = asyncHandler(async (req: Request, res: Response) => {
 
 export const TRACK_CONTROLLER = {
   GET_TRACK: getTrack,
+  GET_TRACKID: getTrackId,
   GET_TRACK_CHART: getTrackChart,
   GET_TRACKS: getTracks,
   GET_MADE_FOR_YOU: getMadeForYou,

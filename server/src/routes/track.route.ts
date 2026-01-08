@@ -3,11 +3,17 @@ import { Router } from 'express';
 import { AUTH_MIDDLEWARE } from 'middlewares/auth.middlewares';
 
 const tracksRouter = Router();
-const { GET_TRACK, GET_TRACKS, GET_TRACK_CHART, GET_MADE_FOR_YOU } =
-  TRACK_CONTROLLER;
+const {
+  GET_TRACK,
+  GET_TRACKID,
+  GET_TRACKS,
+  GET_TRACK_CHART,
+  GET_MADE_FOR_YOU,
+} = TRACK_CONTROLLER;
 
 tracksRouter.get('/', GET_TRACKS);
 tracksRouter.get('/:trackId', GET_TRACK);
+tracksRouter.get('/trackData/:trackId', GET_TRACKID);
 tracksRouter.get('/chart/:trackId', GET_TRACK_CHART);
 tracksRouter.get('/user/madeforyou', AUTH_MIDDLEWARE.PROTECT, GET_MADE_FOR_YOU);
 

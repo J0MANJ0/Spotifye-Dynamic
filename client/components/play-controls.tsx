@@ -12,15 +12,17 @@ import { Tooltip } from '@mui/material';
 import { Shuffle } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { usePlayerStore } from '@/stores/use-player-store';
-import { formatTime, skipBackward, skipForward } from '@/lib/utils';
+import { cn, formatTime, skipBackward, skipForward } from '@/lib/utils';
 import { useMusicStore } from '@/stores/use-music-store';
 import { useEffect, useState } from 'react';
+import { useSocketStore } from '@/stores/use-socket-store';
 
 export const PlayControls = () => {
   const { user } = useUser();
 
   const {
-    currentTrack,
+    currentTrackId,
+    currentTime,
     shuffle,
     currentIndex,
     isPlaying,
@@ -31,27 +33,22 @@ export const PlayControls = () => {
     toggleSong,
     toggleShuffle,
     audioRef,
+    requestSeek,
   } = usePlayerStore();
 
   const [duration, setDuration] = useState(0);
-  const [currentTimeApp, setCurrentTimeApp] = useState(0);
-  const { currentAlbum } = useMusicStore();
+  const { currentAlbumId, tracksByIds, albumsByIds } = useMusicStore();
 
-  useEffect(() => {
-    if (!audioRef) return;
-
-    audioRef.currentTime = currentTimeApp;
-  }, [audioRef, currentTimeApp]);
+  const currentTrack = tracksByIds[currentTrackId!];
+  const currentAlbum = albumsByIds[currentAlbumId!];
 
   useEffect(() => {
     const audio = audioRef;
 
-    if (!audio) return;
+    if (!audio || !currentTrackId) return;
 
-    const updateTime = () => setCurrentTimeApp(audio.currentTime);
     const updateDuration = () => setDuration(audio?.duration);
 
-    audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
 
     const handleEnded = () => {
@@ -59,12 +56,13 @@ export const PlayControls = () => {
     };
 
     audio.addEventListener('ended', handleEnded);
-  }, [currentTrack, audioRef]);
+  }, [audioRef, currentTrackId]);
 
   const handleSeek = (value: number[]) => {
-    if (currentTrack) {
+    if (currentTrackId) {
       if (audioRef) {
         audioRef.currentTime = value[0];
+        requestSeek(value[0]);
       }
     }
   };
@@ -100,10 +98,10 @@ export const PlayControls = () => {
         >
           <button
             className='hover:scale-[1.130] transition-all'
-            disabled={!currentTrack}
+            disabled={!currentTrackId}
             style={{
-              opacity: !currentTrack ? 0.5 : 1,
-              cursor: !currentTrack ? 'not-allowed' : 'pointer',
+              opacity: !currentTrackId ? 0.5 : 1,
+              cursor: !currentTrackId ? 'not-allowed' : 'pointer',
             }}
             onClick={toggleShuffle}
           >
@@ -113,14 +111,14 @@ export const PlayControls = () => {
           </button>
         </Tooltip>
 
-        <Tooltip placement='top' title={currentTrack ? 'Replay 10s' : ''}>
+        <Tooltip placement='top' title={currentTrackId ? 'Replay 10s' : ''}>
           <button
-            onClick={() => skipBackward(audioRef, 10)}
-            disabled={!currentTrack}
+            onClick={() => skipBackward()}
+            disabled={!currentTrackId}
             className='hover:scale-[1.130] transition-all'
             style={{
-              opacity: !currentTrack ? 0.5 : 1,
-              cursor: !currentTrack ? 'not-allowed' : 'pointer',
+              opacity: !currentTrackId ? 0.5 : 1,
+              cursor: !currentTrackId ? 'not-allowed' : 'pointer',
             }}
           >
             <Replay10Icon fontSize='medium' sx={{ color: '#ccc' }} />
@@ -129,16 +127,18 @@ export const PlayControls = () => {
 
         <Tooltip
           placement='top'
-          title={!currentTrack || currentIndex === 0 ? '' : 'Previous'}
+          title={!currentTrackId || currentIndex === 0 ? '' : 'Previous'}
         >
           <button
             className='hidden sm:inline-flex hover:text-white text-white hover:scale-[1.130] transition-all'
             onClick={playPrevious}
-            disabled={!currentTrack || currentIndex === 0}
+            disabled={!currentTrackId || currentIndex === 0}
             style={{
-              opacity: !currentTrack || currentIndex === 0 ? 0.5 : 1,
+              opacity: !currentTrackId || currentIndex === 0 ? 0.5 : 1,
               cursor:
-                !currentTrack || currentIndex === 0 ? 'not-allowed' : 'pointer',
+                !currentTrackId || currentIndex === 0
+                  ? 'not-allowed'
+                  : 'pointer',
             }}
           >
             <SkipPreviousIcon fontSize='large' />
@@ -147,15 +147,15 @@ export const PlayControls = () => {
 
         <Tooltip
           placement='top'
-          title={currentTrack && (isPlaying ? 'Pause' : 'Play')}
+          title={currentTrackId && (isPlaying ? 'Pause' : 'Play')}
         >
           <button
             onClick={toggleSong}
-            disabled={!currentTrack}
+            disabled={!currentTrackId}
             className='hover:scale-[1.130] transition-all rounded-full'
             style={{
-              opacity: !currentTrack ? 0.5 : 1,
-              cursor: !currentTrack ? 'not-allowed' : 'pointer',
+              opacity: !currentTrackId ? 0.5 : 1,
+              cursor: !currentTrackId ? 'not-allowed' : 'pointer',
             }}
           >
             {isPlaying ? (
@@ -169,18 +169,18 @@ export const PlayControls = () => {
         <Tooltip
           placement='top'
           title={
-            !currentTrack || queue.length - 1 === currentIndex ? '' : 'Next'
+            !currentTrackId || queue.length - 1 === currentIndex ? '' : 'Next'
           }
         >
           <button
             className='hidden sm:inline-flex hover:text-white text-white hover:scale-[1.130] transition-all'
             onClick={playNext}
-            disabled={!currentTrack || queue.length - 1 === currentIndex}
+            disabled={!currentTrackId || queue.length - 1 === currentIndex}
             style={{
               opacity:
-                !currentTrack || queue.length - 1 === currentIndex ? 0.5 : 1,
+                !currentTrackId || queue.length - 1 === currentIndex ? 0.5 : 1,
               cursor:
-                !currentTrack || queue.length - 1 === currentIndex
+                !currentTrackId || queue.length - 1 === currentIndex
                   ? 'not-allowed'
                   : 'pointer',
             }}
@@ -189,14 +189,14 @@ export const PlayControls = () => {
           </button>
         </Tooltip>
 
-        <Tooltip placement='top' title={currentTrack ? 'Forward 10s' : ''}>
+        <Tooltip placement='top' title={currentTrackId ? 'Forward 10s' : ''}>
           <button
-            onClick={() => skipForward(audioRef, 10)}
-            disabled={!currentTrack}
+            onClick={() => skipForward()}
+            disabled={!currentTrackId}
             className='hover:scale-[1.130] transition-all'
             style={{
-              opacity: !currentTrack ? 0.5 : 1,
-              cursor: !currentTrack ? 'not-allowed' : 'pointer',
+              opacity: !currentTrackId ? 0.5 : 1,
+              cursor: !currentTrackId ? 'not-allowed' : 'pointer',
             }}
           >
             <Forward10Icon fontSize='medium' sx={{ color: '#ccc' }} />
@@ -206,17 +206,16 @@ export const PlayControls = () => {
         <RepeatMode />
       </div>
       <div className='hidden sm:flex items-center gap-2 w-full'>
-        <div className='text-xs text-zinc-400'>
-          {formatTime(currentTimeApp)}
-        </div>
+        <div className='text-xs text-zinc-400'>{formatTime(currentTime!)}</div>
         <Slider
-          value={[currentTimeApp]}
+          value={[currentTime!]}
           max={duration || 100}
           step={1}
           disabled={!user}
-          className={`w-full hover:cursor-grab active:cursor-grabbing ${
-            user ? 'opacity-50' : 'opacity-100'
-          }`}
+          className={cn(
+            'w-full hover:cursor-pointer active:cursor-pointer',
+            user ? 'opacity-100' : 'opacity-50'
+          )}
           onValueChange={handleSeek}
         />
         <div className='text-xs text-zinc-400'>{formatTime(duration)}</div>

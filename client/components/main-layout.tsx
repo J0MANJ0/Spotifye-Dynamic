@@ -18,6 +18,10 @@ import { LiveTrack } from './live-track';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { useOnlineStatus } from '@/hooks/use-online';
 import { Offline } from './offline';
+import { ShowActiveDevice } from './show-active';
+import { DevicePicker } from './device-picker';
+import { SidebarProvider } from './ui/sidebar';
+import { RightSidebar } from './right-sidebar';
 
 type Props = {
   children: React.ReactNode;
@@ -61,7 +65,7 @@ export const MainLayout = ({ children }: Props) => {
         transition={{ duration: 0.9 }}
       >
         {isOnline ? (
-          <div className='h-screen bg-black flex flex-col'>
+          <div className='h-screen bg-black flex flex-col select-none'>
             <Navbar />
             <ResizablePanelGroup
               direction='horizontal'
@@ -70,8 +74,8 @@ export const MainLayout = ({ children }: Props) => {
               <AudioPlayer />
               <ResizablePanel
                 defaultSize={20}
-                minSize={!maxLeft ? 0 : 20}
-                maxSize={maxLeft ? 20 : 0}
+                minSize={0}
+                maxSize={20}
                 collapsedSize={0}
               >
                 <LeftSidebar />
@@ -91,18 +95,13 @@ export const MainLayout = ({ children }: Props) => {
                     maxSize={maxRight ? 20 : 0}
                     collapsedSize={0}
                   >
-                    {selectedstate === 'users' ? (
-                      <UsersActivities />
-                    ) : selectedstate === 'queue' ? (
-                      <Queue />
-                    ) : (
-                      <LiveTrack />
-                    )}
+                    <RightSidebar />
                   </ResizablePanel>
                 </>
               )}
             </ResizablePanelGroup>
             <PlaybackControls />
+            <ShowActiveDevice />
           </div>
         ) : (
           <Offline />

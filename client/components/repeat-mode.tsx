@@ -7,12 +7,12 @@ import LoopIcon from '@mui/icons-material/Loop';
 import { usePlayerStore } from '@/stores/use-player-store';
 
 export const RepeatMode = () => {
-  const { currentTrack, repeatMode, togglRepeatMode } = usePlayerStore();
+  const { currentTrackId, repeatMode, toggleRepeatMode } = usePlayerStore();
   return (
     <Tooltip
       placement='top'
       title={
-        currentTrack
+        currentTrackId
           ? repeatMode === 'all'
             ? 'Enable repeat one'
             : repeatMode === 'one'
@@ -22,10 +22,10 @@ export const RepeatMode = () => {
       }
     >
       <button
-        onClick={togglRepeatMode}
+        onClick={toggleRepeatMode}
         style={{
-          opacity: !currentTrack ? 0.5 : 1,
-          cursor: !currentTrack ? 'not-allowed' : 'pointer',
+          opacity: !currentTrackId ? 0.5 : 1,
+          cursor: !currentTrackId ? 'not-allowed' : 'pointer',
         }}
         className='hover:scale-[1.130] transition-all'
       >

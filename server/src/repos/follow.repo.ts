@@ -3,7 +3,7 @@ import { FOLLOWCACHE } from 'models/follow.model';
 import { USERCACHE } from 'models/user.model';
 import { Types } from 'mongoose';
 
-const followTarget = async (
+const FollowArtist = async (
   follower: Types.ObjectId,
   targetType: string,
   artistId?: number | null,
@@ -35,7 +35,7 @@ const targetStatus = async (
   }
 };
 
-const unfollowTarget = async (
+const unFollowArtist = async (
   follower: Types.ObjectId,
   targetType: string,
   artistId?: number | null,
@@ -62,6 +62,6 @@ const getFollowedTargets = async (
 export const FOLLOW_REPO = {
   GET_FOLLOWED_TARGETS: getFollowedTargets,
   TARGET_STATUS: targetStatus,
-  FOLLOW_TARGET: followTarget,
-  UNFOLLOW_TARGET: unfollowTarget,
+  FOLLOW_TARGET: FollowArtist,
+  UNFOLLOW_TARGET: unFollowArtist,
 };

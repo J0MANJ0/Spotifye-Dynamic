@@ -2,11 +2,14 @@ import { useNavigationHistory } from '@/hooks/use-nav';
 import { ToggleLikeSong } from './toggle-like';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { useUser } from '@clerk/nextjs';
+import { useMusicStore } from '@/stores/use-music-store';
 
 export const PlaySongInfo = () => {
   const { user } = useUser();
-  const { currentTrack } = usePlayerStore();
+  const { currentTrackId } = usePlayerStore();
   const { router } = useNavigationHistory();
+
+  const currentTrack = useMusicStore((s) => s.tracksByIds[currentTrackId!]);
 
   return (
     <div className='hidden sm:flex items-center gap-4 min-w-[180px] w-[30%]'>

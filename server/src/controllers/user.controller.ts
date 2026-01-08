@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from 'lib/logger';
 import { handleResponse } from 'lib/response';
 import { asyncHandler } from 'lib/wrapper';
 import { MESSAGE_REPO } from 'repos/message.repo';
@@ -33,6 +34,28 @@ const updateUser = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, 'Profile updated sucessfully');
 });
 
+const updateExplicitContent = asyncHandler(
+  async (req: Request, res: Response) => {
+    const {
+      auth: { userId },
+    } = req;
+
+    const user = await USER_REPO.GET_USER(userId as string);
+
+    if (user?.explicitContent) {
+      await USER_REPO.UPDATE_EXPLICIT(userId as string, false);
+      return handleResponse(res, true, 'Explicit content is Off.', {
+        explicitContent: !user?.explicitContent,
+      });
+    } else {
+      await USER_REPO.UPDATE_EXPLICIT(userId as string, true);
+      return handleResponse(res, true, 'Explicit content is On.', {
+        explicitContent: !user?.explicitContent,
+      });
+    }
+  }
+);
+
 const getMessages = asyncHandler(async (req: Request, res: Response) => {
   const {
     auth: { userId },
@@ -60,5 +83,6 @@ export const USER_CONTROLLER = {
   GET_USERS: getUsers,
   GET_MESSAGES: getMessages,
   UPDATE_USER: updateUser,
+  UPDATE_EXPLICIT: updateExplicitContent,
   SEEN: markSeen,
 };

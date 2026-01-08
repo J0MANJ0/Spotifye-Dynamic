@@ -1,6 +1,6 @@
 'use client';
 
-import { useChatStore } from '@/stores/use-chat-store';
+import { skipBackward, skipForward } from '@/lib/utils';
 import { useMusicStore } from '@/stores/use-music-store';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { useUser } from '@clerk/nextjs';
@@ -11,28 +11,34 @@ export const AudioPlayer = () => {
   const prevSongRef = useRef<string | null>(null);
   const { user } = useUser();
   const {
-    currentTrack,
-    currentIndex,
+    currentTrackId,
+    currentTime,
     setCurrentTime,
+    requestSeek,
     setAudioRef,
     isPlaying,
     playNext,
+    isActive,
     repeatMode,
-    shuffle,
-    shuffledQueue,
-    likedAlbumPlaying,
-    queue,
-    progress,
     audioRef,
   } = usePlayerStore();
 
-  const { currentAlbum } = useMusicStore();
+  const { tracksByIds } = useMusicStore();
+
+  const currentTrack = tracksByIds[currentTrackId!];
 
   useEffect(() => {
-    if (audio.current) {
-      setAudioRef(audio.current);
+    if (!audioRef) return;
+
+    audioRef.currentTime = currentTime;
+    requestSeek(currentTime);
+  }, [audioRef, audio, requestSeek]);
+
+  useEffect(() => {
+    if (audio?.current) {
+      setAudioRef(audio?.current);
     }
-  }, [audio.current]);
+  }, [audio?.current, setAudioRef, isActive]);
 
   useEffect(() => {
     isPlaying
@@ -43,7 +49,7 @@ export const AudioPlayer = () => {
   }, [isPlaying]);
 
   useEffect(() => {
-    if (!audioRef || !currentTrack) return;
+    if (!audioRef || !currentTrackId) return;
     const audio = audioRef;
 
     let isLoading = false;
@@ -70,38 +76,14 @@ export const AudioPlayer = () => {
         isLoading = false;
       }
     }
-  }, [currentTrack, isPlaying]);
-
-  useEffect(() => {
-    const audio = audioRef;
-    if (!audio) return;
-
-    const handlePlaying = () => usePlayerStore.setState({ isPlaying: true });
-    const handlePause = () => usePlayerStore.setState({ isPlaying: false });
-    const handleError = () => usePlayerStore.setState({ isPlaying: false });
-
-    audio.addEventListener('playing', handlePlaying);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('error', handleError);
-
-    return () => {
-      audio.removeEventListener('playing', handlePlaying);
-      audio.removeEventListener('pause', handlePause);
-      audio.removeEventListener('error', handleError);
-    };
-  }, []);
+  }, [currentTrackId, isPlaying]);
 
   useEffect(() => {
     const audio = audioRef;
     if (!audio) return;
 
     const handleEnded = () => {
-      if (repeatMode == 'one') {
-        audio.currentTime = 0;
-        audio.play();
-      } else {
-        playNext();
-      }
+      playNext();
     };
 
     audio.addEventListener('ended', handleEnded);
@@ -115,9 +97,9 @@ export const AudioPlayer = () => {
     let raf: number;
     const tick = () => {
       if (!audio.paused) {
-        const prog = (audio.currentTime / audio.duration) * 100 || 0;
+        const prog = (currentTime / audio.duration) * 100 || 0;
         // Update **only** the store – no socket here
-        usePlayerStore.getState().setProgress(prog, audio.currentTime);
+        usePlayerStore.getState().setProgress(prog);
       }
       raf = requestAnimationFrame(tick);
     };
@@ -125,41 +107,6 @@ export const AudioPlayer = () => {
 
     return () => cancelAnimationFrame(raf);
   }, []); // run once
-
-  useEffect(() => {
-    if (!user?.id) return;
-    const socket = useChatStore.getState().socket;
-
-    if (!socket || !socket.connectedg) return;
-
-    const delta: Partial<any> = {
-      currentTrack,
-      currentAlbum,
-      currentIndex,
-      currentTime: audioRef?.currentTime ?? 0,
-      queue,
-      shuffledQueue,
-      shuffle,
-      repeatMode,
-      likedAlbumPlaying,
-      progress,
-    };
-    // Send to server
-
-    usePlayerStore.getState().updateState(delta, user.id);
-  }, [
-    user?.id,
-    currentTrack?._id,
-    currentIndex,
-    queue,
-    shuffledQueue,
-    shuffle,
-    repeatMode,
-    progress,
-    likedAlbumPlaying,
-  ]);
-
-  // AudioPlayer.tsx
 
   useEffect(() => {
     const keyDown = (e: KeyboardEvent) => {
@@ -176,16 +123,13 @@ export const AudioPlayer = () => {
       switch (e.code) {
         case 'Space':
           e.preventDefault();
-          !isPlaying ? audioRef.play() : audioRef.pause();
+          audioRef.paused ? audioRef.play() : audioRef.pause();
           break;
         case 'ArrowRight':
-          audioRef.currentTime = Math.min(
-            audioRef.currentTime + 10,
-            audioRef.duration
-          );
+          audioRef.currentTime = skipForward();
           break;
         case 'ArrowLeft':
-          audioRef.currentTime = Math.max(audioRef.currentTime - 10, 0);
+          audioRef.currentTime = skipBackward();
           break;
       }
     };

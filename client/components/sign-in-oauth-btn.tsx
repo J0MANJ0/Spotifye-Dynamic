@@ -18,7 +18,7 @@ export const SignInOauthBtn = () => {
     <Button
       onClick={signInWithGoogle}
       variant={'secondary'}
-      className='w-full text-white border-zinc-200 h-11'
+      className='w-full text-white border-zinc-200 h-11 cursor-pointer'
     >
       <FcGoogle className='h-6 w-6' />
       Continue with Google

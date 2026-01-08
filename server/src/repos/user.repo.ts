@@ -12,6 +12,13 @@ const updateUser = async (clerkId: string, fullName: string) => {
   return USERCACHE.findOneAndUpdate({ clerkId }, { fullName });
 };
 
+const updateExplicitContent = async (
+  clerkId: string,
+  explicitContent: boolean
+) => {
+  return USERCACHE.findOneAndUpdate({ clerkId }, { explicitContent });
+};
+
 const createUser = async (
   clerkId: string,
   fullName: string,
@@ -25,4 +32,5 @@ export const USER_REPO = {
   GET_USERS: getUsers,
   CREATE_USER: createUser,
   UPDATE_USER: updateUser,
+  UPDATE_EXPLICIT: updateExplicitContent,
 };

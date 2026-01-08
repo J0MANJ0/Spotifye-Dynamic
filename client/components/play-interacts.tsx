@@ -6,6 +6,7 @@ import {
   Mic2,
   SidebarClose,
   SidebarOpen,
+  TabletSmartphone,
   Users,
   Volume1,
   Volume2,
@@ -23,23 +24,31 @@ import { cn, downloadSong } from '@/lib/utils';
 
 export const PlayInteracts = () => {
   const { user } = useUser();
-  const { setState, selectedstate } = useMusicStore();
-  const { currentTrack, isMaxRight, audioRef } = usePlayerStore();
-  const [volume, setVolume] = useState(65);
+  const { setState, selectedstate, tracksByIds } = useMusicStore();
+  const {
+    currentTrackId,
+    isMaxRight,
+    audioRef,
+    volume,
+    setVolume,
+    toggleMute,
+  } = usePlayerStore();
   const { router, pathname } = useNavigationHistory();
+
+  const currentTrack = tracksByIds[currentTrackId!];
 
   useEffect(() => {
     if (audioRef) {
       audioRef.volume = volume / 100;
     }
-  }, [volume, audioRef]);
+  }, [volume]);
 
   return (
     <div className='sm:flex items-center gap-4 min-w-[180px] w-[30%] justify-end'>
       {currentTrack && !user && (
         <Tooltip
           placement='top'
-          title={`Download ${currentTrack.data.title} by ${currentTrack.data.artist.name}`}
+          title={`Download ${currentTrack?.data?.title} by ${currentTrack?.data?.artist.name}`}
         >
           <button onClick={downloadSong}>
             <DownloadSharpIcon fontSize='small' sx={{ color: '#fff' }} />
@@ -55,7 +64,7 @@ export const PlayInteracts = () => {
           >
             <AudioLines
               className={`size-4 ${
-                currentTrack && selectedstate === 'live' && 'text-green-400'
+                currentTrackId && selectedstate === 'live' && 'text-green-400'
               }`}
             />
           </button>
@@ -69,7 +78,7 @@ export const PlayInteracts = () => {
         >
           <Mic2
             className={`size-4 ${
-              currentTrack && pathname === '/lyrics'
+              currentTrackId && pathname === '/lyrics'
                 ? 'text-green-400'
                 : 'text-muted-foreground'
             }`}
@@ -85,7 +94,7 @@ export const PlayInteracts = () => {
           >
             <ListMusic
               className={`size-4 ${
-                currentTrack && selectedstate === 'queue' && 'text-green-400'
+                currentTrackId && selectedstate === 'queue' && 'text-green-400'
               }`}
             />
           </button>
@@ -100,16 +109,14 @@ export const PlayInteracts = () => {
           >
             <Users
               className={`size-4 ${
-                currentTrack && selectedstate === 'users' && 'text-green-400'
+                currentTrackId && selectedstate === 'users' && 'text-green-400'
               }`}
             />
           </button>
         </Tooltip>
       )}
 
-      {/* {user && <DevicePicker />} */}
-
-      <Tooltip
+      {/* <Tooltip
         placement='top'
         title={isMaxRight ? 'Close Sidebar' : 'Open Sidebar'}
       >
@@ -130,26 +137,42 @@ export const PlayInteracts = () => {
             <SidebarClose className='h-4 w-4' />
           )}
         </button>
+      </Tooltip> */}
+
+      <Tooltip placement='top' title='Connect to a device'>
+        <button
+          className='cursor-pointer hover:scale-105 transition-transform flex items-center'
+          onClick={() =>
+            selectedstate === 'devices' ? setState('live') : setState('devices')
+          }
+        >
+          <TabletSmartphone
+            className={cn(
+              'h-4 w-4',
+              selectedstate === 'devices' ? 'text-green-500' : 'text-gray-400'
+            )}
+          />
+        </button>
       </Tooltip>
 
-      <div className='flex items-center gap-2 cursor-pointer hover:text-green-400'>
-        {volume === 0 ? (
-          <VolumeOff className='size-4' onClick={() => setVolume(55)} />
-        ) : (
-          <span onClick={() => setVolume(0)}>
-            {volume <= 50 ? (
-              <Volume1 className='size-4' />
+      <div className='flex items-center justify-center gap-2 cursor-pointer hover:text-green-400'>
+        <Tooltip placement='top' title={volume === 0 ? 'Unmute' : 'Mute'}>
+          <span onClick={toggleMute} className='hover:text-green-400'>
+            {volume === 0 ? (
+              <VolumeOff className='h-4 w-4' />
+            ) : volume <= 50 ? (
+              <Volume1 className='h-4 w-4' />
             ) : (
-              <Volume2 className='size-4' />
+              <Volume2 className='h-4 w-4' />
             )}
           </span>
-        )}
+        </Tooltip>
 
         <Slider
           value={[volume]}
           max={100}
           step={1}
-          className='w-24 hover:cursor-grab active:cursor-grabbing'
+          className='w-24 hover:cursor-pointer active:cursor-pointer'
           onValueChange={(value) => {
             setVolume(value[0]);
             if (audioRef) {

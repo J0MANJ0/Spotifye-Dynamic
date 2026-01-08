@@ -17,11 +17,19 @@ import { PlayingBars } from '@/components/playing-bars';
 import { Track } from '@/types';
 
 const ArtistLikedSongsPage = () => {
-  const { artistPage, likedSongs, fetchArtistPage } = useMusicStore();
-  const { currentTrack, isPlaying, toggleSong, playAlbum, artistAlbumPlaying } =
-    usePlayerStore();
+  const { artistPage, likedSongs, fetchArtistPage, tracksByIds } =
+    useMusicStore();
+  const {
+    currentTrackId,
+    isPlaying,
+    toggleSong,
+    playAlbum,
+    artistAlbumPlaying,
+  } = usePlayerStore();
   const { router } = useNavigationHistory();
   const { artistId } = useParams<{ artistId: string }>();
+
+  const currentTrack = tracksByIds[currentTrackId!];
 
   const [hover, setHover] = useState(false);
 
@@ -33,38 +41,27 @@ const ArtistLikedSongsPage = () => {
   }, [artistPage?.data?.id, likedSongs]);
 
   const handlePlayAlbum = () => {
-    if (!likedArtistSongs) return;
-    const isCurrentAlbumPlaying = likedArtistSongs.some(
-      (track) => track.trackId === currentTrack?.trackId
+    if (!likedSongs) return;
+    const iscurrentAlbumIdPlaying = likedSongs.some(
+      (track) => track.trackId === currentTrack.trackId
     );
 
-    if (isCurrentAlbumPlaying && artistAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying && artistAlbumPlaying) {
       toggleSong();
     } else {
-      playAlbum(likedArtistSongs);
-      usePlayerStore.setState({
-        likedAlbumPlaying: false,
-        madeForYouAlbumPlaying: false,
-        artistAlbumPlaying: true,
-      });
-      useMusicStore.setState({ currentAlbum: null, album: null });
+      const q = likedSongs.map((t) => t._id);
+      playAlbum(q, 'artistAlbum');
     }
   };
 
   const handlePlaySong = (song: Track) => {
-    if (!likedArtistSongs) return;
-    const songIdx = likedArtistSongs.findIndex((s) => s._id === song._id);
+    if (!likedSongs) return;
+    const songIdx = likedSongs.findIndex((s) => s._id === song._id);
 
     if (songIdx === -1) return;
-    playAlbum(likedArtistSongs, songIdx);
-    usePlayerStore.setState({
-      likedAlbumPlaying: false,
-      madeForYouAlbumPlaying: false,
-      artistAlbumPlaying: true,
-    });
-    useMusicStore.setState({ currentAlbum: null, album: null });
+    const q = likedSongs.map((t) => t._id);
+    playAlbum(q, 'artistAlbum', null, songIdx);
   };
-
   useEffect(() => {
     fetchArtistPage(Number(artistId));
   }, [artistId, fetchArtistPage]);
@@ -76,16 +73,14 @@ const ArtistLikedSongsPage = () => {
             <button
               onClick={handlePlayAlbum}
               className='size-10 rounded-full bg-green-500 hover:bg-green-400 hover:scale-[1.030] transition-all flex justify-center items-center'
-              // disabled={!likedSongs?.length}
-              // style={{
-              //   cursor: !likedSongs?.length ? 'not-allowed' : 'pointer',
-              //   opacity: !likedSongs?.length ? 0.5 : 1,
-              // }}
+              disabled={!likedSongs?.length}
+              style={{
+                cursor: !likedSongs?.length ? 'not-allowed' : 'pointer',
+                opacity: !likedSongs?.length ? 0.5 : 1,
+              }}
             >
               {isPlaying &&
-              likedArtistSongs?.some(
-                (song) => song._id === currentTrack?._id
-              ) &&
+              likedArtistSongs?.some((song) => song._id === currentTrack._id) &&
               artistAlbumPlaying ? (
                 <PauseIcon fontSize='medium' sx={{ color: '#000' }} />
               ) : (
@@ -95,7 +90,7 @@ const ArtistLikedSongsPage = () => {
           </div>
           <div className='flex justify-start items-center'>
             <h1 className='text-white text-2xl font-bold'>
-              Liked Songs By {artistPage?.data?.name}
+              Liked Songs By {artistPage?.data?.name}{' '}
             </h1>
           </div>
         </div>
@@ -121,30 +116,30 @@ const ArtistLikedSongsPage = () => {
         <Separator />
         <ScrollArea className='h-[70%] w-full'>
           {likedArtistSongs.map((track, i) => {
-            const iscurrentTrack = currentTrack?.trackId === track?.trackId;
+            const iscurrentTrackId = currentTrack?.trackId === track?.trackId;
             return (
               <Fragment key={track._id}>
                 <div
                   key={track._id}
                   onClick={() => {
-                    if (iscurrentTrack && artistAlbumPlaying) {
+                    if (iscurrentTrackId) {
                       toggleSong();
                     } else {
                       handlePlaySong(track);
                     }
                   }}
                   onMouseEnter={() => {
-                    if (iscurrentTrack) setHover(true);
+                    if (iscurrentTrackId) setHover(true);
                   }}
                   onMouseLeave={() => {
-                    if (iscurrentTrack) setHover(false);
+                    if (iscurrentTrackId) setHover(false);
                   }}
                   className='grid grid-cols-[2fr_2fr] p-2 group hover:bg-zinc-800 rounded-md cursor-pointer'
                 >
                   <div className='grid grid-cols-[0.5fr_3fr]'>
                     <div className='grid grid-cols-[1fr_2fr]'>
                       <div className='flex justify-start items-center'>
-                        {isPlaying && iscurrentTrack ? (
+                        {isPlaying && iscurrentTrackId ? (
                           hover ? (
                             <PauseIcon sx={{ fontSize: '20px' }} />
                           ) : (
@@ -155,7 +150,7 @@ const ArtistLikedSongsPage = () => {
                             <span
                               className={cn(
                                 'group-hover:hidden',
-                                iscurrentTrack && 'text-green-400'
+                                iscurrentTrackId && 'text-green-400'
                               )}
                             >
                               {i + 1}
@@ -178,7 +173,7 @@ const ArtistLikedSongsPage = () => {
                       <p
                         className={cn(
                           'text-sm line-clamp-1',
-                          iscurrentTrack && 'text-green-400'
+                          iscurrentTrackId && 'text-green-400'
                         )}
                       >
                         {track?.data?.title}

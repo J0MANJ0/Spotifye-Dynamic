@@ -4,19 +4,20 @@ import { useNavigationHistory } from '@/hooks/use-nav';
 import { usePlayerStore } from '@/stores/use-player-store';
 import { Track } from '@/types';
 import { useUser } from '@clerk/nextjs';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { Tooltip } from '@mui/material';
 import { ToggleLikeSong } from './toggle-like';
 import { ScrollArea } from './ui/scroll-area';
+import { useMusicStore } from '@/stores/use-music-store';
 
 export const Queue = () => {
   const { user } = useUser();
   const {
     queue,
-    currentTrack,
+    currentTrackId,
     progress,
     toastShown,
     currentIndex,
@@ -30,13 +31,30 @@ export const Queue = () => {
     setToastShown,
   } = usePlayerStore();
   const { router } = useNavigationHistory();
+  const { tracksByIds, currentAlbumId } = useMusicStore();
+
+  const currentTrack = tracksByIds[currentTrackId!];
+  const queuedTracks = useMemo(() => {
+    return queue.map((id) => tracksByIds[id]).filter(Boolean);
+  }, [queue]);
 
   const handlePlaySong = (track: Track) => {
     if (!queue) return;
-    const trackIdx = queue.findIndex((s) => s._id === track._id);
+    const trackIdx = queue.findIndex((s) => s === track._id);
 
     if (trackIdx === -1) return;
-    playAlbum(queue, trackIdx);
+    playAlbum(
+      queue,
+      currentAlbumId
+        ? 'album'
+        : likedAlbumPlaying
+        ? 'likedSongsAlbum'
+        : madeForYouAlbumPlaying
+        ? 'madeForYouAlbum'
+        : 'artistAlbum',
+      currentAlbumId,
+      trackIdx
+    );
     usePlayerStore.setState({ toastShown: false });
   };
 
@@ -44,7 +62,7 @@ export const Queue = () => {
     if (
       progress.toFixed(0).toString() === '90' &&
       !toastShown &&
-      currentIndex !== queue.length - 1 &&
+      currentIndex !== queuedTracks.length - 1 &&
       repeatMode !== 'one'
     ) {
       toast.custom(
@@ -64,16 +82,16 @@ export const Queue = () => {
                 <div className='shrink-0 pt-0.5'>
                   <img
                     className='size-12 rounded-full'
-                    src={queue[currentIndex + 1].data.album.cover_medium}
+                    src={queuedTracks[currentIndex + 1].data.album.cover_medium}
                     alt=''
                   />
                 </div>
                 <div className='ml-3 flex-1'>
                   <p className='text-sm font-medium text-white'>
-                    {queue[currentIndex + 1].data.title}
+                    {queuedTracks[currentIndex + 1].data.title}
                   </p>
                   <p className='mt-1 text-sm text-gray-300'>
-                    {queue[currentIndex + 1].data.artist.name}
+                    {queuedTracks[currentIndex + 1].data.artist.name}
                   </p>
                 </div>
                 <div className='flex justify-center items-center animate-pulse transition-all'>
@@ -84,7 +102,7 @@ export const Queue = () => {
             <div className='flex border-l border-gray-800'>
               <button
                 onClick={() => {
-                  handlePlaySong(queue[currentIndex + 1]);
+                  handlePlaySong(queuedTracks[currentIndex + 1]);
                   toast.dismiss(t.id);
                 }}
                 className='w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500'
@@ -189,7 +207,7 @@ export const Queue = () => {
           </div>
           <ScrollArea>
             <div>
-              {currentIndex !== queue.length - 1 && (
+              {currentIndex !== queuedTracks.length - 1 && (
                 <h3 className='text-md font-semibold text-gray-300'>
                   Next from:{' '}
                   <span
@@ -217,13 +235,13 @@ export const Queue = () => {
                 </h3>
               )}
               <ul className='gap-2 flex flex-col'>
-                {queue.length !== 0 ? (
-                  queue
+                {queuedTracks.length !== 0 ? (
+                  queuedTracks
                     .filter(
-                      (s, i) => s._id !== currentTrack?._id && currentIndex < i
+                      (s, i) => s._id !== currentTrackId && currentIndex < i
                     )
                     .map((song) => {
-                      const iscurrentTrack = currentTrack?._id === song._id;
+                      const iscurrentTrackId = currentTrackId === song._id;
                       return (
                         <li
                           key={song._id}
@@ -232,7 +250,7 @@ export const Queue = () => {
                           <div
                             className='hidden group-hover:block absolute left-5 top-5 cursor-pointer'
                             onClick={() => {
-                              if (iscurrentTrack) {
+                              if (iscurrentTrackId) {
                                 toggleSong();
                               } else {
                                 handlePlaySong(song);

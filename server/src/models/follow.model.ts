@@ -1,11 +1,11 @@
 import { Schema, Document, Types, model } from 'mongoose';
 
-export type FollowTarget = 'users' | 'artists';
+export type FollowArtist = 'users' | 'artists';
 
 export interface IFollow extends Document {
   follower: Types.ObjectId;
   target: Types.ObjectId;
-  targetType: FollowTarget;
+  targetType: FollowArtist;
 }
 
 const followSchema = new Schema<IFollow>(

@@ -18,28 +18,34 @@ export const LiveTrack = () => {
   const { user } = useAuthStore();
   const { router } = useNavigationHistory();
   const {
-    currentTrack,
+    currentTrackId,
     toggleSong,
     queue,
     playAlbum,
     isPlaying,
     currentIndex,
-    setcurrentTrack,
+    setcurrentTrackId,
     likedAlbumPlaying,
+    madeForYouAlbumPlaying,
     progress,
     toastShown,
     setToastShown,
     repeatMode,
   } = usePlayerStore();
-  const { albums, tracks, setState, currentAlbum } = useMusicStore();
+  const { albums, tracks, setState, currentAlbumId, tracksByIds } =
+    useMusicStore();
 
   const scrollToCurrent = useRef<HTMLImageElement | null>(null);
+
+  const currentTrack = tracksByIds[currentTrackId!];
+
+  const queuedTracks = queue.map((id) => tracksByIds[id]).filter(Boolean);
 
   useEffect(() => {
     if (
       progress.toFixed(0).toString() === '90' &&
       !toastShown &&
-      currentIndex !== queue.length - 1 &&
+      currentIndex !== queuedTracks.length - 1 &&
       repeatMode !== 'one'
     ) {
       toast.custom(
@@ -59,16 +65,16 @@ export const LiveTrack = () => {
                 <div className='shrink-0 pt-0.5'>
                   <img
                     className='size-12 rounded-full'
-                    src={queue[currentIndex + 1].data.album.cover_medium}
+                    src={queuedTracks[currentIndex + 1].data.album.cover_medium}
                     alt=''
                   />
                 </div>
                 <div className='ml-3 flex-1'>
                   <p className='text-sm font-medium text-white'>
-                    {queue[currentIndex + 1].data.title}
+                    {queuedTracks[currentIndex + 1].data.title}
                   </p>
                   <p className='mt-1 text-sm text-gray-300'>
-                    {queue[currentIndex + 1].data.artist.name}
+                    {queuedTracks[currentIndex + 1].data.artist.name}
                   </p>
                 </div>
                 <div className='flex justify-center items-center animate-pulse transition-all'>
@@ -79,7 +85,7 @@ export const LiveTrack = () => {
             <div className='flex border-l border-gray-800'>
               <button
                 onClick={() => {
-                  handlePlaySong(queue[currentIndex + 1]);
+                  handlePlaySong(queuedTracks[currentIndex + 1]);
                   toast.dismiss(t.id);
                 }}
                 className='w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500'
@@ -97,13 +103,13 @@ export const LiveTrack = () => {
   }, [progress, toastShown, setToastShown]);
 
   useEffect(() => {
-    if (currentTrack) {
+    if (currentTrackId) {
       scrollToCurrent.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
     }
-  }, [currentTrack?.trackId]);
+  }, [currentTrackId]);
 
   const associatedSongs = useMemo(() => {
     const filtered = albums
@@ -127,18 +133,19 @@ export const LiveTrack = () => {
     );
 
     return filtered.sort(() => Math.random() - 0.5).slice(0, 4);
-  }, [currentTrack?.trackId, currentAlbum?.albumId, albums]);
+  }, [currentTrack?.trackId, currentAlbumId, albums]);
 
   const handlePlayAlbum = (album: Album) => {
     if (!album) return;
-    const isCurrentAlbumPlaying = album?.tracks.some(
+    const iscurrentAlbumIdPlaying = album?.tracks.some(
       (track) => track._id === currentTrack?._id
     );
 
-    if (isCurrentAlbumPlaying && !likedAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying && !likedAlbumPlaying) {
       toggleSong();
     } else {
-      playAlbum(album.tracks);
+      const q = album.tracks.map((t) => t._id);
+      playAlbum(q, 'album', album._id);
       usePlayerStore.setState({ likedAlbumPlaying: false });
       router.push(`/albums/${album.data.id}`);
     }
@@ -146,20 +153,32 @@ export const LiveTrack = () => {
 
   const handlePlaySong = (track: Track) => {
     if (!queue) return;
-    const songIdx = queue.findIndex((s) => s._id === track._id);
+    const songIdx = queuedTracks.findIndex((s) => s._id === track._id);
 
     if (songIdx === -1) return;
-    playAlbum(queue, songIdx);
+    const q = queuedTracks.map((t) => t._id);
+    playAlbum(
+      q,
+      currentAlbumId
+        ? 'album'
+        : likedAlbumPlaying
+        ? 'likedSongsAlbum'
+        : madeForYouAlbumPlaying
+        ? 'madeForYouAlbum'
+        : 'artistAlbum',
+      currentAlbumId,
+      songIdx
+    );
     usePlayerStore.setState({ toastShown: false });
   };
 
   const handlePlay = (track: Track) => {
     if (!track) return;
-    const iscurrentTrack = currentTrack?._id === track._id;
-    iscurrentTrack ? toggleSong() : setcurrentTrack(track);
+    const iscurrentTrackId = currentTrackId === track._id;
+    iscurrentTrackId ? toggleSong() : setcurrentTrackId(track?._id);
   };
 
-  if (!currentTrack) {
+  if (!currentTrackId) {
     return (
       <div className='size-full bg-zinc-900 rounded-md flex flex-col p-4 gap-5'>
         <div className='flex justify-center items-center gap-4 flex-col'>
@@ -179,7 +198,7 @@ export const LiveTrack = () => {
     <div className='h-full w-full bg-zinc-900 rounded-md flex flex-col p-4 gap-5'>
       <div
         className='font-bold text-white text-xl hover:underline cursor-pointer'
-        onClick={() => router.push(`/albums/${currentTrack.data.album.id}`)}
+        onClick={() => router.push(`/albums/${currentTrack?.data.album.id}`)}
       >
         <h3>{currentTrack?.data.album.title}</h3>
       </div>
@@ -190,7 +209,7 @@ export const LiveTrack = () => {
               src={currentTrack?.data.album.cover_xl}
               alt={currentTrack?.data.title}
               className='w-full object-contain rounded-md brightness-75 hover:brightness-100 transition-all duration-300'
-              ref={currentTrack && scrollToCurrent}
+              ref={scrollToCurrent}
             />
           </div>
         </div>
@@ -200,20 +219,20 @@ export const LiveTrack = () => {
             <h2
               className='text-2xl font-extrabold text-gray-200 hover:underline cursor-pointer'
               onClick={() =>
-                router.push(`/albums/${currentTrack.data.album.id}`)
+                router.push(`/albums/${currentTrack?.data.album.id}`)
               }
             >
               {currentTrack?.data.title}
             </h2>
             <p className='text-zinc-400 text-sm  cursor-pointer'>
-              {currentTrack.data.contributors.map((c, i) => (
+              {currentTrack?.data.contributors.map((c, i) => (
                 <span
                   key={c.id}
                   className='hover:underline cursor-pointer'
                   onClick={() => router.push(`/artists/${c.id}`)}
                 >
                   {c.name}
-                  {i !== currentTrack.data.contributors.length - 1 && ','}
+                  {i !== currentTrack?.data.contributors.length - 1 && ','}
                 </span>
               ))}
             </p>
@@ -235,12 +254,12 @@ export const LiveTrack = () => {
           <div className='p-2 bg-zinc-800 rounded-md mt-4'>
             <div className='flex justify-between items-center p-2'>
               <h3 className='font-semibold'>
-                More from {currentTrack.data.album.title}
+                More from {currentTrack?.data.album.title}
               </h3>
               <span
                 className='text-zinc-400 text-xs hover:underline cursor-pointer'
                 onClick={() =>
-                  router.push(`/albums/${currentTrack.data.album.id}`)
+                  router.push(`/albums/${currentTrack?.data.album.id}`)
                 }
               >
                 Show all
@@ -248,7 +267,7 @@ export const LiveTrack = () => {
             </div>
             <ul className='gap-2 flex flex-col'>
               {associatedSongs?.map((song) => {
-                const iscurrentTrack = currentTrack?._id === song._id;
+                const iscurrentTrackId = currentTrack?._id === song._id;
                 return (
                   <li
                     key={song._id}
@@ -257,7 +276,7 @@ export const LiveTrack = () => {
                     <div
                       className='hidden group-hover:block absolute left-5 top-5 cursor-pointer'
                       onClick={() => {
-                        if (iscurrentTrack) {
+                        if (iscurrentTrackId) {
                           toggleSong();
                         } else {
                           handlePlaySong(song);
@@ -308,7 +327,7 @@ export const LiveTrack = () => {
           <div className='p-2 bg-zinc-800 rounded-md mt-4'>
             <div className='flex items-center p-2 text-gray-300'>
               <h3 className='font-semibold'>
-                From {currentTrack.data.artist.name}
+                From {currentTrack?.data.artist.name}
               </h3>
             </div>
             <ul className='gap-2 flex flex-col'>
@@ -357,7 +376,7 @@ export const LiveTrack = () => {
           <div className='p-2 bg-zinc-800 rounded-md mt-4'>
             <div className='flex  items-center p-2 text-gray-300'>
               <h3 className='font-semibold'>
-                Related Albums to {currentTrack.data.artist.name}
+                Related Albums to {currentTrack?.data.artist.name}
               </h3>
             </div>
             <ul className='gap-2 flex flex-col'>
@@ -397,7 +416,7 @@ export const LiveTrack = () => {
           </div>
         )}
 
-        {currentIndex !== queue.length - 1 && (
+        {currentIndex !== queuedTracks.length - 1 && (
           <div className='p-2 rounded-md bg-zinc-800 mt-4'>
             <div className='flex justify-between items-center p-2'>
               <h3 className='font-bold text-sm'>Next in Queue</h3>
@@ -410,33 +429,33 @@ export const LiveTrack = () => {
             </div>
             <div
               className='flex items-center ml-1 p-[7px] gap-2 hover:bg-zinc-700 hover:rounded-md cursor-pointer relative group'
-              onClick={() => handlePlaySong(queue[currentIndex + 1])}
+              onClick={() => handlePlaySong(queuedTracks[currentIndex + 1])}
             >
               <div className='hidden group-hover:block absolute left-5 top-5'>
                 {isPlaying &&
-                queue[currentIndex + 1]._id === currentTrack._id ? (
+                queuedTracks[currentIndex + 1]._id === currentTrack._id ? (
                   <PauseIcon fontSize='medium' sx={{ color: '#fff' }} />
                 ) : (
                   <PlayArrowIcon fontSize='medium' sx={{ color: '#fff' }} />
                 )}
               </div>
               <img
-                src={queue[currentIndex + 1].data.album.cover_medium}
+                src={queuedTracks[currentIndex + 1].data.album.cover_medium}
                 alt=''
                 className='size-12 rounded-md shrink-0 object-cover'
               />
               <div className='flex flex-col gap-2 p-2'>
-                <span className='font-bold text-sm text-gray-300'>
-                  {queue[currentIndex + 1]?.data.title}
+                <span className='font-bold text-sm text-gray-300 truncate line-clamp-1'>
+                  {queuedTracks[currentIndex + 1]?.data.title}
                 </span>
                 <span className='text-xs text-zinc-400'>
-                  {queue[currentIndex + 1]?.data.artist.name}
+                  {queuedTracks[currentIndex + 1]?.data.artist.name}
                 </span>
               </div>
               {user && (
                 <div className='flex justify-center items-center absolute right-5'>
                   <ToggleLikeSong
-                    trackId={String(queue[currentIndex + 1].data.id)}
+                    trackId={String(queuedTracks[currentIndex + 1].data.id)}
                   />
                 </div>
               )}

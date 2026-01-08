@@ -13,6 +13,17 @@ function Slider({
   max = 100,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
+  const [hover, setHover] = React.useState(false);
+  const _values = React.useMemo(
+    () =>
+      Array.isArray(value)
+        ? value
+        : Array.isArray(defaultValue)
+        ? defaultValue
+        : [min, max],
+    [value, defaultValue, min, max]
+  );
+
   return (
     <SliderPrimitive.Root
       data-slot='slider'
@@ -25,6 +36,8 @@ function Slider({
         className
       )}
       {...props}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
     >
       <SliderPrimitive.Track
         data-slot='slider-track'
@@ -35,17 +48,19 @@ function Slider({
         <SliderPrimitive.Range
           data-slot='slider-range'
           className={cn(
-            'bg-white hover:bg-green-400 rounded-md absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full'
+            'bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full rounded-md',
+            hover && 'bg-green-500'
           )}
         />
       </SliderPrimitive.Track>
-      {/* {Array.from({ length: _values.length }, (_, index) => (
-        <SliderPrimitive.Thumb
-          data-slot="slider-thumb"
-          key={index}
-          className="border-primary ring-ring/50 block size-4 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
-        />
-      ))} */}
+      {hover &&
+        Array.from({ length: _values.length }, (_, index) => (
+          <SliderPrimitive.Thumb
+            data-slot='slider-thumb'
+            key={index}
+            className='block border-primary ring-ring/50 size-3 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50'
+          />
+        ))}
     </SliderPrimitive.Root>
   );
 }

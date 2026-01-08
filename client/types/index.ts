@@ -59,6 +59,7 @@ export interface User {
   clerkId: string;
   fullName: string;
   imageUrl: string;
+  explicitContent?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -75,6 +76,15 @@ export interface FollowArtist {
   _id: string;
   follower: string;
   target: Artist;
+  targetType: 'users' | 'artists';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FollowUser {
+  _id: string;
+  follower: string;
+  target: User;
   targetType: 'users' | 'artists';
   createdAt: string;
   updatedAt: string;
@@ -298,4 +308,12 @@ export interface Info {
   };
   has_podcasts: boolean;
   offers: [any];
+}
+
+export interface Device {
+  socketId: string;
+  deviceType: 'desktop' | 'mobile' | 'tablet';
+  browser: string;
+  os: string;
+  isActive: boolean;
 }

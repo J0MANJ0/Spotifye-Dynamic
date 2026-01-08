@@ -1,14 +1,6 @@
 import { api } from '@/lib/api';
 import { parseLyrics } from '@/lib/utils';
-import type {
-  Album,
-  Track,
-  Stats,
-  ArtistData,
-  Lrc,
-  Artist,
-  TrackData,
-} from '@/types';
+import type { Album, Track, Stats, Lrc, Artist, TrackData } from '@/types';
 import toast from 'react-hot-toast';
 import { create } from 'zustand';
 
@@ -19,13 +11,15 @@ type LyricLine = {
 
 interface IMusicProps {
   tracks: Track[];
+  tracksByIds: Record<string, Track>;
   trackChart: TrackData | null;
   albums: Album[];
+  albumsByIds: Record<string, Album>;
   artistPage: Artist | null;
   artist: Artist | null;
   artists: Artist[] | null;
   album: Album | null;
-  currentAlbum: Album | null;
+  currentAlbumId: string | null;
   albumDialog: Album | null;
   likedSongs: Track[];
   featuredsongs: Track[];
@@ -83,8 +77,10 @@ interface IMusicProps {
 
 export const useMusicStore = create<IMusicProps>((set) => ({
   tracks: [],
+  tracksByIds: {},
   albums: [],
-  currentAlbum: null,
+  albumsByIds: {},
+  currentAlbumId: null,
   trackChart: null,
   album: null,
   albumDialog: null,
@@ -219,7 +215,14 @@ export const useMusicStore = create<IMusicProps>((set) => ({
         data: { success, albums },
       } = await api.get('/albums');
 
-      success ? set({ albums }) : set({ albums: [] });
+      if (success) {
+        const albumsByIds = Object.fromEntries(
+          albums.map((a: Album) => [a._id, a])
+        );
+        set({ albums, albumsByIds });
+      } else {
+        set({ albums: [], albumsByIds: {} });
+      }
     } catch (error: any) {
       set({ error: error?.response?.data?.message });
     } finally {
@@ -353,7 +356,14 @@ export const useMusicStore = create<IMusicProps>((set) => ({
         data: { success, tracks },
       } = await api.get('/tracks');
 
-      success ? set({ tracks }) : set({ tracks: [] });
+      if (success) {
+        const tracksByIds = Object.fromEntries(
+          tracks.map((t: Track) => [t._id, t])
+        );
+        set({ tracks, tracksByIds });
+      } else {
+        set({ tracks: [], tracksByIds: {} });
+      }
     } catch (error: any) {
       set({ error: error?.response?.data?.message });
     } finally {

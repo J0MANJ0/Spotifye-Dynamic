@@ -23,13 +23,6 @@ interface PlaybackState {
   lastUpdatedDevice: string;
 }
 
-interface DeviceStatus {
-  userId: string;
-  deviceId: string;
-  status: 'online' | 'offline' | 'idle';
-  timestamp: number;
-}
-
 interface SocketStoreProps {
   socket: Socket | null;
   isConnected: boolean;
@@ -43,7 +36,7 @@ interface SocketStoreProps {
   off: (event: string, callback?: (...args: any[]) => void) => void;
 
   // Initialization
-  initSocket: (authToken: string, userId: string) => void;
+  initSocket: (userId: string) => void;
   disconnect: () => void;
 
   // Session management
@@ -114,7 +107,7 @@ export const useSocketStore = create<SocketStoreProps>((set, get) => ({
   },
 
   // Initialize socket connection
-  initSocket: (authToken, userId) => {
+  initSocket: (userId) => {
     const existingSocket = get().socket;
     if (existingSocket?.connected) {
       console.log('Socket already connected');
@@ -135,8 +128,6 @@ export const useSocketStore = create<SocketStoreProps>((set, get) => ({
 
     const socket = io(ENV.SOCKET_URL, {
       auth: {
-        token: authToken,
-        deviceId: deviceId,
         userId,
       },
       transports: ['websocket', 'polling'],
@@ -171,92 +162,11 @@ export const useSocketStore = create<SocketStoreProps>((set, get) => ({
       }
     });
 
-    // Session events
-    socket.on('session:state', (state: PlaybackState) => {
-      console.log('📦 Session state received:', state);
-      set({ currentPlayback: state });
-    });
-
-    socket.on('session:user_joined', (data) => {
-      console.log('👤 User joined:', data);
-      // Handle user joined notification
-    });
-
-    socket.on('session:user_left', (data) => {
-      console.log('👋 User left:', data);
-      // Handle user left notification
-    });
-
-    socket.on('session:error', (error) => {
-      console.error('❌ Session error:', error);
-    });
-
-    // Playback events
-    socket.on('playback:play', (data) => {
-      console.log('▶️ Remote play:', data);
-      // Update local playback state
-      // This would trigger your audio player to play
-    });
-
-    socket.on('playback:pause', (data) => {
-      console.log('⏸️ Remote pause:', data);
-      // Update local playback state
-    });
-
-    socket.on('playback:seek', (data) => {
-      console.log('🎯 Remote seek:', data);
-      // Seek local player
-    });
-
-    socket.on('playback:queue_updated', (data) => {
-      console.log('📋 Queue updated:', data);
-      // Update local queue
-    });
-
-    socket.on('playback:volume', (data) => {
-      console.log('🔊 Volume changed:', data);
-      // Update local volume
-    });
-
-    // Device events
-    socket.on('device:list', (devices: DeviceInfo[]) => {
-      console.log('📱 Device list:', devices);
-      set({ devices });
-    });
-
-    socket.on('device:registered', (data) => {
-      console.log('📱 Device registered:', data);
-      // Update devices list
-      const { devices } = get();
-      if (!devices.some((d) => d.id === data.deviceId)) {
-        set({ devices: [...devices, data.deviceInfo] });
-      }
-    });
-
-    socket.on('device:active_changed', (data) => {
-      console.log('📱 Active device changed:', data);
-      // Handle active device change
-    });
-
-    socket.on('device:transfer_request', (data) => {
-      console.log('🔄 Transfer request:', data);
-      // Show UI prompt for transfer
-      if (confirm('Accept playback transfer?')) {
-        get().setActiveDevice(data.sessionId);
-      }
-    });
-
-    socket.on('device:status', (data: DeviceStatus) => {
-      console.log('📱 Device status:', data);
-      // Update device status in UI
-    });
-
     socket.on('error', (error) => {
       console.error('❌ Socket error:', error);
     });
 
-    // Set socket in store
-    set({ socket });
+    set({ socket, isConnected: true });
 
     // Cleanup function
     return () => {
@@ -270,7 +180,7 @@ export const useSocketStore = create<SocketStoreProps>((set, get) => ({
     const { socket } = get();
     if (socket) {
       socket.disconnect();
-      set({ socket: null, isConnected: false, activeSession: null });
+      set({ socket: null, isConnected: false });
     }
   },
 

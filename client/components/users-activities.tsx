@@ -5,10 +5,18 @@ import { useUser } from '@clerk/nextjs';
 import { HeadphonesIcon, Music, Users } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { useFollowStore } from '@/stores/use-follow-store';
+import { Button } from './ui/button';
+import { useMemo } from 'react';
 
 export const UsersActivities = () => {
   const { user } = useUser();
-  const { userActivities, users, onlineUsers } = useChatStore();
+  const { followedUsers, FollowArtist, unFollowArtist } = useFollowStore();
+  const { usersActivities, users, onlineUsers } = useChatStore();
+
+  const usersList = useMemo(() => {
+    return users;
+  }, [followedUsers, users]);
 
   return (
     <div className='h-full bg-zinc-900 rounded-lg flex flex-col'>
@@ -22,10 +30,19 @@ export const UsersActivities = () => {
 
       <ScrollArea className='flex-1'>
         <div className='p-4 space-y-4'>
-          {users.map((user) => {
-            const activity = userActivities.get(user.clerkId);
+          {usersList.map((user) => {
+            const activity = usersActivities.get(user.clerkId);
 
             const isPlaying = activity && activity !== 'Idle';
+            const isFollowed = followedUsers.some(
+              (u) => u.target.clerkId === user.clerkId
+            );
+
+            const handleFollow = () => {
+              isFollowed
+                ? unFollowArtist('users', null, user._id)
+                : FollowArtist('users', null, user._id);
+            };
             return (
               <div
                 className='cursor-pointer hover:bg-zinc-800/50 rounded-md transition-colors group py-2'
@@ -69,6 +86,14 @@ export const UsersActivities = () => {
                         {onlineUsers.has(user.clerkId) && 'Idle'}
                       </div>
                     )}
+                  </div>
+                  <div>
+                    <Button
+                      className='flex items-center justify-center rounded-2xl bg-zinc-900 text-white text-xs px-8 border border-gray-400 hover:scale-102 hover:border-gray-200 hover:bg-zinc-800 cursor-pointer'
+                      onClick={handleFollow}
+                    >
+                      {isFollowed ? 'Following' : 'Follow'}
+                    </Button>
                   </div>
                 </div>
               </div>
