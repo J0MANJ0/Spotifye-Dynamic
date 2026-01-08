@@ -26,7 +26,7 @@ const getArtist = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, '', { source: 'api', artist: data });
 });
 
-const getArtists = asyncHandler(async (req: Request, res: Response) => {
+const getArtists = asyncHandler(async (_: Request, res: Response) => {
   const artists = await ARTIST_REPO.GET_ARTISTS();
 
   return handleResponse(res, true, '', { artists });

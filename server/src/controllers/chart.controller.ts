@@ -3,7 +3,7 @@ import { handleResponse } from '../lib/response';
 import { asyncHandler } from '../lib/wrapper';
 import { CHART_SERVICE } from '../services/chart.service';
 
-const getChart = asyncHandler(async (req: Request, res: Response) => {
+const getChart = asyncHandler(async (_req: Request, res: Response) => {
   const chart = await CHART_SERVICE.FETCH_CHART();
 
   if (!chart) return handleResponse(res, false, 'No Chart available!', {}, 404);

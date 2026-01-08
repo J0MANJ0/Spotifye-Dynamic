@@ -1,18 +1,30 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "Node16", // Or "NodeNext" for latest Node features
-    "moduleResolution": "Node16", // Matches module above
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "lib": ["ES2023"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+
     "outDir": "./dist",
     "rootDir": "./src",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true, // Important: skips checking .d.ts files (fixes many third-party issues)
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
-    "removeComments": true // Optional: strips comments in production build
+    "removeComments": true,
+
+    "types": ["node"] // THIS IS CRITICAL – tells TS to include Node.js types
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

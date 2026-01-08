@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import { handleResponse } from '../lib/response';
 import { asyncHandler } from '../lib/wrapper';
-import { ARTISTCACHE } from '../models/artist.model';
-import { FOLLOWCACHE } from '../models/follow.model';
-import { USERCACHE } from '../models/user.model';
 import { Types } from 'mongoose';
 import { FOLLOW_REPO } from '../repos/follow.repo';
 import { USER_REPO } from '../repos/user.repo';

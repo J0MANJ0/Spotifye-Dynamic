@@ -2,12 +2,13 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import { clerkMiddleware } from '@clerk/express';
+import { AUTH_MIDDLEWARE } from './middlewares/auth.middlewares';
 
 const app = express();
 
 // middlewares
 app.use(clerkMiddleware());
-// app.use(AUTH_MIDDLEWARE.PROTECT_SOCKET);
+app.use(AUTH_MIDDLEWARE.PROTECT_SOCKET);
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(
@@ -52,7 +53,6 @@ import followRoutes from './routes/follow.route';
 
 // error
 import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
-import { AUTH_MIDDLEWARE } from './middlewares/auth.middlewares';
 
 // status
 app.get('/', (_: Request, res: Response) => {

@@ -105,7 +105,7 @@ const deleteAlbum = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, 'Album deleted successfully');
 });
 
-const checkAdmin = asyncHandler(async (req: Request, res: Response) => {
+const checkAdmin = asyncHandler(async (_req: Request, res: Response) => {
   return handleResponse(res, true, '', { admin: true });
 });
 

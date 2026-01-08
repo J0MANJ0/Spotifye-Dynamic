@@ -20,7 +20,7 @@ const getAlbum = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, '', { album: cache });
 });
 
-const getAlbums = asyncHandler(async (req: Request, res: Response) => {
+const getAlbums = asyncHandler(async (_: Request, res: Response) => {
   const albums = await ALBUM_REPO.GET_ALBUMS();
 
   return handleResponse(res, true, '', { total: albums.length, albums });
