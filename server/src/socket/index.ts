@@ -137,6 +137,7 @@ function emitUsers(io: Server, socket: Socket) {
 }
 
 const initSocket = (httpServer: HttpServer) => {
+  if (ENV.ENABLE_SOCKETS === 'false') return;
   const io = new Server(httpServer, {
     cors: { origin: ENV.CLIENT_URL, credentials: true },
   });
