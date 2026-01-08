@@ -7,7 +7,7 @@ import { LRCCACHE } from '../models/lrc.model';
 import { TRACKCACHE } from '../models/track.model';
 import { USERCACHE } from '../models/user.model';
 
-const getStats = asyncHandler(async (req: Request, res: Response) => {
+const getStats = asyncHandler(async (_req: Request, res: Response) => {
   const [tracks, albums, users, artists, lyrics] = await Promise.all([
     TRACKCACHE.countDocuments(),
     ALBUMCACHE.countDocuments(),

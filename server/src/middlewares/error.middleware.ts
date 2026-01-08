@@ -4,7 +4,7 @@ import { handleResponse } from '../lib/response';
 
 const errorHandler = async (
   err: any,
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction
 ) => {

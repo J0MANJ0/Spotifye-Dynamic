@@ -17,7 +17,7 @@ const getLrcfile = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, '', { url: data.lyrics?.url });
 });
 
-const getLrcFiles = asyncHandler(async (req: Request, res: Response) => {
+const getLrcFiles = asyncHandler(async (_req: Request, res: Response) => {
   const data = await LRC_REPO.GET_LRC_FILES();
 
   if (!data.length) return handleResponse(res, false, '', { lrcs: [] });

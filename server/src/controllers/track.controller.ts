@@ -41,7 +41,7 @@ const getTrackChart = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, '', { track_chart: data });
 });
 
-const getTracks = asyncHandler(async (req: Request, res: Response) => {
+const getTracks = asyncHandler(async (_req: Request, res: Response) => {
   const data = await TRACK_REPO.GET_TRACKS();
 
   if (!data) return handleResponse(res, false, 'No Tracks found!', {}, 404);

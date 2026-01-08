@@ -30,7 +30,7 @@ const getLyrics = asyncHandler(async (req: Request, res: Response) => {
   return handleResponse(res, true, '', { source: 'api', lyrics: data });
 });
 
-const getAllLyrics = asyncHandler(async (req: Request, res: Response) => {
+const getAllLyrics = asyncHandler(async (_req: Request, res: Response) => {
   const data = await LYRICS_REPO.GET_ALL_LYRICS();
 
   return handleResponse(res, true, '', {

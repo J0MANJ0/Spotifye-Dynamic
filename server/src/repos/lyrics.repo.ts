@@ -18,6 +18,7 @@ const saveLyrics = async (songId: number, data: any, lyrics: string) => {
       artistId: data?.artist?.id,
       lyrics,
     });
+  return;
 };
 
 export const LYRICS_REPO = {
