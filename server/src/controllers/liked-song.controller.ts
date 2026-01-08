@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { TRACKCACHE } from 'models/track.model';
-import { LIKEDSONG_REPO } from 'repos/liked-song.repo';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { TRACKCACHE } from '../models/track.model';
+import { LIKEDSONG_REPO } from '../repos/liked-song.repo';
 
 const getLikedSongs = asyncHandler(async (req: Request, res: Response) => {
   const {

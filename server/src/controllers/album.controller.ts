@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { ALBUM_REPO } from 'repos/album.repo';
-import { ALBUM_SERVICE } from 'services/album.service';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { ALBUM_REPO } from '../repos/album.repo';
+import { ALBUM_SERVICE } from '../services/album.service';
 
 const getAlbum = asyncHandler(async (req: Request, res: Response) => {
   const {

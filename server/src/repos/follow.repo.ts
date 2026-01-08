@@ -1,6 +1,6 @@
-import { ARTISTCACHE } from 'models/artist.model';
-import { FOLLOWCACHE } from 'models/follow.model';
-import { USERCACHE } from 'models/user.model';
+import { ARTISTCACHE } from '../models/artist.model';
+import { FOLLOWCACHE } from '../models/follow.model';
+import { USERCACHE } from '../models/user.model';
 import { Types } from 'mongoose';
 
 const FollowArtist = async (

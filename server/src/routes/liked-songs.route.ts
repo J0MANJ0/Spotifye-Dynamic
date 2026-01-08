@@ -1,4 +1,4 @@
-import { LIKEDSONG_CONTROLLER } from 'controllers/liked-song.controller';
+import { LIKEDSONG_CONTROLLER } from '../controllers/liked-song.controller';
 import { Router } from 'express';
 
 const likedSongsRouter = Router();

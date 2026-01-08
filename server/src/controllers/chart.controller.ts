@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { CHART_SERVICE } from 'services/chart.service';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { CHART_SERVICE } from '../services/chart.service';
 
 const getChart = asyncHandler(async (req: Request, res: Response) => {
   const chart = await CHART_SERVICE.FETCH_CHART();

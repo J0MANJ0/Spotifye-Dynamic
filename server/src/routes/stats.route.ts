@@ -1,6 +1,6 @@
-import { STATS_CONTROLLER } from 'controllers/stats.controller';
+import { STATS_CONTROLLER } from '../controllers/stats.controller';
 import { Router } from 'express';
-import { AUTH_MIDDLEWARE } from 'middlewares/auth.middlewares';
+import { AUTH_MIDDLEWARE } from '../middlewares/auth.middlewares';
 
 const statsRouter = Router();
 

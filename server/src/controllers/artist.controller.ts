@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { ARTIST_REPO } from 'repos/artist.repo';
-import { ARTIST_SERVICE } from 'services/artist.service';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { ARTIST_REPO } from '../repos/artist.repo';
+import { ARTIST_SERVICE } from '../services/artist.service';
 
 const getArtist = asyncHandler(async (req: Request, res: Response) => {
   const {

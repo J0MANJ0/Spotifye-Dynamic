@@ -1,4 +1,4 @@
-import { APIS } from 'lib/api';
+import { APIS } from '../lib/api';
 
 const fetchLyrics = async (artist: string, title: string) => {
   const {

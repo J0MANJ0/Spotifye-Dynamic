@@ -1,4 +1,4 @@
-import { LRCCACHE } from 'models/lrc.model';
+import { LRCCACHE } from '../models/lrc.model';
 
 const getLrcfile = async (trackId: number) => {
   return await LRCCACHE.findOne({ trackId });

@@ -1,4 +1,4 @@
-import { LYRICS_CONTROLLER } from 'controllers/lyrics.controller';
+import { LYRICS_CONTROLLER } from '../controllers/lyrics.controller';
 import { Router } from 'express';
 
 const lyricsRouter = Router();

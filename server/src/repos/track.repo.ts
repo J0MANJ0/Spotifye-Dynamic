@@ -1,4 +1,4 @@
-import { TRACKCACHE } from 'models/track.model';
+import { TRACKCACHE } from '../models/track.model';
 import { Types } from 'mongoose';
 
 const getTrack = async (trackId: string) => {

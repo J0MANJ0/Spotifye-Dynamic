@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { LYRICS_REPO } from 'repos/lyrics.repo';
-import { LYRICS_SERVICE } from 'services/lyrics.service';
-import { MUSIC_SERVICE } from 'services/music.service';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { LYRICS_REPO } from '../repos/lyrics.repo';
+import { LYRICS_SERVICE } from '../services/lyrics.service';
+import { MUSIC_SERVICE } from '../services/music.service';
 
 const getLyrics = asyncHandler(async (req: Request, res: Response) => {
   const {

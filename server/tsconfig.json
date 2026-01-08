@@ -1,25 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "Node16",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./src",
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["node", "express"],
+    "target": "ES2022",
+    "module": "Node16", // Or "NodeNext" for latest Node features
+    "moduleResolution": "Node16", // Matches module above
+    "lib": ["ES2023"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node16",
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": false,
-    "sourceMap": true
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "removeComments": true // Optional: strips comments in production build
   },
-  "include": ["src/**/*", "src/types"],
-  "exclude": ["node_modules", "dist"],
-  "ts-node": {
-    "esm": true
-  }
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { LIKEDSONG_REPO } from 'repos/liked-song.repo';
-import { USER_REPO } from 'repos/user.repo';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { LIKEDSONG_REPO } from '../repos/liked-song.repo';
+import { USER_REPO } from '../repos/user.repo';
 
 const callBack = asyncHandler(async (req: Request, res: Response) => {
   const {

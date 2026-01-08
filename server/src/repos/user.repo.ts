@@ -1,4 +1,4 @@
-import { USERCACHE } from 'models/user.model';
+import { USERCACHE } from '../models/user.model';
 
 const getUser = async (clerkId: string) => {
   return await USERCACHE.findOne({ clerkId });

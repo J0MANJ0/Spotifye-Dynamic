@@ -1,4 +1,4 @@
-import { AUTH_CALLBACK } from 'controllers/auth.controller';
+import { AUTH_CALLBACK } from '../controllers/auth.controller';
 import { Router } from 'express';
 
 const authRouter = Router();

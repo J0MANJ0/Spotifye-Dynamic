@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { ALBUMCACHE } from 'models/album.model';
-import { TRACKCACHE } from 'models/track.model';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { ALBUMCACHE } from '../models/album.model';
+import { TRACKCACHE } from '../models/track.model';
 import { Types } from 'mongoose';
-import { LIKEDSONG_REPO } from 'repos/liked-song.repo';
-import { TRACK_REPO } from 'repos/track.repo';
-import { TRACK_SERVICE } from 'services/track.service';
+import { LIKEDSONG_REPO } from '../repos/liked-song.repo';
+import { TRACK_REPO } from '../repos/track.repo';
+import { TRACK_SERVICE } from '../services/track.service';
 
 const getTrack = asyncHandler(async (req: Request, res: Response) => {
   const {

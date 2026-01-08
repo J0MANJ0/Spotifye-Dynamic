@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import logger from 'lib/logger';
-import { handleResponse } from 'lib/response';
-import { asyncHandler } from 'lib/wrapper';
-import { MESSAGE_REPO } from 'repos/message.repo';
-import { USER_REPO } from 'repos/user.repo';
+import { handleResponse } from '../lib/response';
+import { asyncHandler } from '../lib/wrapper';
+import { MESSAGE_REPO } from '../repos/message.repo';
+import { USER_REPO } from '../repos/user.repo';
 
 const getUser = asyncHandler(async (req: Request, res: Response) => {
   const {

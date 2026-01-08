@@ -1,4 +1,4 @@
-import { ALBUMCACHE } from 'models/album.model';
+import { ALBUMCACHE } from '../models/album.model';
 
 const getAlbum = async (albumId: number) => {
   return await ALBUMCACHE.findOne({ albumId }).populate({

@@ -1,4 +1,4 @@
-// import { PLAYBACKSTATE } from 'models/states.model';
+// import { PLAYBACKSTATE } from '../models/states.model';
 // import { PlaybackState } from 'socket/handlers/playback';
 
 // const saveState = async (userId: string, state: PlaybackState) => {

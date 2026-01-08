@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { asyncHandler } from 'lib/wrapper';
+import { asyncHandler } from '../lib/wrapper';
 import { clerkClient } from '@clerk/express';
-import { ENV } from 'lib/env';
-import { handleResponse } from 'lib/response';
+import { ENV } from '../lib/env';
+import { handleResponse } from '../lib/response';
 
 const requireAdmin = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {

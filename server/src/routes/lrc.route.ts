@@ -1,4 +1,4 @@
-import { LRC_CONTROLLER } from 'controllers/lrc.controller';
+import { LRC_CONTROLLER } from '../controllers/lrc.controller';
 import { Router } from 'express';
 
 const lrcRouter = Router();

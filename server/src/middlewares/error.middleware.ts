@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import logger from 'lib/logger';
-import { handleResponse } from 'lib/response';
+import logger from '../lib/logger';
+import { handleResponse } from '../lib/response';
 
 const errorHandler = async (
   err: any,

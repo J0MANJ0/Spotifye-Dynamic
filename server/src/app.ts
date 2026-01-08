@@ -20,39 +20,39 @@ app.use(
 );
 
 // music routes
-import musicRoutes from 'routes/music.route';
+import musicRoutes from './routes/music.route';
 
 // albums routes
-import albumRoutes from 'routes/album.route';
+import albumRoutes from './routes/album.route';
 
 // artists routes
-import artistRoutes from 'routes/artist.route';
+import artistRoutes from './routes/artist.route';
 
 // chart routes
-import chartRoutes from 'routes/chart.route';
+import chartRoutes from './routes/chart.route';
 
 // tracks routes
-import tracksRoutes from 'routes/track.route';
+import tracksRoutes from './routes/track.route';
 
 // info route
-import infoRoutes from 'routes/info.route';
+import infoRoutes from './routes/info.route';
 
 // lyrics route
-import lyricsRoutes from 'routes/lyrics.route';
-import { ENV } from 'lib/env';
+import lyricsRoutes from './routes/lyrics.route';
+import { ENV } from './lib/env';
 
 // main routes
-import userRoutes from 'routes/user.route';
-import adminRoutes from 'routes/admin.route';
-import authRoutes from 'routes/auth.route';
-import statsRoutes from 'routes/stats.route';
-import likedSongsRoutes from 'routes/liked-songs.route';
-import lrcRoutes from 'routes/lrc.route';
-import followRoutes from 'routes/follow.route';
+import userRoutes from './routes/user.route';
+import adminRoutes from './routes/admin.route';
+import authRoutes from './routes/auth.route';
+import statsRoutes from './routes/stats.route';
+import likedSongsRoutes from './routes/liked-songs.route';
+import lrcRoutes from './routes/lrc.route';
+import followRoutes from './routes/follow.route';
 
 // error
-import { ERROR_MIDDLEWARE } from 'middlewares/error.middleware';
-import { AUTH_MIDDLEWARE } from 'middlewares/auth.middlewares';
+import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
+import { AUTH_MIDDLEWARE } from './middlewares/auth.middlewares';
 
 // status
 app.get('/', (_, res) => {

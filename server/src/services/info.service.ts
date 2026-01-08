@@ -1,4 +1,4 @@
-import { APIS } from 'lib/api';
+import { APIS } from '../lib/api';
 
 const fetchInfo = async () => {
   const { data } = await APIS.MUSIC.get('/infos/');

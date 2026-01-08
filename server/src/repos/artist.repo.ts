@@ -1,4 +1,4 @@
-import { ARTISTCACHE } from 'models/artist.model';
+import { ARTISTCACHE } from '../models/artist.model';
 
 const getArtist = async (artistId: number) => {
   return await ARTISTCACHE.findOne({ artistId }).lean();

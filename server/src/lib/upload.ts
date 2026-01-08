@@ -1,4 +1,4 @@
-import cloudinary from 'config/cloudinary';
+import cloudinary from '../config/cloudinary';
 import fileUpload from 'express-fileupload';
 import { UTIL } from './utils';
 

@@ -1,4 +1,4 @@
-import { LYRICSCACHE } from 'models/lyrics.model';
+import { LYRICSCACHE } from '../models/lyrics.model';
 
 const getLyrics = async (songId: number) => {
   return await LYRICSCACHE.findOne({ songId }).lean();

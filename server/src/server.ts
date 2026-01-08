@@ -1,9 +1,9 @@
 import { createServer } from 'http';
-import app from 'app';
-import { ENV } from 'lib/env';
-import { connectDB } from 'config/db';
-import logger from 'lib/logger';
-import { SOC_INIT } from 'socket';
+import app from './app';
+import { ENV } from './lib/env';
+import { connectDB } from './config/db';
+import logger from './lib/logger';
+import { SOC_INIT } from './socket';
 
 const server = createServer(app);
 

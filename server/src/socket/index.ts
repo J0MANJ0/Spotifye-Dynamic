@@ -1,9 +1,15 @@
 import { Socket, Server } from 'socket.io';
 import { Server as HttpServer } from 'http';
-import { ENV } from 'lib/env';
-import logger from 'lib/logger';
+import { ENV } from '../lib/env';
+import logger from '../lib/logger';
 import { UAParser } from 'ua-parser-js';
-import { MESSAGE_REPO } from 'repos/message.repo';
+import { MESSAGE_REPO } from '../repos/message.repo';
+import {
+  PlaybackCommand,
+  PlaybackState,
+  SetDevice,
+  ToggleExplicit,
+} from '../types/playback';
 
 interface DeviceMeta {
   userId: string;

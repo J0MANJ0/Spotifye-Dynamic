@@ -1,7 +1,7 @@
-import { ADMIN_CONTROLLER } from 'controllers/admin.controller';
-import { LRC_CONTROLLER } from 'controllers/lrc.controller';
+import { ADMIN_CONTROLLER } from '../controllers/admin.controller';
+import { LRC_CONTROLLER } from '../controllers/lrc.controller';
 import { Router } from 'express';
-import { AUTH_MIDDLEWARE } from 'middlewares/auth.middlewares';
+import { AUTH_MIDDLEWARE } from '../middlewares/auth.middlewares';
 
 const adminRouter = Router();
 

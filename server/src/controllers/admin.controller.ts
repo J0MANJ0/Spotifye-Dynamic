@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { UPLOAD } from 'lib/upload';
-import { asyncHandler } from 'lib/wrapper';
-import { ALBUMCACHE } from 'models/album.model';
-import { TRACKCACHE } from 'models/track.model';
-import { ALBUM_REPO } from 'repos/album.repo';
-import { ARTIST_REPO } from 'repos/artist.repo';
-import { TRACK_REPO } from 'repos/track.repo';
-import { ALBUM_SERVICE } from 'services/album.service';
-import { ARTIST_SERVICE } from 'services/artist.service';
-import { TRACK_SERVICE } from 'services/track.service';
+import { handleResponse } from '../lib/response';
+import { UPLOAD } from '../lib/upload';
+import { asyncHandler } from '../lib/wrapper';
+import { ALBUMCACHE } from '../models/album.model';
+import { TRACKCACHE } from '../models/track.model';
+import { ALBUM_REPO } from '../repos/album.repo';
+import { ARTIST_REPO } from '../repos/artist.repo';
+import { TRACK_REPO } from '../repos/track.repo';
+import { ALBUM_SERVICE } from '../services/album.service';
+import { ARTIST_SERVICE } from '../services/artist.service';
+import { TRACK_SERVICE } from '../services/track.service';
 import fileUpload from 'express-fileupload';
 import { Schema, Types } from 'mongoose';
 

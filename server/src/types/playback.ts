@@ -1,17 +1,17 @@
-type RepeatMode = 'off' | 'all' | 'one';
+export type RepeatMode = 'off' | 'all' | 'one';
 
-type Activity = {
+export type Activity = {
   title: string;
   artist: string;
 };
 
-type AlbumType =
+export type AlbumType =
   | 'likedSongsAlbum'
   | 'artistAlbum'
   | 'madeForYouAlbum'
   | 'album';
 
-type PlaybackCommand =
+export type PlaybackCommand =
   | { type: 'TOGGLE_PLAY' }
   | { type: 'SET_QUEUE'; queue: string[]; startIndex: number }
   | {
@@ -29,10 +29,13 @@ type PlaybackCommand =
   | { type: 'SET_VOLUME'; volume: number }
   | { type: 'TOGGLE_SHUFFLE' };
 
-type ToggleExplicit = { type: 'TOGGLE_EXPLICIT'; explicitContent: boolean };
-type SetDevice = { type: 'SET_ACTIVE'; socketId: string };
+export type ToggleExplicit = {
+  type: 'TOGGLE_EXPLICIT';
+  explicitContent: boolean;
+};
+export type SetDevice = { type: 'SET_ACTIVE'; socketId: string };
 
-interface PlaybackState {
+export interface PlaybackState {
   isPlaying: boolean;
   likedAlbumPlaying: boolean;
   artistAlbumPlaying: boolean;

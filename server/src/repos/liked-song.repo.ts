@@ -1,5 +1,5 @@
-import { LIKEDSONGCACHE } from 'models/liked-song.model';
-import { TRACKCACHE } from 'models/track.model';
+import { LIKEDSONGCACHE } from '../models/liked-song.model';
+import { TRACKCACHE } from '../models/track.model';
 
 const getLikedSongs = async (userId: string) => {
   return await LIKEDSONGCACHE.findOne({ userId })

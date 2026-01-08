@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { handleResponse } from 'lib/response';
-import { UPLOAD } from 'lib/upload';
-import { asyncHandler } from 'lib/wrapper';
-import { LRC_REPO } from 'repos/lrc.repo';
+import { handleResponse } from '../lib/response';
+import { UPLOAD } from '../lib/upload';
+import { asyncHandler } from '../lib/wrapper';
+import { LRC_REPO } from '../repos/lrc.repo';
 
 const getLrcfile = asyncHandler(async (req: Request, res: Response) => {
   const {

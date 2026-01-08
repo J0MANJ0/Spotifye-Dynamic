@@ -1,4 +1,4 @@
-import { MESSAGECACHE } from 'models/message.model';
+import { MESSAGECACHE } from '../models/message.model';
 
 const getMessages = async (senderId: string, recipientId: string) => {
   return await MESSAGECACHE.find({
