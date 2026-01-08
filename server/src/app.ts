@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import { clerkMiddleware } from '@clerk/express';
@@ -55,7 +55,7 @@ import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
 import { AUTH_MIDDLEWARE } from './middlewares/auth.middlewares';
 
 // status
-app.get('/', (_, res) => {
+app.get('/', (_: Request, res: Response) => {
   return res.status(200).json({
     status: 'LIVE ⏺️',
   });
