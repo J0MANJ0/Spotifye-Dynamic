@@ -4,10 +4,8 @@
     "module": "Node16",
     "moduleResolution": "Node16",
     "lib": ["ES2023"],
-
     "outDir": "./dist",
     "rootDir": "./src",
-
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -15,16 +13,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true, // Important: skips checking .d.ts files (fixes many third-party issues)
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "removeComments": true,
-
-    "types": ["node"] // THIS IS CRITICAL – tells TS to include Node.js types
+    "removeComments": true
+    // Remove this: "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
