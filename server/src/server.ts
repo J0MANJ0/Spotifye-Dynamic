@@ -19,7 +19,7 @@ process.on('unhandledRejection', (err: unknown) => {
 
 connectDB()
   .then(() => {
-    server.listen(ENV.PORT, () =>
+    server.listen(ENV.PORT, '0.0.0.0', () =>
       logger.info(`Server running on port ${ENV.PORT}`)
     );
   })
