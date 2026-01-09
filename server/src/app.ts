@@ -8,7 +8,9 @@ const app = express();
 
 // middlewares
 app.use(clerkMiddleware());
-// app.use(AUTH_MIDDLEWARE.PROTECT_SOCKET);
+if (ENV.NODE_ENV === 'PRODUCTION') {
+  app.use(AUTH_MIDDLEWARE.PROTECT_SOCKET);
+}
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(
