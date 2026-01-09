@@ -20,7 +20,8 @@
   "scripts": {
     "server": "nodemon --watch src --ext ts --exec tsx src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "vercel-build": "echo hello"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.5",

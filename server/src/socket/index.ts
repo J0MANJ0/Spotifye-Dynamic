@@ -143,329 +143,328 @@ function emitUsers(io: Server, socket: Socket) {
 }
 
 const initSocket = (httpServer: HttpServer) => {
-  if (ENV.ENABLE_SOCKETS === 'true') {
-    const io = new Server(httpServer, {
-      cors: { origin: ENV.CLIENT_URL, credentials: true },
+  if (ENV.ENABLE_SOCKETS === 'false') return;
+  const io = new Server(httpServer, {
+    cors: { origin: ENV.CLIENT_URL, credentials: true },
+  });
+
+  io.on('connection', (socket: Socket) => {
+    if (!socket) return;
+    const userId = socket.handshake.auth?.userId;
+
+    if (!userId) {
+      logger.warn(`Socket ${socket.id} connected without userId`);
+      return;
+    }
+
+    const ua = socket.handshake.headers['user-agent'] ?? '';
+    const parser = new UAParser(ua);
+    const result = parser.getResult();
+    const browser = result.browser.name ?? 'Unknown';
+    const os = result.os.name ?? 'Unknown';
+
+    socketMeta.set(socket.id, {
+      userId,
+      socketId: socket.id,
+      deviceType: getDeviceType(ua),
+      browser,
+      os,
     });
 
-    io.on('connection', (socket: Socket) => {
-      if (!socket) return;
-      const userId = socket.handshake.auth?.userId;
+    const room = `user:${userId}`;
 
-      if (!userId) {
-        logger.warn(`Socket ${socket.id} connected without userId`);
-        return;
+    socket.join(room);
+
+    addSocket(userId, socket.id);
+
+    emitDevices(io, userId, room);
+
+    emitUsers(io, socket);
+
+    io.emit('user:connected', userId);
+
+    const state = ensureUserState(userId);
+
+    const nowPlayingTime = resolveCurrentTime(state);
+
+    logger.info(`Active device: ${activeSocket.get(userId)}`);
+    logger.info(`User ${userId} connected on socket: ${socket.id}`);
+
+    io.to(room).emit('sync:active', {
+      isActiveSocket: activeSocket.get(userId),
+    });
+
+    socket.emit('sync:playback', {
+      ...state,
+      currentTime: nowPlayingTime,
+      syncAt: Date.now(),
+      syncReason: 'join',
+    });
+
+    socket.on('playback:command', (cmd: PlaybackCommand) => {
+      const state = playbackState.get(userId);
+
+      if (!state) return;
+
+      if (state.isPlaying) {
+        state.currentTime = resolveCurrentTime(state);
       }
 
-      const ua = socket.handshake.headers['user-agent'] ?? '';
-      const parser = new UAParser(ua);
-      const result = parser.getResult();
-      const browser = result.browser.name ?? 'Unknown';
-      const os = result.os.name ?? 'Unknown';
-
-      socketMeta.set(socket.id, {
-        userId,
-        socketId: socket.id,
-        deviceType: getDeviceType(ua),
-        browser,
-        os,
-      });
-
-      const room = `user:${userId}`;
-
-      socket.join(room);
-
-      addSocket(userId, socket.id);
-
-      emitDevices(io, userId, room);
-
-      emitUsers(io, socket);
-
-      io.emit('user:connected', userId);
-
-      const state = ensureUserState(userId);
-
-      const nowPlayingTime = resolveCurrentTime(state);
-
-      logger.info(`Active device: ${activeSocket.get(userId)}`);
-      logger.info(`User ${userId} connected on socket: ${socket.id}`);
-
-      io.to(room).emit('sync:active', {
-        isActiveSocket: activeSocket.get(userId),
-      });
-
-      socket.emit('sync:playback', {
-        ...state,
-        currentTime: nowPlayingTime,
-        syncAt: Date.now(),
-        syncReason: 'join',
-      });
-
-      socket.on('playback:command', (cmd: PlaybackCommand) => {
-        const state = playbackState.get(userId);
-
-        if (!state) return;
-
-        if (state.isPlaying) {
-          state.currentTime = resolveCurrentTime(state);
-        }
-
-        switch (cmd.type) {
-          case 'TOGGLE_PLAY': {
-            if (state.isPlaying) {
-              state.isPlaying = false;
-              state.syncReason = 'pause';
-            } else {
-              state.isPlaying = true;
-              state.syncAt = Date.now();
-              state.syncReason = 'play';
-            }
-            break;
-          }
-          case 'SET_QUEUE': {
-            const { queue, startIndex } = cmd;
-            state.queue = queue;
-            state.currentIndex = startIndex;
-            state.currentTrackId = queue[startIndex];
+      switch (cmd.type) {
+        case 'TOGGLE_PLAY': {
+          if (state.isPlaying) {
+            state.isPlaying = false;
+            state.syncReason = 'pause';
+          } else {
             state.isPlaying = true;
-            state.currentTime = 0;
-
-            (state.syncAt = Date.now()), (state.syncReason = 'track-change');
-
-            break;
+            state.syncAt = Date.now();
+            state.syncReason = 'play';
           }
-          case 'SET_TRACK': {
-            const idx = state.queue.findIndex((t) => t === cmd.trackId);
+          break;
+        }
+        case 'SET_QUEUE': {
+          const { queue, startIndex } = cmd;
+          state.queue = queue;
+          state.currentIndex = startIndex;
+          state.currentTrackId = queue[startIndex];
+          state.isPlaying = true;
+          state.currentTime = 0;
 
-            if (idx !== -1) {
-              state.currentIndex = idx;
-              state.currentTime = 0;
-              state.currentTrackId = cmd.trackId;
-              state.isPlaying = true;
-              state.syncAt = Date.now();
-              state.syncReason = 'track-change';
-            }
-            break;
-          }
-          case 'NEXT': {
-            const list = state.shuffle ? state.shuffledQueue : state.queue;
+          (state.syncAt = Date.now()), (state.syncReason = 'track-change');
 
-            if (state.repeatMode === 'one') {
-              state.currentTime = 0;
-              state.isPlaying = true;
-              state.syncAt = Date.now();
-              state.syncReason = 'repeat-one';
-              break;
-            }
+          break;
+        }
+        case 'SET_TRACK': {
+          const idx = state.queue.findIndex((t) => t === cmd.trackId);
 
-            let nextIndex = state.currentIndex + 1;
-
-            if (nextIndex >= list.length) {
-              if (state.repeatMode === 'all') {
-                nextIndex = 0;
-              } else {
-                state.isPlaying = false;
-                break;
-              }
-            }
-
-            state.currentIndex = nextIndex;
-            state.currentTrackId = list[nextIndex];
+          if (idx !== -1) {
+            state.currentIndex = idx;
             state.currentTime = 0;
+            state.currentTrackId = cmd.trackId;
             state.isPlaying = true;
             state.syncAt = Date.now();
             state.syncReason = 'track-change';
-            break;
           }
-          case 'PREV': {
-            const prevIndex = state.currentIndex - 1;
+          break;
+        }
+        case 'NEXT': {
+          const list = state.shuffle ? state.shuffledQueue : state.queue;
 
-            if (prevIndex >= 0) {
-              state.currentIndex = prevIndex;
-              state.currentTime = 0;
-              state.currentTrackId = state.queue[prevIndex];
-              state.isPlaying = true;
-
-              state.syncAt = Date.now();
-              state.syncReason = 'track-change';
-            }
-
-            break;
-          }
-          case 'SEEK': {
-            state.currentTime = cmd.time;
-
-            (state.syncAt = Date.now()), (state.syncReason = 'seek');
-
-            break;
-          }
-          case 'SET_REPEAT': {
-            state.repeatMode = cmd.mode;
-            if (state.isPlaying) {
-              state.syncAt = Date.now();
-            }
-
-            break;
-          }
-          case 'TOGGLE_SHUFFLE': {
-            state.shuffle = !state.shuffle;
-            if (state.isPlaying) {
-              state.syncAt = Date.now();
-            }
-
-            break;
-          }
-          case 'PLAY_ALBUM': {
-            const { queue, startIndex, TYPE, albumId } = cmd;
-
-            state.queue = queue;
-            state.currentIndex = startIndex!;
+          if (state.repeatMode === 'one') {
             state.currentTime = 0;
-            state.currentTrackId = queue[startIndex!];
             state.isPlaying = true;
-            (state.syncAt = Date.now()), (state.syncReason = 'track-change');
+            state.syncAt = Date.now();
+            state.syncReason = 'repeat-one';
+            break;
+          }
 
-            if (TYPE === 'album' && albumId) {
-              state.currentAlbumId = albumId;
-              state.likedAlbumPlaying = false;
-              state.madeForYouAlbumPlaying = false;
-              state.artistAlbumPlaying = false;
-            } else if (TYPE === 'likedSongsAlbum') {
-              state.likedAlbumPlaying = true;
-              state.madeForYouAlbumPlaying = false;
-              state.artistAlbumPlaying = false;
-              state.currentAlbumId = null;
-            } else if (TYPE === 'artistAlbum') {
-              state.artistAlbumPlaying = true;
-              state.likedAlbumPlaying = false;
-              state.madeForYouAlbumPlaying = false;
-              state.currentAlbumId = null;
-            } else if (TYPE === 'madeForYouAlbum') {
-              state.madeForYouAlbumPlaying = true;
-              state.artistAlbumPlaying = false;
-              state.likedAlbumPlaying = false;
-              state.currentAlbumId = null;
+          let nextIndex = state.currentIndex + 1;
+
+          if (nextIndex >= list.length) {
+            if (state.repeatMode === 'all') {
+              nextIndex = 0;
+            } else {
+              state.isPlaying = false;
+              break;
             }
-            break;
-          }
-          case 'SET_VOLUME': {
-            if (cmd.volume > 0) {
-              state.prevVolume = cmd.volume;
-            }
-
-            state.volume = cmd.volume;
-            if (state.isPlaying) {
-              state.syncAt = Date.now();
-            }
-            break;
-          }
-          default:
-            break;
-        }
-
-        io.to(room).emit('sync:playback', {
-          ...state,
-          currentTime: resolveCurrentTime(state),
-          syncAt: Date.now(),
-        });
-      });
-
-      socket.on('set:active:device', (cmd: SetDevice) => {
-        switch (cmd.type) {
-          case 'SET_ACTIVE': {
-            const { socketId } = cmd;
-            const sockets = userSockets.get(userId);
-
-            if (!sockets || !sockets.has(socketId)) return;
-
-            activeSocket.set(userId, socketId);
-
-            io.to(room).emit('sync:active', {
-              isActiveSocket: activeSocket.get(userId),
-            });
-            logger.info(`SOCKET :${socketId}`);
-            emitDevices(io, userId, room);
-            break;
           }
 
-          default:
-            break;
+          state.currentIndex = nextIndex;
+          state.currentTrackId = list[nextIndex];
+          state.currentTime = 0;
+          state.isPlaying = true;
+          state.syncAt = Date.now();
+          state.syncReason = 'track-change';
+          break;
         }
-      });
+        case 'PREV': {
+          const prevIndex = state.currentIndex - 1;
 
-      socket.on('explicit:content:toggle', (cmd: ToggleExplicit) => {
-        const state = playbackState.get(userId);
+          if (prevIndex >= 0) {
+            state.currentIndex = prevIndex;
+            state.currentTime = 0;
+            state.currentTrackId = state.queue[prevIndex];
+            state.isPlaying = true;
 
-        if (!state) return;
-
-        switch (cmd.type) {
-          case 'TOGGLE_EXPLICIT': {
-            state.explicitContent = cmd.explicitContent;
-            break;
+            state.syncAt = Date.now();
+            state.syncReason = 'track-change';
           }
-          default:
-            break;
+
+          break;
         }
+        case 'SEEK': {
+          state.currentTime = cmd.time;
 
-        io.to(room).emit('sync:explicit', {
-          explicitContent: state.explicitContent,
-        });
-      });
+          (state.syncAt = Date.now()), (state.syncReason = 'seek');
 
-      socket.on(
-        'update:user:activity',
-        ({ userId, activity }: { userId: string; activity: string }) => {
-          userActivities.set(userId, activity);
-          io.emit('updated:user:activity', { userId, activity });
+          break;
         }
-      );
-
-      socket.on(
-        'send:message',
-        async ({
-          senderId,
-          recipientId,
-          content,
-        }: {
-          senderId: string;
-          recipientId: string;
-          content: string;
-        }) => {
-          try {
-            const message = await MESSAGE_REPO.SEND_MESSAGE(
-              senderId,
-              recipientId,
-              content
-            );
-
-            const recipientSockets = userSockets.get(recipientId);
-
-            if (recipientSockets) {
-              for (const sid of recipientSockets) {
-                io.to(sid).emit('receive:message', message);
-              }
-            }
-            socket.emit('sent:message', message);
-          } catch (error: any) {
-            logger.error(`Message error: ${error}`);
-            socket.emit('message:error', error?.message);
+        case 'SET_REPEAT': {
+          state.repeatMode = cmd.mode;
+          if (state.isPlaying) {
+            state.syncAt = Date.now();
           }
+
+          break;
         }
-      );
+        case 'TOGGLE_SHUFFLE': {
+          state.shuffle = !state.shuffle;
+          if (state.isPlaying) {
+            state.syncAt = Date.now();
+          }
 
-      socket.on('disconnect', (reason: DisconnectReason) => {
-        logger.error(`Socket disconnected ${socket.id}: ${reason}`);
-        removeSocket(userId, socket.id);
-        socketMeta.delete(socket.id);
+          break;
+        }
+        case 'PLAY_ALBUM': {
+          const { queue, startIndex, TYPE, albumId } = cmd;
 
-        emitDevices(io, userId, room);
-        emitUsers(io, socket);
-        io.emit('user:disconnected', userId);
+          state.queue = queue;
+          state.currentIndex = startIndex!;
+          state.currentTime = 0;
+          state.currentTrackId = queue[startIndex!];
+          state.isPlaying = true;
+          (state.syncAt = Date.now()), (state.syncReason = 'track-change');
+
+          if (TYPE === 'album' && albumId) {
+            state.currentAlbumId = albumId;
+            state.likedAlbumPlaying = false;
+            state.madeForYouAlbumPlaying = false;
+            state.artistAlbumPlaying = false;
+          } else if (TYPE === 'likedSongsAlbum') {
+            state.likedAlbumPlaying = true;
+            state.madeForYouAlbumPlaying = false;
+            state.artistAlbumPlaying = false;
+            state.currentAlbumId = null;
+          } else if (TYPE === 'artistAlbum') {
+            state.artistAlbumPlaying = true;
+            state.likedAlbumPlaying = false;
+            state.madeForYouAlbumPlaying = false;
+            state.currentAlbumId = null;
+          } else if (TYPE === 'madeForYouAlbum') {
+            state.madeForYouAlbumPlaying = true;
+            state.artistAlbumPlaying = false;
+            state.likedAlbumPlaying = false;
+            state.currentAlbumId = null;
+          }
+          break;
+        }
+        case 'SET_VOLUME': {
+          if (cmd.volume > 0) {
+            state.prevVolume = cmd.volume;
+          }
+
+          state.volume = cmd.volume;
+          if (state.isPlaying) {
+            state.syncAt = Date.now();
+          }
+          break;
+        }
+        default:
+          break;
+      }
+
+      io.to(room).emit('sync:playback', {
+        ...state,
+        currentTime: resolveCurrentTime(state),
+        syncAt: Date.now(),
       });
     });
 
-    return io;
-  } else return null;
+    socket.on('set:active:device', (cmd: SetDevice) => {
+      switch (cmd.type) {
+        case 'SET_ACTIVE': {
+          const { socketId } = cmd;
+          const sockets = userSockets.get(userId);
+
+          if (!sockets || !sockets.has(socketId)) return;
+
+          activeSocket.set(userId, socketId);
+
+          io.to(room).emit('sync:active', {
+            isActiveSocket: activeSocket.get(userId),
+          });
+          logger.info(`SOCKET :${socketId}`);
+          emitDevices(io, userId, room);
+          break;
+        }
+
+        default:
+          break;
+      }
+    });
+
+    socket.on('explicit:content:toggle', (cmd: ToggleExplicit) => {
+      const state = playbackState.get(userId);
+
+      if (!state) return;
+
+      switch (cmd.type) {
+        case 'TOGGLE_EXPLICIT': {
+          state.explicitContent = cmd.explicitContent;
+          break;
+        }
+        default:
+          break;
+      }
+
+      io.to(room).emit('sync:explicit', {
+        explicitContent: state.explicitContent,
+      });
+    });
+
+    socket.on(
+      'update:user:activity',
+      ({ userId, activity }: { userId: string; activity: string }) => {
+        userActivities.set(userId, activity);
+        io.emit('updated:user:activity', { userId, activity });
+      }
+    );
+
+    socket.on(
+      'send:message',
+      async ({
+        senderId,
+        recipientId,
+        content,
+      }: {
+        senderId: string;
+        recipientId: string;
+        content: string;
+      }) => {
+        try {
+          const message = await MESSAGE_REPO.SEND_MESSAGE(
+            senderId,
+            recipientId,
+            content
+          );
+
+          const recipientSockets = userSockets.get(recipientId);
+
+          if (recipientSockets) {
+            for (const sid of recipientSockets) {
+              io.to(sid).emit('receive:message', message);
+            }
+          }
+          socket.emit('sent:message', message);
+        } catch (error: any) {
+          logger.error(`Message error: ${error}`);
+          socket.emit('message:error', error?.message);
+        }
+      }
+    );
+
+    socket.on('disconnect', (reason: DisconnectReason) => {
+      logger.error(`Socket disconnected ${socket.id}: ${reason}`);
+      removeSocket(userId, socket.id);
+      socketMeta.delete(socket.id);
+
+      emitDevices(io, userId, room);
+      emitUsers(io, socket);
+      io.emit('user:disconnected', userId);
+    });
+  });
+
+  return io;
 };
 
 export const SOC_INIT = {

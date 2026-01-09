@@ -9,21 +9,17 @@ const server = createServer(app);
 
 SOC_INIT.INIT_SOCKET(server);
 
-process.on('uncaughtException', (err: Error) => {
-  console.error('Uncaught Exception:', err);
-});
-
-process.on('unhandledRejection', (err: unknown) => {
-  console.error('Unhandled Rejection:', err);
-});
-
 connectDB()
   .then(() => {
-    server.listen(ENV.PORT, '0.0.0.0', () =>
-      logger.info(`Server running on port ${ENV.PORT}`)
+    const { PORT } = ENV;
+    server.listen(PORT, () =>
+      logger.info(`Socket running on ws://localhost:${PORT}/socket.io`)
+    );
+    app.listen(PORT, () =>
+      logger.info(`Server running on http://localhost:${PORT}`)
     );
   })
   .catch((err) => {
-    logger.error('Failed to start server:', err);
+    logger.error('Failed to start server/connect db:', err);
     process.exit(1);
   });

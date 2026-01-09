@@ -1,4 +1,4 @@
-import { MUSIC_CONTROLLER } from '../controllers/music.controller';
+import { MUSIC_CONTROLLER } from '../../src/controllers/music.controller';
 import { Router } from 'express';
 
 const musicRouter = Router();

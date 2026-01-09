@@ -1,4 +1,4 @@
-import { ALBUM_CONTROLLER } from '../controllers/album.controller';
+import { ALBUM_CONTROLLER } from '../../src/controllers/album.controller';
 import { Router } from 'express';
 
 const albumRouter = Router();

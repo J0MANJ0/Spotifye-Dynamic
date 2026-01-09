@@ -55,3 +55,660 @@
 [31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
 [31m    at cjsLoader (node:internal/modules/esm/translators:263:5)[39m
 [31m    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:196:7)[39m
+2026-01-09 19:50:00:500 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at chartRoutes (/home/joseph/Projects/music-apis/server/src/app.ts:67:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:109:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:51:11:5111 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at chartRoutes (/home/joseph/Projects/music-apis/server/src/app.ts:67:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:109:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:51:51:5151 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at chartRoutes (/home/joseph/Projects/music-apis/server/src/app.ts:67:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:109:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:54:56:5456 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at chartRoutes (/home/joseph/Projects/music-apis/server/src/app.ts:67:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:109:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:55:00:550 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:55:05:555 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:59:01:591 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:59:22:5922 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 19:59:40:5940 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 20:11:59:1159 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 20:14:15:1415 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 20:14:23:1423 [31merror[39m: [31muncaughtException: argument handler must be a function[39m
+[31mTypeError: argument handler must be a function[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/router/index.js:392:13)[39m
+[31m    at Function.<anonymous> (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:222:21)[39m
+[31m    at Array.forEach (<anonymous>)[39m
+[31m    at Function.use (/home/joseph/Projects/music-apis/server/node_modules/express/lib/application.js:219:7)[39m
+[31m    at api (/home/joseph/Projects/music-apis/server/src/app.ts:37:5)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/app.ts:43:16)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+2026-01-09 20:32:52:3252 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/index.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/index.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:38:07:387 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/index.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/index.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:39:33:3933 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/index.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/index.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:40:11:4011 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:40:48:4048 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:41:01:411 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:41:04:414 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:41:40:4140 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:45:51:4551 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:47:03:473 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:47:14:4714 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:47:57:4757 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:48:26:4826 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:49:37:4937 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:51:38:5138 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:52:19:5219 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 20:54:56:5456 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 22:47:54:4754 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 22:58:02:582 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+2026-01-09 23:07:35:735 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/admin.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at Function._resolveFilename (node:internal/modules/cjs/loader:1249:15)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1340:12)[39m
+[31m    at require (node:internal/modules/helpers:138:16)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/api/admin.route.ts:1:1)[39m
+[31m    at Module.<anonymous> (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Module._compile (/home/joseph/Projects/music-apis/server/node_modules/source-map-support/source-map-support.js:568:25)[39m
+[31m    at Module.m._compile (/tmp/ts-node-dev-hook-6822191200660128.js:69:33)[39m
+2026-01-09 23:08:55:855 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/lrc.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/lrc.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at Function._resolveFilename (node:internal/modules/cjs/loader:1249:15)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1340:12)[39m
+[31m    at require (node:internal/modules/helpers:138:16)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/api/admin.route.ts:2:1)[39m
+[31m    at Module.<anonymous> (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Module._compile (/home/joseph/Projects/music-apis/server/node_modules/source-map-support/source-map-support.js:568:25)[39m
+[31m    at Module.m._compile (/tmp/ts-node-dev-hook-6822191200660128.js:69:33)[39m
+2026-01-09 23:09:40:940 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/lrc.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/lrc.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at Function._resolveFilename (node:internal/modules/cjs/loader:1249:15)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1340:12)[39m
+[31m    at require (node:internal/modules/helpers:138:16)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/api/admin.route.ts:2:1)[39m
+[31m    at Module.<anonymous> (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Module._compile (/home/joseph/Projects/music-apis/server/node_modules/source-map-support/source-map-support.js:568:25)[39m
+[31m    at Module.m._compile (/tmp/ts-node-dev-hook-6822191200660128.js:69:33)[39m
+2026-01-09 23:10:03:103 [31merror[39m: [31muncaughtException: Cannot find module '../../src/controllers/lrc.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module '../../src/controllers/lrc.controller'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/admin.route.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/api/index.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at Function._resolveFilename (node:internal/modules/cjs/loader:1249:15)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1340:12)[39m
+[31m    at require (node:internal/modules/helpers:138:16)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/api/admin.route.ts:2:1)[39m
+[31m    at Module.<anonymous> (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Module._compile (/home/joseph/Projects/music-apis/server/node_modules/source-map-support/source-map-support.js:568:25)[39m
+[31m    at Module.m._compile (/tmp/ts-node-dev-hook-6822191200660128.js:69:33)[39m
+2026-01-09 23:29:47:2947 [31merror[39m: [31muncaughtException: listen EADDRINUSE: address already in use :::8000[39m
+[31mError: listen EADDRINUSE: address already in use :::8000[39m
+[31m    at Server.setupListenHandle [as _listen2] (node:net:1912:16)[39m
+[31m    at listenInCluster (node:net:1969:12)[39m
+[31m    at Server.listen (node:net:2074:7)[39m
+[31m    at <anonymous> (/home/joseph/Projects/music-apis/server/src/server.ts:18:12)[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m

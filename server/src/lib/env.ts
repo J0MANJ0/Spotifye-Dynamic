@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 export const ENV = {
-  PORT: Number(process.env.PORT!) || 8000,
+  PORT: process.env.PORT!,
   DEEZER_BASE: process.env.DEEZER_BASE!,
   LYRICS_BASE: process.env.LYRICS_BASE!,
   CONN_STR: process.env.CONN_STR!,

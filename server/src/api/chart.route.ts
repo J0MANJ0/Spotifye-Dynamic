@@ -1,4 +1,4 @@
-import { CHART_CONTROLLER } from '../controllers/chart.controller';
+import { CHART_CONTROLLER } from '../../src/controllers/chart.controller';
 import { Router } from 'express';
 
 const chartRouter = Router();

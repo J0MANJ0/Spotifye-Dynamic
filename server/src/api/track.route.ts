@@ -1,6 +1,6 @@
-import { TRACK_CONTROLLER } from '../controllers/track.controller';
+import { TRACK_CONTROLLER } from '../../src/controllers/track.controller';
 import { Router } from 'express';
-import { AUTH_MIDDLEWARE } from '../middlewares/auth.middlewares';
+import { AUTH_MIDDLEWARE } from '../../src/middlewares/auth.middlewares';
 
 const tracksRouter = Router();
 const {
