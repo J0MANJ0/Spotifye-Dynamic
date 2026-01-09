@@ -26,7 +26,7 @@ const saveAlbum = async (albumId: number, data: any) => {
   const album = await ALBUMCACHE.findOne({ albumId });
 
   if (!album) return ALBUMCACHE.create({ albumId, data, tracks: undefined });
-  else return;
+  else return null;
 };
 
 export const ALBUM_REPO = {
