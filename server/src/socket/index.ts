@@ -1,4 +1,4 @@
-import { Socket, Server } from 'socket.io';
+import { Socket, Server, DisconnectReason } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { ENV } from '../lib/env';
 import logger from '../lib/logger';
@@ -412,34 +412,48 @@ const initSocket = (httpServer: HttpServer) => {
       });
     });
 
-    socket.on('update:user:activity', ({ userId, activity }) => {
-      userActivities.set(userId, activity);
-      io.emit('updated:user:activity', { userId, activity });
-    });
-
-    socket.on('send:message', async ({ senderId, recipientId, content }) => {
-      try {
-        const message = await MESSAGE_REPO.SEND_MESSAGE(
-          senderId,
-          recipientId,
-          content
-        );
-
-        const recipientSockets = userSockets.get(recipientId);
-
-        if (recipientSockets) {
-          for (const sid of recipientSockets) {
-            io.to(sid).emit('receive:message', message);
-          }
-        }
-        socket.emit('sent:message', message);
-      } catch (error: any) {
-        logger.error(`Message error: ${error}`);
-        socket.emit('message:error', error?.message);
+    socket.on(
+      'update:user:activity',
+      ({ userId, activity }: { userId: string; activity: string }) => {
+        userActivities.set(userId, activity);
+        io.emit('updated:user:activity', { userId, activity });
       }
-    });
+    );
 
-    socket.on('disconnect', (reason) => {
+    socket.on(
+      'send:message',
+      async ({
+        senderId,
+        recipientId,
+        content,
+      }: {
+        senderId: string;
+        recipientId: string;
+        content: string;
+      }) => {
+        try {
+          const message = await MESSAGE_REPO.SEND_MESSAGE(
+            senderId,
+            recipientId,
+            content
+          );
+
+          const recipientSockets = userSockets.get(recipientId);
+
+          if (recipientSockets) {
+            for (const sid of recipientSockets) {
+              io.to(sid).emit('receive:message', message);
+            }
+          }
+          socket.emit('sent:message', message);
+        } catch (error: any) {
+          logger.error(`Message error: ${error}`);
+          socket.emit('message:error', error?.message);
+        }
+      }
+    );
+
+    socket.on('disconnect', (reason: DisconnectReason) => {
       logger.error(`Socket disconnected ${socket.id}: ${reason}`);
       removeSocket(userId, socket.id);
       socketMeta.delete(socket.id);
