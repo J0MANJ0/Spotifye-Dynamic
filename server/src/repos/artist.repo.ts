@@ -12,7 +12,7 @@ const saveArtist = async (artistId: number, data: any) => {
   const artist = await ARTISTCACHE.findOne({ artistId });
 
   if (!artist) return ARTISTCACHE.create({ artistId, data });
-  return;
+  else return;
 };
 
 export const ARTIST_REPO = {
