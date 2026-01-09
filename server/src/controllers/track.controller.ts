@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { handleResponse } from '../lib/response';
 import { asyncHandler } from '../lib/wrapper';
-import { ALBUMCACHE, IAlbumCache } from '../models/album.model';
-import { ITrackCache, TRACKCACHE } from '../models/track.model';
+import { ALBUMCACHE } from '../models/album.model';
+import { TRACKCACHE } from '../models/track.model';
 import { Types } from 'mongoose';
 import { LIKEDSONG_REPO } from '../repos/liked-song.repo';
 import { TRACK_REPO } from '../repos/track.repo';
@@ -76,9 +76,9 @@ const getMadeForYou = asyncHandler(async (req: Request, res: Response) => {
   const likedAlbumIds = [
     ...new Set(
       likedTracks
-        .map((t: ITrackCache) => t.albumId)
-        .filter((id: Types.ObjectId) => Types.ObjectId.isValid(String(id)))
-        .map((id: Types.ObjectId) => id.toString())
+        .map((t: any) => t.albumId)
+        .filter((id: any) => Types.ObjectId.isValid(String(id)))
+        .map((id: any) => id.toString())
     ),
   ].map((id) => new Types.ObjectId(id));
 
@@ -91,7 +91,7 @@ const getMadeForYou = asyncHandler(async (req: Request, res: Response) => {
 
   const genreIds = new Set<number>();
 
-  albums.forEach((album: IAlbumCache) => {
+  albums.forEach((album: any) => {
     album.data?.genres?.data?.forEach((g: any) => {
       genreIds.add(g.id);
     });
@@ -107,7 +107,7 @@ const getMadeForYou = asyncHandler(async (req: Request, res: Response) => {
   if (!candidateAlbums.length)
     return handleResponse(res, true, '', { tracks: [] });
 
-  const candidateAlbumIds = candidateAlbums.map((a: IAlbumCache) => a._id);
+  const candidateAlbumIds = candidateAlbums.map((a: any) => a._id);
 
   const tracks = await TRACKCACHE.aggregate([
     {

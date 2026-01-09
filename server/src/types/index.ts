@@ -1,7 +1,9 @@
+import { Types } from 'mongoose';
+
 export interface Track {
   _id: string;
   trackId: number;
-  albumId: string;
+  albumId: Types.ObjectId;
   audioUrl: string;
   duration: number;
   data: TrackData;
