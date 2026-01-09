@@ -9,6 +9,14 @@ const server = createServer(app);
 
 SOC_INIT.INIT_SOCKET(server);
 
+process.on('uncaughtException', (err: Error) => {
+  console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (err: unknown) => {
+  console.error('Unhandled Rejection:', err);
+});
+
 connectDB()
   .then(() => {
     server.listen(ENV.PORT, () =>
