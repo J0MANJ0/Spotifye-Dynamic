@@ -43,3 +43,15 @@
 [31m    at doWrite (/home/joseph/Projects/music-apis/server/node_modules/readable-stream/lib/_stream_writable.js:390:139)[39m
 [31m    at writeOrBuffer (/home/joseph/Projects/music-apis/server/node_modules/readable-stream/lib/_stream_writable.js:381:5)[39m
 [31m    at Writable.write (/home/joseph/Projects/music-apis/server/node_modules/readable-stream/lib/_stream_writable.js:302:11)[39m
+2026-01-09 17:19:31:1931 [31merror[39m: [31muncaughtException: (0 , import_http.createServer) is not a function[39m
+[31mTypeError: (0 , import_http.createServer) is not a function[39m
+[31m    at logger (/home/joseph/Projects/music-apis/server/src/server.ts:8:16)[39m
+[31m    at Object.<anonymous> (/home/joseph/Projects/music-apis/server/src/server.ts:29:4)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1565:14)[39m
+[31m    at Object.transformer (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1318:32)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1128:12)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m
+[31m    at cjsLoader (node:internal/modules/esm/translators:263:5)[39m
+[31m    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:196:7)[39m
