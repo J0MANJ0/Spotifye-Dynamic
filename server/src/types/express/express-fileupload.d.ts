@@ -1,4 +1,4 @@
-import fileUpload from 'express-fileupload';
+import type fileUpload from 'express-fileupload';
 
 declare global {
   namespace Express {

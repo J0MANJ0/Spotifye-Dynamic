@@ -2,9 +2,9 @@
   "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": ["ES2024"],
     "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node16",
     "outDir": "./dist",
     "rootDir": "./src",
     "sourceMap": true,
