@@ -8,7 +8,6 @@ import { ToastContainer } from 'react-toastify';
 import ServerProvider from '@/providers/server.provider';
 import SocketProvider from '@/providers/socket.provider';
 import PlaybackProvider from '@/providers/playback.provider';
-import { PlaybackResolver } from '@/hooks/useplaybackresolver';
 
 const outfitFont = Outfit({
   subsets: ['latin'],
