@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { handleResponse } from './response';
-import logger from './logger';
 
 type AsyncMiddleware = (
   req: Request,
@@ -11,7 +10,7 @@ type AsyncMiddleware = (
 export const asyncHandler = (fn: AsyncMiddleware) => {
   return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch((error) => {
-      logger.error('Error in catch block:', error);
+      console.log('Error in catch block:', error);
       return handleResponse(
         res,
         false,

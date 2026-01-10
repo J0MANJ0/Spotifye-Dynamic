@@ -1,7 +1,6 @@
 import { Socket, Server, DisconnectReason } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { ENV } from '../lib/env';
-import logger from '../lib/logger';
 import { UAParser } from 'ua-parser-js';
 import { MESSAGE_REPO } from '../repos/message.repo';
 import {
@@ -153,7 +152,7 @@ const initSocket = (httpServer: HttpServer) => {
     const userId = socket.handshake.auth?.userId;
 
     if (!userId) {
-      logger.warn(`Socket ${socket.id} connected without userId`);
+      console.log(`Socket ${socket.id} connected without userId`);
       return;
     }
 
@@ -187,8 +186,8 @@ const initSocket = (httpServer: HttpServer) => {
 
     const nowPlayingTime = resolveCurrentTime(state);
 
-    logger.info(`Active device: ${activeSocket.get(userId)}`);
-    logger.info(`User ${userId} connected on socket: ${socket.id}`);
+    console.log(`Active device: ${activeSocket.get(userId)}`);
+    console.log(`User ${userId} connected on socket: ${socket.id}`);
 
     io.to(room).emit('sync:active', {
       isActiveSocket: activeSocket.get(userId),
@@ -383,7 +382,7 @@ const initSocket = (httpServer: HttpServer) => {
           io.to(room).emit('sync:active', {
             isActiveSocket: activeSocket.get(userId),
           });
-          logger.info(`SOCKET :${socketId}`);
+          console.log(`SOCKET :${socketId}`);
           emitDevices(io, userId, room);
           break;
         }
@@ -447,14 +446,14 @@ const initSocket = (httpServer: HttpServer) => {
           }
           socket.emit('sent:message', message);
         } catch (error: any) {
-          logger.error(`Message error: ${error}`);
+          console.log(`Message error: ${error}`);
           socket.emit('message:error', error?.message);
         }
       }
     );
 
     socket.on('disconnect', (reason: DisconnectReason) => {
-      logger.error(`Socket disconnected ${socket.id}: ${reason}`);
+      console.log(`Socket disconnected ${socket.id}: ${reason}`);
       removeSocket(userId, socket.id);
       socketMeta.delete(socket.id);
 

@@ -1,7 +1,6 @@
 import app from '../app';
 import { ENV } from '../lib/env';
 import { connectDB } from '../config/db';
-import logger from '../lib/logger';
 
 // Initialize database connection
 let dbConnected = false;
@@ -11,9 +10,9 @@ async function ensureDbConnection() {
     try {
       await connectDB();
       dbConnected = true;
-      logger.info('Database connected for Vercel serverless function');
+      console.log('Database connected for Vercel serverless function');
     } catch (error) {
-      logger.error('Database connection failed:', error);
+      console.log('Database connection failed:', error);
       throw error;
     }
   }

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import logger from '../lib/logger';
 import { handleResponse } from '../lib/response';
 
 const errorHandler = async (
@@ -8,7 +7,7 @@ const errorHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  logger.error('Error in error handler middleware:', err);
+  console.log('Error in error handler middleware:', err);
 
   handleResponse(
     res,
