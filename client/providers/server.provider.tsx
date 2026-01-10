@@ -30,6 +30,14 @@ const ServerProvider = () => {
   const { fetchChart } = useChartStore();
 
   useEffect(() => {
+    getUser();
+  }, [getUser, user]);
+
+  useEffect(() => {
+    checkAdmin();
+  }, [checkAdmin, user]);
+
+  useEffect(() => {
     const fetch = async () => {
       return await Promise.all([
         fetchAlbums(),
@@ -52,16 +60,11 @@ const ServerProvider = () => {
   }, [createAlbum, createLrc, createTrack]);
 
   useEffect(() => {
-    checkAdmin();
-  }, [checkAdmin, user]);
-
-  useEffect(() => {
     if (user) {
       const fetch = async () => {
         return await Promise.all([
           fetchMessages(user?.id),
           getInfo(),
-          getUser(),
           fetchChart(),
           fetchUsers(),
           fetchLikedSongs(),
@@ -69,7 +72,7 @@ const ServerProvider = () => {
       };
       fetch();
     }
-  }, [user, getInfo, getUser, fetchMessages, fetchLikedSongs, fetchChart]);
+  }, [user, getInfo, fetchMessages, fetchLikedSongs, fetchChart]);
 
   useEffect(() => {
     if (isAdmin) {

@@ -3,11 +3,13 @@
 import { skipBackward, skipForward } from '@/lib/utils';
 import { useMusicStore } from '@/stores/use-music-store';
 import { usePlayerStore } from '@/stores/use-player-store';
+import { useUser } from '@clerk/nextjs';
 import { useEffect, useRef } from 'react';
 
 export const AudioPlayer = () => {
   const audio = useRef<HTMLAudioElement>(null);
   const prevSongRef = useRef<string | null>(null);
+  const { user } = useUser();
   const {
     currentTrackId,
     currentTime,
@@ -16,6 +18,7 @@ export const AudioPlayer = () => {
     setAudioRef,
     isPlaying,
     playNext,
+    isActive,
     repeatMode,
     audioRef,
   } = usePlayerStore();
@@ -35,7 +38,7 @@ export const AudioPlayer = () => {
     if (audio?.current) {
       setAudioRef(audio?.current);
     }
-  }, []);
+  }, [audio?.current, setAudioRef, isActive]);
 
   useEffect(() => {
     isPlaying
@@ -44,6 +47,35 @@ export const AudioPlayer = () => {
 
     usePlayerStore.setState({ toastShown: false });
   }, [isPlaying]);
+
+  // useEffect(() => {
+  //   if (!audioRef || !currentTrackId) return;
+  //   const audio = audioRef;
+
+  //   let isLoading = false;
+  //   const isSongChange = prevSongRef.current !== currentTrack?.audioUrl;
+
+  //   if (isSongChange && !isLoading) {
+  //     isLoading = true;
+  //     audio.src = currentTrack?.audioUrl;
+  //     audio.load();
+  //     audio.currentTime = 0;
+  //     prevSongRef.current = currentTrack?.audioUrl;
+
+  //     if (isPlaying) {
+  //       audio
+  //         .play()
+  //         .catch((error) => {
+  //           console.error('Playback failed:', error);
+  //         })
+  //         .finally(() => {
+  //           isLoading = false;
+  //         });
+  //     } else {
+  //       isLoading = false;
+  //     }
+  //   }
+  // }, [currentTrackId, isPlaying]);
 
   useEffect(() => {
     const audioEl = audio.current;
