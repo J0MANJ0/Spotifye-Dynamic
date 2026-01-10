@@ -3,13 +3,11 @@
 import { skipBackward, skipForward } from '@/lib/utils';
 import { useMusicStore } from '@/stores/use-music-store';
 import { usePlayerStore } from '@/stores/use-player-store';
-import { useUser } from '@clerk/nextjs';
 import { useEffect, useRef } from 'react';
 
 export const AudioPlayer = () => {
   const audio = useRef<HTMLAudioElement>(null);
   const prevSongRef = useRef<string | null>(null);
-  const { user } = useUser();
   const {
     currentTrackId,
     currentTime,
@@ -18,7 +16,6 @@ export const AudioPlayer = () => {
     setAudioRef,
     isPlaying,
     playNext,
-    isActive,
     repeatMode,
     audioRef,
   } = usePlayerStore();
@@ -38,7 +35,7 @@ export const AudioPlayer = () => {
     if (audio?.current) {
       setAudioRef(audio?.current);
     }
-  }, [audio?.current, setAudioRef, isActive]);
+  }, []);
 
   useEffect(() => {
     isPlaying
@@ -49,34 +46,23 @@ export const AudioPlayer = () => {
   }, [isPlaying]);
 
   useEffect(() => {
-    if (!audioRef || !currentTrackId) return;
-    const audio = audioRef;
+    const audioEl = audio.current;
+    if (!audioEl || !currentTrack?.audioUrl) return;
 
-    let isLoading = false;
-    const isSongChange = prevSongRef.current !== currentTrack?.audioUrl;
+    if (prevSongRef.current === currentTrack.audioUrl) return;
 
-    if (isSongChange && !isLoading) {
-      isLoading = true;
-      audio.src = currentTrack?.audioUrl;
-      audio.currentTime = 0;
-      prevSongRef.current = currentTrack?.audioUrl;
+    prevSongRef.current = currentTrack.audioUrl;
 
-      if (isPlaying) {
-        audio.onloadedmetadata = () => {
-          audio
-            .play()
-            .catch((error) => {
-              console.error('Playback failed:', error);
-            })
-            .finally(() => {
-              isLoading = false;
-            });
-        };
-      } else {
-        isLoading = false;
-      }
+    audioEl.src = currentTrack.audioUrl;
+    audioEl.load();
+    audioEl.currentTime = 0;
+
+    if (isPlaying) {
+      audioEl.play().catch((err) => {
+        console.error('Playback failed:', err);
+      });
     }
-  }, [currentTrackId, isPlaying]);
+  }, [currentTrackId]);
 
   useEffect(() => {
     const audio = audioRef;
