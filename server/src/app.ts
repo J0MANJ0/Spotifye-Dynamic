@@ -4,13 +4,13 @@ import fileUpload from 'express-fileupload';
 import { clerkMiddleware } from '@clerk/express';
 import { AUTH_MIDDLEWARE } from './middlewares/auth.middlewares';
 import { ENV } from './lib/env';
-import api from './api';
+import api from './api/api';
 
 const app = express();
 
 // middlewares
 app.use(clerkMiddleware());
-if (ENV.NODE_ENV === 'production') {
+if (ENV.ENABLE_SOCKETS === 'true' && ENV.NODE_ENV === 'production') {
   app.use(AUTH_MIDDLEWARE.PROTECT_SOCKET);
 }
 app.use(express.json());
@@ -27,10 +27,24 @@ app.use(
 // error
 import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
 
+app.get('/health', (_: Request, res: Response) => {
+  return res.status(200).json({
+    status: 'LIVE 🔥',
+    mode: ENV.NODE_ENV,
+    websockets: ENV.ENABLE_SOCKETS === 'true' ? 'enabled' : 'disabled',
+  });
+});
+
 // status
 app.get('/', (_: Request, res: Response) => {
   return res.status(200).json({
     status: 'LIVE ⏺️',
+    mode: ENV.NODE_ENV,
+    deployment: process.env.VERCEL
+      ? 'Vercel'
+      : process.env.RENDER
+      ? 'Render'
+      : 'Local',
   });
 });
 

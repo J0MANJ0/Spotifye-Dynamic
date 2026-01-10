@@ -712,3 +712,21 @@
 [31m    at Server.listen (node:net:2074:7)[39m
 [31m    at <anonymous> (/home/joseph/Projects/music-apis/server/src/server.ts:18:12)[39m
 [31m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+2026-01-10 12:04:40:440 [31merror[39m: [31muncaughtException: Cannot find module './api'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31mError: Cannot find module './api'[39m
+[31mRequire stack:[39m
+[31m- /home/joseph/Projects/music-apis/server/src/app.ts[39m
+[31m- /home/joseph/Projects/music-apis/server/src/server.ts[39m
+[31m    at node:internal/modules/cjs/loader:1249:15[39m
+[31m    at nextResolveSimple (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1004)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:2630[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1542[39m
+[31m    at resolveTsPaths (/home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:760)[39m
+[31m    at /home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-D46fvsV_.cjs:4:1102[39m
+[31m    at m._resolveFilename (file:///home/joseph/Projects/music-apis/server/node_modules/tsx/dist/register-B7jrtLTO.mjs:1:789)[39m
+[31m    at Function._load (node:internal/modules/cjs/loader:1075:27)[39m
+[31m    at TracingChannel.traceSync (node:diagnostics_channel:322:14)[39m
+[31m    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)[39m

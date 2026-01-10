@@ -1,3 +1,3 @@
-import app from '../src/app';
+import handler from '../src/api/index';
 
-export default app;
+export default handler;

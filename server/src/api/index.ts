@@ -1,41 +1,37 @@
-import { Request, Response, Router } from 'express';
-import admin from './admin.route';
-import albums from './album.route';
-import artists from './artist.route';
-import auth from './auth.route';
-import chart from './chart.route';
-import follow from './follow.route';
-import info from './info.route';
-import likedSongs from './liked-songs.route';
-import lrc from './lrc.route';
-import lyrics from './lyrics.route';
-import music from './music.route';
-import stats from './stats.route';
-import tracks from './track.route';
-import users from './user.route';
+import app from '../app';
+import { ENV } from '../lib/env';
+import { connectDB } from '../config/db';
+import logger from '../lib/logger';
 
-const router = Router();
+// Initialize database connection
+let dbConnected = false;
 
-router.get('/', (_req: Request, res: Response) => {
-  res.json({
-    status: 'live-route',
-    message: 'ACTIVE 🔥',
+async function ensureDbConnection() {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+      logger.info('Database connected for Vercel serverless function');
+    } catch (error) {
+      logger.error('Database connection failed:', error);
+      throw error;
+    }
+  }
+}
+
+// Vercel serverless function handler
+export default async function handler(req: any, res: any) {
+  // Ensure DB connection for each request (Vercel reuses instances)
+  await ensureDbConnection();
+
+  // Handle the request with Express app
+  return app(req, res);
+}
+
+// For local testing
+if (require.main === module) {
+  const { PORT } = ENV;
+  app.listen(PORT, () => {
+    console.log(`Vercel API handler running on http://localhost:${PORT}`);
   });
-});
-
-router.use('/admin', admin);
-router.use('/albums', albums);
-router.use('/artists', artists);
-router.use('/auth', auth);
-router.use('/users', users);
-router.use('/chart', chart);
-router.use('/follow', follow);
-router.use('/info', info);
-router.use('/liked-songs', likedSongs);
-router.use('/lrc', lrc);
-router.use('/lyrics', lyrics);
-router.use('/music', music);
-router.use('/stats', stats);
-router.use('/tracks', tracks);
-
-export default router;
+}
