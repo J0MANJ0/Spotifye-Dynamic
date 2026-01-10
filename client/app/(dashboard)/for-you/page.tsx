@@ -54,7 +54,8 @@ const MadeForYouPage = () => {
     if (iscurrentAlbumIdPlaying && madeForYouAlbumPlaying) {
       toggleSong();
     } else {
-      playAlbum(madeforyou);
+      const q = madeforyou.map((t) => t._id);
+      playAlbum(q, 'madeForYouAlbum', null);
       usePlayerStore.setState({
         likedAlbumPlaying: false,
         madeForYouAlbumPlaying: true,
@@ -77,7 +78,8 @@ const MadeForYouPage = () => {
     const songIdx = filteredLikedSongs.findIndex((s) => s._id === song._id);
 
     if (songIdx === -1) return;
-    playAlbum(filteredLikedSongs, songIdx);
+    const q = filteredLikedSongs.map((t) => t._id);
+    playAlbum(q, 'likedSongsAlbum', null, songIdx);
     usePlayerStore.setState({
       likedAlbumPlaying: false,
       madeForYouAlbumPlaying: true,
