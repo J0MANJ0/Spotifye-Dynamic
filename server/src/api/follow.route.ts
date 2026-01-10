@@ -1,6 +1,6 @@
-import { FOLLOW_CONTROLLER } from '../../src/controllers/follow.controller';
+import { FOLLOW_CONTROLLER } from '../controllers/follow.controller';
 import { Router } from 'express';
-import { AUTH_MIDDLEWARE } from '../../src/middlewares/auth.middlewares';
+import { AUTH_MIDDLEWARE } from '../middlewares/auth.middlewares';
 
 const followRouter = Router();
 
