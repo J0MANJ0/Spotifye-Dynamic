@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import { clerkMiddleware } from '@clerk/express';
-import { AUTH_MIDDLEWARE } from './middlewares/auth.middlewares';
 import { ENV } from './lib/env';
 import api from './api/api';
 
@@ -10,9 +9,6 @@ const app = express();
 
 // middlewares
 app.use(clerkMiddleware());
-if (ENV.ENABLE_SOCKETS === 'true' && ENV.NODE_ENV === 'production') {
-  app.use(AUTH_MIDDLEWARE.PROTECT_SOCKET);
-}
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(

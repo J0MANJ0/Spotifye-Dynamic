@@ -57,7 +57,7 @@ const LikedSongsPage = () => {
   const currentTrack = tracksByIds[currentTrackId!];
 
   const activeFilterKeys = useMemo(() => {
-    return searchKeys.length > 0 ? searchKeys : ['title', 'artist'];
+    return searchKeys?.length > 0 ? searchKeys : ['title', 'artist'];
   }, [searchKeys]);
 
   const filteredLikedSongs = useMemo(() => {
@@ -100,7 +100,7 @@ const LikedSongsPage = () => {
   };
 
   useEffect(() => {
-    if (scrollToCurrent.current && filteredLikedSongs.length > 0) {
+    if (scrollToCurrent.current && filteredLikedSongs?.length > 0) {
       scrollToCurrent.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
@@ -154,8 +154,8 @@ const LikedSongsPage = () => {
                   {user?.fullName}
                 </span>
                 <span className='font-medium'>
-                  • {filteredLikedSongs.length}{' '}
-                  {filteredLikedSongs.length === 1 ? 'song' : 'songs'},
+                  • {filteredLikedSongs?.length}{' '}
+                  {filteredLikedSongs?.length === 1 ? 'song' : 'songs'},
                 </span>
                 <span>{albumTimeLength(filteredLikedSongs || [])}</span>
               </div>
@@ -214,7 +214,7 @@ const LikedSongsPage = () => {
             <div className='px-6'>
               <div className='py-4 space-y-2'>
                 {filteredLikedSongs?.map((track, i) => {
-                  const iscurrentTrackId = currentTrack?._id === track._id;
+                  const iscurrentTrackId = currentTrack?._id === track?._id;
                   return (
                     <div
                       ref={
@@ -230,12 +230,12 @@ const LikedSongsPage = () => {
                         }
                       }}
                       onMouseEnter={() => {
-                        if (currentTrack?._id === track._id) setHover(true);
+                        if (currentTrack?._id === track?._id) setHover(true);
                       }}
                       onMouseLeave={() => {
-                        if (currentTrack?._id === track._id) setHover(false);
+                        if (currentTrack?._id === track?._id) setHover(false);
                       }}
-                      key={track._id}
+                      key={track?._id}
                       className={`grid grid-cols-[16px_5fr_3fr_2fr_1fr_1fr] gap-4 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer ${
                         iscurrentTrackId &&
                         likedAlbumPlaying &&
@@ -279,8 +279,8 @@ const LikedSongsPage = () => {
                       </div>
                       <div className='flex items-center gap-3'>
                         <img
-                          src={track.data.album.cover_medium}
-                          alt={track.data.title}
+                          src={track?.data?.album?.cover_medium}
+                          alt={track?.data?.title}
                           className='size-10 rounded-[3px]'
                         />
 
@@ -293,20 +293,21 @@ const LikedSongsPage = () => {
                                   : 'text-white'
                               }`}
                             >
-                              {track.data.title}
+                              {track?.data?.title}
                             </div>
                           )}
                           {!search && (
                             <div className='hover:underline flex justify-start items-center'>
                               <span>
-                                {track.data.explicit_lyrics && (
+                                {track?.data?.explicit_lyrics && (
                                   <ExplicitIcon fontSize='small' />
                                 )}
                               </span>
                               {track.data.contributors.map((c, i) => (
                                 <span key={c.id}>
                                   {c.name}
-                                  {i !== track.data.contributors.length - 1 &&
+                                  {i !==
+                                    track?.data?.contributors?.length - 1 &&
                                     ','}
                                 </span>
                               ))}
@@ -319,19 +320,19 @@ const LikedSongsPage = () => {
                           className='hover:underline'
                           onClick={(e) => {
                             e.stopPropagation();
-                            router.push(`/albums/${track.data.album.id}`);
+                            router.push(`/albums/${track?.data?.album?.id}`);
                           }}
                         >
-                          {track.data.album.title}
+                          {track?.data?.album?.title}
                         </span>
                       </div>
                       <div className='flex items-center'>
-                        {formatDistanceToNow(new Date(track.createdAt), {
+                        {formatDistanceToNow(new Date(track?.createdAt), {
                           addSuffix: true,
                         })}
                       </div>
                       <div className='flex items-center'>
-                        {formatTime(track.duration)}
+                        {formatTime(track?.duration)}
                       </div>
                       <div className='items-center hidden group-hover:flex'>
                         {user && (
@@ -342,7 +343,7 @@ const LikedSongsPage = () => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                unLike(track.trackId);
+                                unLike(track?.trackId);
                               }}
                               className='cursor-pointer'
                             >
