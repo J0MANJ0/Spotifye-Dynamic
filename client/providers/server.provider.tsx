@@ -6,11 +6,11 @@ import { useChatStore } from '@/stores/use-chat-store';
 import { useFollowStore } from '@/stores/use-follow-store';
 import { useMusicStore } from '@/stores/use-music-store';
 
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { useEffect } from 'react';
 
 const ServerProvider = () => {
-  const { user } = useUser();
+  const { userId } = useAuth();
   const {
     fetchAlbums,
     fetchArtists,
@@ -35,7 +35,7 @@ const ServerProvider = () => {
 
   useEffect(() => {
     checkAdmin();
-  }, [checkAdmin, user]);
+  }, [checkAdmin, userId]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -60,10 +60,10 @@ const ServerProvider = () => {
   }, [createAlbum, createLrc, createTrack]);
 
   useEffect(() => {
-    if (user) {
+    if (userId) {
       const fetch = async () => {
         await Promise.all([
-          fetchMessages(user?.id),
+          fetchMessages(userId),
           getInfo(),
           fetchChart(),
           fetchUsers(),
@@ -72,20 +72,20 @@ const ServerProvider = () => {
       };
       fetch();
     }
-  }, [user, getInfo, fetchMessages, fetchLikedSongs, fetchChart]);
+  }, [userId, getInfo, fetchMessages, fetchLikedSongs, fetchChart]);
 
   useEffect(() => {
     if (isAdmin) {
       fetchStats();
     }
-  }, [isAdmin, user, fetchStats]);
+  }, [isAdmin, userId, fetchStats]);
 
   useEffect(() => {
-    getTargets('artists');
+    if (userId) getTargets('artists');
   }, [getTargets, FollowArtist, unFollowArtist]);
 
   useEffect(() => {
-    getTargets('users');
+    if (userId) getTargets('users');
   }, [getTargets, FollowArtist, unFollowArtist]);
 
   return null;
