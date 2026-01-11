@@ -47,7 +47,7 @@ const ProfilePage = () => {
           <div className='flex p-6 gap-6 pb-8'>
             <img
               src={user?.imageUrl}
-              alt='liked-songs'
+              alt={user?.fullName!}
               className='size-60 shadow-xl rounded-full'
             />
             <div className='flex flex-col justify-end'>

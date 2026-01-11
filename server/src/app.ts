@@ -9,7 +9,6 @@ import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
 const app = express();
 
 // middlewares
-app.use(clerkMiddleware());
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(
@@ -20,6 +19,7 @@ app.use(
     },
   })
 );
+app.use(clerkMiddleware());
 
 // error
 

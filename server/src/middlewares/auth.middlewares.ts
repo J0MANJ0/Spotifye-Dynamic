@@ -6,9 +6,7 @@ import { handleResponse } from '../lib/response';
 
 const requireAdmin = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const {
-      auth: { userId },
-    } = req;
+    const userId = req?.auth?.userId;
 
     const user = await clerkClient.users.getUser(userId!);
 
@@ -22,9 +20,7 @@ const requireAdmin = asyncHandler(
 
 const protect = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const {
-      auth: { userId },
-    } = req;
+    const userId = req?.auth?.userId;
 
     if (!userId) return handleResponse(res, false, 'Please Sign in!', {}, 401);
 
@@ -34,9 +30,7 @@ const protect = asyncHandler(
 
 const protectSocket = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const {
-      auth: { userId },
-    } = req;
+    const userId = req?.auth?.userId;
 
     if (!userId) return handleResponse(res, false, 'Please Sign in!', {}, 401);
 
