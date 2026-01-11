@@ -31,7 +31,7 @@ const ServerProvider = () => {
 
   useEffect(() => {
     getUser();
-  }, [getUser, user]);
+  }, []);
 
   useEffect(() => {
     checkAdmin();

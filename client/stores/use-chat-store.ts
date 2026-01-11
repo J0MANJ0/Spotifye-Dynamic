@@ -45,12 +45,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     const { on } = useSocketStore.getState();
 
     on('users:online', (onlineUsers) => {
-      console.log('store', { onlineUsers });
       set({ onlineUsers: new Set(onlineUsers) });
-    });
-
-    on('users:online', (data) => {
-      console.log({ data });
     });
 
     on('users:activities', (activities) => {

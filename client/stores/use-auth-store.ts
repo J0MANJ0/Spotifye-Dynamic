@@ -68,6 +68,7 @@ export const useAuthStore = create<IAuth>((set) => ({
 
       if (success) {
         set({ user, explicitContent: user?.explicitContent });
+        console.log({ user });
       } else {
         set({ user: null });
       }
