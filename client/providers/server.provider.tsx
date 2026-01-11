@@ -62,7 +62,7 @@ const ServerProvider = () => {
   useEffect(() => {
     if (user) {
       const fetch = async () => {
-        return await Promise.all([
+        await Promise.all([
           fetchMessages(user?.id),
           getInfo(),
           fetchChart(),

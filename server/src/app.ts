@@ -4,6 +4,7 @@ import fileUpload from 'express-fileupload';
 import { clerkMiddleware } from '@clerk/express';
 import { ENV } from './lib/env';
 import api from './api/api';
+import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
 
 const app = express();
 
@@ -21,7 +22,6 @@ app.use(
 );
 
 // error
-import { ERROR_MIDDLEWARE } from './middlewares/error.middleware';
 
 app.get('/health', (_: Request, res: Response) => {
   return res.status(200).json({

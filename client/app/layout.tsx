@@ -40,8 +40,8 @@ export default function RootLayout({
           >
             <Toaster />
             <PlaybackProvider />
-            <ServerProvider />
             <SocketProvider />
+            <ServerProvider />
             {children}
             <ToastContainer position='bottom-right' />
           </ThemeProvider>
