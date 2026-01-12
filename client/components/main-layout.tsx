@@ -22,6 +22,8 @@ import { ShowActiveDevice } from './show-active';
 import { DevicePicker } from './device-picker';
 import { SidebarProvider } from './ui/sidebar';
 import { RightSidebar } from './right-sidebar';
+import { useUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 type Props = {
   children: React.ReactNode;
@@ -33,6 +35,8 @@ export const MainLayout = ({ children }: Props) => {
   const [maxRight, setisMaxRight] = useState<boolean>(true);
   const [maxLeft, setisMaxLeft] = useState<boolean>(true);
   const [isMobile, setIsMobile] = useState(false);
+
+  const { user } = useUser();
 
   const isOnline = useOnlineStatus();
 
@@ -55,6 +59,8 @@ export const MainLayout = ({ children }: Props) => {
   useEffect(() => {
     setisMaxLeft(isMaxLeft);
   }, [isMaxLeft]);
+
+  // if (!user) redirect('/auth/sign-in');
   return (
     <AnimatePresence>
       <motion.div

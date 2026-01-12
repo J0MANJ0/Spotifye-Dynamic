@@ -107,7 +107,7 @@ const AlbumPage = () => {
       (track) => track._id === currentTrackId
     );
 
-    if (iscurrentAlbumIdPlaying && !likedAlbumPlaying) {
+    if (iscurrentAlbumIdPlaying) {
       toggleSong();
     } else {
       playAlbum(q!, 'album');

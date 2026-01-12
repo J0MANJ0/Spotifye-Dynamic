@@ -10,8 +10,6 @@ const getUser = asyncHandler(async (req: Request, res: Response) => {
   } = req;
   const user = await USER_REPO.GET_USER(String(userId));
 
-  console.log({ user });
-
   return handleResponse(res, true, '', { user });
 });
 

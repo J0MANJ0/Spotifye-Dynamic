@@ -27,11 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning className='dark'>
-      <link rel='icon' href='/spotify.png' />
+    <ClerkProvider>
+      <html lang='en' suppressHydrationWarning className='dark'>
+        <link rel='icon' href='/spotify.png' />
 
-      <body className={`${outfitFont.className} antialiased`}>
-        <ClerkProvider>
+        <body className={`${outfitFont.className} antialiased`}>
           <ThemeProvider
             attribute='class'
             defaultTheme='system'
@@ -45,8 +45,8 @@ export default function RootLayout({
             {children}
             <ToastContainer position='bottom-right' />
           </ThemeProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

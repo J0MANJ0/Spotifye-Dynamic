@@ -24,7 +24,7 @@ export const DevicePicker = () => {
     return list.find((d) => d.isActive);
   }, [list]);
 
-  if (!activeDevice) return <NoDevicesFound />;
+  if (!activeDevice || !socket) return <NoDevicesFound />;
 
   return (
     <div className='h-full rounded-md bg-zinc-900 p-4'>

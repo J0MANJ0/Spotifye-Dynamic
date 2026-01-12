@@ -1,6 +1,6 @@
 'use client';
 
-import { SignedOut, UserButton, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 import { Tooltip } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -93,9 +93,11 @@ export const Navbar = () => {
       <div className='p-1.5 flex justify-center items-center'>
         <div className='flex gap-4 items-center'>
           {isAdmin && (
-            <Link href={'/admin'}>
-              <GradientButton label='Admin Dashboard' icon={User} />
-            </Link>
+            <SignedIn>
+              <Link href={'/admin'}>
+                <GradientButton label='Admin Dashboard' icon={User} />
+              </Link>
+            </SignedIn>
           )}
 
           {user && (
